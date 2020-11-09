@@ -1,5 +1,4 @@
 import ScratchBlocks from 'scratch-blocks';
-import deviceData from '../lib/libraries/devices/index.jsx';
 
 const categorySeparator = '<sep gap="36"/>';
 
@@ -138,18 +137,6 @@ const motion = function (isInitialSetup, isStage, targetId) {
         ${categorySeparator}
     </category>
     `;
-};
-
-const xmlEscape = function (unsafe) {
-    return unsafe.replace(/[<>&'"]/g, c => {
-        switch (c) {
-        case '<': return '&lt;';
-        case '>': return '&gt;';
-        case '&': return '&amp;';
-        case '\'': return '&apos;';
-        case '"': return '&quot;';
-        }
-    });
 };
 
 const looks = function (isInitialSetup, isStage, targetId, costumeName, backdropName) {
@@ -344,21 +331,22 @@ const sound = function (isInitialSetup, isStage, targetId, soundName) {
     `;
 };
 
-const events = function (isInitialSetup, isStage) {
+const events = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
     return `
     <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
-        <block type="event_whenflagclicked"/>
-        <block type="event_whenkeypressed">
+        <block type="event_whenflagclicked" ${isRealtimeMode ? `` : `disabled="true"`}/>
+        <block type="event_whenarduinobegin" ${isRealtimeMode ? `disabled="true"` : ``}/>
+        <block type="event_whenkeypressed" ${isRealtimeMode ? `` : `disabled="true"`}>
         </block>
         ${isStage ? `
-            <block type="event_whenstageclicked"/>
+            <block type="event_whenstageclicked" ${isRealtimeMode ? `` : `disabled="true"`}/>
         ` : `
-            <block type="event_whenthisspriteclicked"/>
+            <block type="event_whenthisspriteclicked" ${isRealtimeMode ? `` : `disabled="true"`}/>
         `}
-        <block type="event_whenbackdropswitchesto">
+        <block type="event_whenbackdropswitchesto" ${isRealtimeMode ? `` : `disabled="true"`}>
         </block>
         ${blockSeparator}
-        <block type="event_whengreaterthan">
+        <block type="event_whengreaterthan" ${isRealtimeMode ? `` : `disabled="true"`}>
             <value name="VALUE">
                 <shadow type="math_number">
                     <field name="NUM">10</field>
@@ -366,14 +354,14 @@ const events = function (isInitialSetup, isStage) {
             </value>
         </block>
         ${blockSeparator}
-        <block type="event_whenbroadcastreceived">
+        <block type="event_whenbroadcastreceived" ${isRealtimeMode ? `` : `disabled="true"`}>
         </block>
-        <block type="event_broadcast">
+        <block type="event_broadcast" ${isRealtimeMode ? `` : `disabled="true"`}>
             <value name="BROADCAST_INPUT">
                 <shadow type="event_broadcast_menu"></shadow>
             </value>
         </block>
-        <block type="event_broadcastandwait">
+        <block type="event_broadcastandwait" ${isRealtimeMode ? `` : `disabled="true"`}>
             <value name="BROADCAST_INPUT">
               <shadow type="event_broadcast_menu"></shadow>
             </value>
@@ -383,7 +371,7 @@ const events = function (isInitialSetup, isStage) {
     `;
 };
 
-const control = function (isInitialSetup, isStage) {
+const control = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
     return `
     <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
         <block type="control_wait">
@@ -411,19 +399,19 @@ const control = function (isInitialSetup, isStage) {
         <block type="control_stop"/>
         ${blockSeparator}
         ${isStage ? `
-            <block type="control_create_clone_of">
+            <block type="control_create_clone_of" ${isRealtimeMode ? `` : `disabled="true"`}>
                 <value name="CLONE_OPTION">
                     <shadow type="control_create_clone_of_menu"/>
                 </value>
             </block>
         ` : `
-            <block type="control_start_as_clone"/>
-            <block type="control_create_clone_of">
+            <block type="control_start_as_clone" ${isRealtimeMode ? `` : `disabled="true"`}/>
+            <block type="control_create_clone_of" ${isRealtimeMode ? `` : `disabled="true"`}>
                 <value name="CLONE_OPTION">
                     <shadow type="control_create_clone_of_menu"/>
                 </value>
             </block>
-            <block type="control_delete_this_clone"/>
+            <block type="control_delete_this_clone" ${isRealtimeMode ? `` : `disabled="true"`}/>
         `}
         ${categorySeparator}
     </category>
@@ -718,63 +706,23 @@ const myBlocks = function () {
 
 /* eslint-enable no-unused-vars */
 
-const xmlOpen = '<xml style="display: none">';
-const xmlClose = '</xml>';
-
-/**
- * @param {!boolean} isInitialSetup - Whether the toolbox is for initial setup. If the mode is "initial setup",
- * blocks with localized default parameters (e.g. ask and wait) should not be loaded. (LLK/scratch-gui#5445)
- * @param {?boolean} isStage - Whether the toolbox is for a stage-type target. This is always set to true
- * when isInitialSetup is true.
- * @param {?string} targetId - The current editing target
- * @param {?Array.<object>} categoriesXML - optional array of `{id,xml}` for categories. This can include both core
- * and other extensions: core extensions will be placed in the normal Scratch order; others will go at the bottom.
- * @property {string} id - the extension / category ID.
- * @property {string} xml - the `<category>...</category>` XML for this extension / category.
- * @param {?string} costumeName - The name of the default selected costume dropdown.
- * @param {?string} backdropName - The name of the default selected backdrop dropdown.
- * @param {?string} soundName -  The name of the default selected sound dropdown.
- * @returns {string} - a ScratchBlocks-style XML document for the contents of the toolbox.
- */
-const makeToolboxXML = function (isInitialSetup, deviceId =null, isStage = true, targetId, categoriesXML = [], isRealtimeMode = true,
-    costumeName = '', backdropName = '', soundName = '') {
-    isStage = isInitialSetup || isStage;
+const getXML = function (isInitialSetup, isStage, targetId, isRealtimeMode, costumeName, backdropName, soundName) {
     const gap = [categorySeparator];
 
-    costumeName = xmlEscape(costumeName);
-    backdropName = xmlEscape(backdropName);
-    soundName = xmlEscape(soundName);
-    categoriesXML = categoriesXML.slice();
-    const moveCategory = categoryId => {
-        const index = categoriesXML.findIndex(categoryInfo => categoryInfo.id === categoryId);
-        if (index >= 0) {
-            // remove the category from categoriesXML and return its XML
-            const [categoryInfo] = categoriesXML.splice(index, 1);
-            return categoryInfo.xml;
-        }
-        // return `undefined`
-    };
+    const motionXML = motion(isInitialSetup, isStage, targetId);
+    const looksXML = looks(isInitialSetup, isStage, targetId, costumeName, backdropName);
+    const soundXML = sound(isInitialSetup, isStage, targetId, soundName);
+    const eventsXML = events(isInitialSetup, isStage, targetId, isRealtimeMode);
+    const controlXML = control(isInitialSetup, isStage, targetId, isRealtimeMode);
+    const sensingXML = sensing(isInitialSetup, isStage, targetId);
+    const operatorsXML = operators(isInitialSetup, isStage, targetId, isRealtimeMode);
+    const variablesXML = variables(isInitialSetup, isStage, targetId, isRealtimeMode);
+    const myBlocksXML = myBlocks(isInitialSetup, isStage, targetId);
 
-    var everything = [xmlOpen];
+    var baseToolboxXml = [];
 
-    if (deviceId) {
-        const device = deviceData.find(ext => ext.deviceId === deviceId);
-        const baseToolboxXml = device.baseToolBoxXml(isInitialSetup, isStage, targetId, isRealtimeMode,
-            costumeName, backdropName, soundName);
-
-        everything = everything.concat(baseToolboxXml);
-    } else {
-        const motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId);
-        const looksXML = moveCategory('looks') || looks(isInitialSetup, isStage, targetId, costumeName, backdropName);
-        const soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName);
-        const eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId);
-        const controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId);
-        const sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId);
-        const operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId);
-        const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId);
-        const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId);
-
-        everything.push(
+    if (isRealtimeMode == true) {
+        baseToolboxXml = [
             motionXML, gap,
             looksXML, gap,
             soundXML, gap,
@@ -784,15 +732,18 @@ const makeToolboxXML = function (isInitialSetup, deviceId =null, isStage = true,
             operatorsXML, gap,
             variablesXML, gap,
             myBlocksXML
-        );
+        ];
+    } else {
+        baseToolboxXml = [
+            eventsXML, gap,
+            controlXML, gap,
+            operatorsXML, gap,
+            variablesXML, gap,
+            myBlocksXML
+        ];
     }
 
-    for (const extensionCategory of categoriesXML) {
-        everything.push(gap, extensionCategory.xml);
-    }
-
-    everything.push(xmlClose);
-    return everything.join('\n');
+    return baseToolboxXml;
 };
 
-export default makeToolboxXML;
+export default getXML;

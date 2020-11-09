@@ -1,6 +1,8 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import arduinoBaseToolBox from './baseToolbox/arduino';
+
 import arduinoUnoIconURL from './arduinoUno/arduinoUno.png';
 import arduinoUnoInsetIconURL from './arduinoUno/arduinoUno-small.svg';
 import arduinoUnoConnectionIconURLL from './arduinoUno/arduinoUno-illustration.svg';
@@ -52,6 +54,7 @@ export default [
                 id="gui.device.arduino.connectingMessage"
             />
         ),
+        baseToolBoxXml: arduinoBaseToolBox,
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         helpLink: 'https://store.arduino.cc/usa/arduino-uno-rev3'
@@ -85,7 +88,8 @@ export default [
                 id="gui.device.arduino.connectingMessage"
             />
         ),
-        programMode: ['realtime', 'upload'],
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         helpLink: 'https://store.arduino.cc/usa/arduino-nano'
     },
@@ -118,6 +122,7 @@ export default [
                 id="gui.device.arduino.connectingMessage"
             />
         ),
+        baseToolBoxXml: arduinoBaseToolBox,
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         helpLink: 'https://store.arduino.cc/usa/leonardo'
@@ -151,6 +156,7 @@ export default [
                 id="gui.device.arduino.connectingMessage"
             />
         ),
+        baseToolBoxXml: arduinoBaseToolBox,
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         helpLink: 'https://store.arduino.cc/usa/mega-2560-r3'

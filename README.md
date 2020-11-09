@@ -82,6 +82,12 @@ This is a fast changing and incomplete program. It's for professional developer.
 
 ...
 
+## Contact me
+
+China QQ group number: 933484739
+
+Email: arthurzheng150@gmail.com
+
 ## Bug Report
 
 You can submit the Bug log in Issues of this project.

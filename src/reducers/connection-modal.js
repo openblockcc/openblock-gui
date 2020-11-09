@@ -35,7 +35,6 @@ const setConnectionModalExtensionId = function (extensionId) {
 };
 
 const setConnectionModalPeripheralName = function (peripheralName) {
-    console.log('peripheralName: ' + peripheralName);
     return {
         type: SET_NAME,
         peripheralName: peripheralName

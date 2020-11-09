@@ -30,7 +30,8 @@ import {activateCustomProcedures, deactivateCustomProcedures} from '../reducers/
 import {setConnectionModalExtensionId} from '../reducers/connection-modal';
 import {updateMetrics} from '../reducers/workspace-metrics';
 import {setCodeEditorValue} from '../reducers/code';
-import {setDeviceId, setDeviceName } from '../reducers/device';
+import {setDeviceId, setDeviceName} from '../reducers/device';
+import {setUploadMode, setRealtimeMode, setSupportSwitchMode} from '../reducers/program-mode';
 
 import {
     activateTab,
@@ -212,6 +213,7 @@ class Blocks extends React.Component {
         this.detachVM();
         this.workspace.dispose();
         clearTimeout(this.toolboxUpdateTimeout);
+        clearTimeout(this.updateDeviceToolboxTimeout);
     }
     requestToolboxUpdate () {
         clearTimeout(this.toolboxUpdateTimeout);
@@ -239,8 +241,9 @@ class Blocks extends React.Component {
         }
     }
     updateToolbox () {
-        this.props.onToolboxWillUpdate();
         this.toolboxUpdateTimeout = false;
+
+        this.props.onToolboxWillUpdate();
 
         const categoryId = this.workspace.toolbox_.getSelectedCategoryId();
         const offset = this.workspace.toolbox_.getCategoryScrollOffset();
@@ -377,7 +380,7 @@ class Blocks extends React.Component {
             const targetCostumes = target.getCostumes();
             const targetSounds = target.getSounds();
             const dynamicBlocksXML = this.props.vm.runtime.getBlocksXML(target, this.props.isRealtimeMode ? 'realtime' : 'upload');
-            return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
+            return makeToolboxXML(false, this.props.deviceId, target.isStage, target.id, dynamicBlocksXML, this.props.isRealtimeMode,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
                 targetSounds.length > 0 ? targetSounds[targetSounds.length - 1].name : ''
@@ -510,7 +513,17 @@ class Blocks extends React.Component {
             defineBlocks(categoryInfo.blocks);
         });
 
-        // Update the toolbox with new blocks if possible
+        // Update the toolbox with new blocks if possible, use timeout to let props update first
+        this.requestUpdateDeviceToolbox();
+    }
+    requestUpdateDeviceToolbox () {
+        clearTimeout(this.updateDeviceToolboxTimeout);
+        this.updateDeviceToolboxTimeout = setTimeout(() => {
+            this.UpdateDeviceToolbox();
+        }, 0);
+    }
+    UpdateDeviceToolbox () {
+        this.updateDeviceToolboxTimeout = false;
         const toolboxXML = this.getToolboxXML();
         if (toolboxXML) {
             this.props.updateToolboxState(toolboxXML);
@@ -533,6 +546,20 @@ class Blocks extends React.Component {
     }
     handleDeviceSelected (categoryId) {
         const device = deviceData.find(ext => ext.deviceId === categoryId);
+        const supportUploadMode = device.programMode.includes('upload');
+        const supportRealtimeMode = device.programMode.includes('realtime');
+
+        if (!(supportUploadMode && supportRealtimeMode)) {
+            if (supportUploadMode) {
+                this.props.onSetUploadMode();
+            } else {
+                this.props.onSetRealtimeMode();
+            }
+            this.props.onSetSupportSwitchMode(false);
+        } else {
+            this.props.onSetSupportSwitchMode(true);
+        }
+
         if (device && device.launchPeripheralConnectionFlow) {
             this.props.onDeviceSelected(device.deviceId, device.name);
             this.handleConnectionModalStart(categoryId);
@@ -618,6 +645,7 @@ class Blocks extends React.Component {
             anyModalVisible,
             canUseCloud,
             customProceduresVisible,
+            deviceId,
             deviceLibraryVisible,
             extensionLibraryVisible,
             options,
@@ -637,6 +665,9 @@ class Blocks extends React.Component {
             onRequestCloseExtensionLibrary,
             onRequestCloseDeviceLibrary,
             onRequestCloseCustomProcedures,
+            onSetUploadMode,
+            onSetRealtimeMode,
+            onSetSupportSwitchMode,
             toolboxXML,
             updateMetrics: updateMetricsProp,
             workspaceMetrics,
@@ -695,6 +726,7 @@ Blocks.propTypes = {
     anyModalVisible: PropTypes.bool,
     canUseCloud: PropTypes.bool,
     customProceduresVisible: PropTypes.bool,
+    deviceId: PropTypes.string,
     deviceLibraryVisible: PropTypes.bool,
     extensionLibraryVisible: PropTypes.bool,
     isRealtimeMode: PropTypes.bool,
@@ -734,6 +766,9 @@ Blocks.propTypes = {
         comments: PropTypes.bool,
         collapse: PropTypes.bool
     }),
+    onSetUploadMode: PropTypes.func,
+    onSetRealtimeMode: PropTypes.func,
+    onSetSupportSwitchMode: PropTypes.func,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
     toolboxXML: PropTypes.string,
     updateMetrics: PropTypes.func,
@@ -782,6 +817,7 @@ const mapStateToProps = state => ({
         Object.keys(state.scratchGui.modals).some(key => state.scratchGui.modals[key]) ||
         state.scratchGui.mode.isFullScreen
     ),
+    deviceId: state.scratchGui.device.deviceId,
     deviceLibraryVisible: state.scratchGui.modals.deviceLibrary,
     extensionLibraryVisible: state.scratchGui.modals.extensionLibrary,
     isRealtimeMode: state.scratchGui.programMode.isRealtimeMode,
@@ -831,7 +867,10 @@ const mapDispatchToProps = dispatch => ({
     },
     setCodeEditorValue: (value) => {
         dispatch(setCodeEditorValue(value));
-    }
+    },
+    onSetUploadMode: () => dispatch(setUploadMode()),
+    onSetRealtimeMode: () => dispatch(setRealtimeMode()),
+    onSetSupportSwitchMode: state => dispatch(setSupportSwitchMode(state))
 });
 
 export default errorBoundaryHOC('Blocks')(

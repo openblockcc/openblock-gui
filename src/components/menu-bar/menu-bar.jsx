@@ -603,10 +603,11 @@ class MenuBar extends React.Component {
                             className={styles.programModeSwitch}
                             onChange={this.handleProgramModeSwitchOnChange}
                             checked={!this.props.isRealtimeMode}
-                            disabled={this.props.isToolboxUpdating}
+                            disabled={this.props.isToolboxUpdating || !this.props.isSupportSwitchMode}
                             height={25}
                             width={90}
-                            offColor="#FF8C1A"
+                            onColor={this.props.isToolboxUpdating || !this.props.isSupportSwitchMode ? "#888888" : "#008800"}
+                            offColor={this.props.isToolboxUpdating || !this.props.isSupportSwitchMode ? "#888888" : "#FF8C1A"}
                             uncheckedIcon={
                                 <div className={styles.modeSwitchRealtime}>
                                     <FormattedMessage
@@ -654,10 +655,13 @@ MenuBar.propTypes = {
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     intl: intlShape,
+    isUpdating: PropTypes.bool,
+    isRealtimeMode: PropTypes.bool.isRequired,
     isRtl: PropTypes.bool,
     isShared: PropTypes.bool,
     isShowingProject: PropTypes.bool,
-    isUpdating: PropTypes.bool,
+    isSupportSwitchMode: PropTypes.bool,
+    isToolboxUpdating: PropTypes.bool.isRequired,
     languageMenuOpen: PropTypes.bool,
     locale: PropTypes.string.isRequired,
     loginMenuOpen: PropTypes.bool,
@@ -693,8 +697,6 @@ MenuBar.propTypes = {
     userOwnsProject: PropTypes.bool,
     username: PropTypes.string,
     vm: PropTypes.instanceOf(VM).isRequired,
-    isRealtimeMode: PropTypes.bool.isRequired,
-    isToolboxUpdating: PropTypes.bool.isRequired,
     onSetUploadMode: PropTypes.func,
     onSetRealtimeMode: PropTypes.func,
     onOpenConnectionModal: PropTypes.func,
@@ -720,9 +722,12 @@ const mapStateToProps = (state, ownProps) => {
         accountMenuOpen: accountMenuOpen(state),
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
-        isRtl: state.locales.isRtl,
         isUpdating: getIsUpdating(loadingState),
+        isRealtimeMode: state.scratchGui.programMode.isRealtimeMode,
+        isRtl: state.locales.isRtl,
         isShowingProject: getIsShowingProject(loadingState),
+        isSupportSwitchMode: state.scratchGui.programMode.isSupportSwitchMode,
+        isToolboxUpdating: state.scratchGui.toolbox.isToolboxUpdating,
         languageMenuOpen: languageMenuOpen(state),
         locale: state.locales.locale,
         loginMenuOpen: loginMenuOpen(state),
@@ -732,8 +737,6 @@ const mapStateToProps = (state, ownProps) => {
         userOwnsProject: ownProps.authorUsername && user &&
             (ownProps.authorUsername === user.username),
         vm: state.scratchGui.vm,
-        isRealtimeMode: state.scratchGui.programMode.isRealtimeMode,
-        isToolboxUpdating: state.scratchGui.toolbox.isToolboxUpdating,
         extensionId: state.scratchGui.connectionModal.extensionId,
         peripheralName: state.scratchGui.connectionModal.peripheralName,
         deviceId: state.scratchGui.device.deviceId,
