@@ -28,13 +28,13 @@ import microbitIconURL from './microbit/microbit.png';
 import microbitConnectionIconURLL from './microbit/microbit-illustration.svg';
 import microbitConnectionSmallIconURL from './microbit/microbit-small.svg';
 
-import microbitV2IconURL from './microbitV2/microbitV2.png';
-import microbitV2ConnectionIconURLL from './microbitV2/microbitV2-illustration.svg';
-import microbitV2ConnectionSmallIconURL from './microbitV2/microbitV2-small.svg';
-
 import maixduinoIconURL from './maixduino/maixduino.png';
 import maixduinoConnectionIconURLL from './maixduino/maixduino-illustration.svg';
 import maixduinoConnectionSmallIconURL from './maixduino/maixduino-small.svg';
+
+import makeymakeyIconURL from './makeymakey/makeymakey.png';
+import makeymakeyConnectionIconURLL from './makeymakey/makeymakey-illustration.svg';
+import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
 
 const deviceData = [
     {
@@ -55,7 +55,6 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '9600',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -92,7 +91,6 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '9600',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -130,7 +128,6 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '9600',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -167,7 +164,6 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '9600',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -204,7 +200,6 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '9600',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -241,49 +236,11 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '115200',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
         connectionIconURL: microbitConnectionIconURLL,
         connectionSmallIconURL: microbitConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to their microbit."
-                id="gui.device.microbit.connectingMessage"
-            />
-        ),
-        baseToolBoxXml: microbitBaseToolBox,
-        programMode: ['upload'],
-        programLanguage: ['block', 'python'],
-        tags: ['microPython'],
-        helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
-    },
-    {
-        name: 'Micro:bit V2',
-        deviceId: 'microbitV2',
-        manufactor: 'microbit.org',
-        leanMore: 'https://microbit.org/',
-        type: 'microbit',
-        iconURL: microbitV2IconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="Upgraded processor, built-In speaker and microphone, touch sensitive logo."
-                description="Description for the 'micro:bit V2' device"
-                id="gui.device.microbitV2.description"
-            />
-        ),
-        featured: true,
-        disabled: true,
-        bluetoothRequired: false,
-        serialportRequired: true,
-        defaultBaudRate: '115200',
-        internetConnectionRequired: false,
-        launchPeripheralConnectionFlow: true,
-        useAutoScan: false,
-        connectionIconURL: microbitV2ConnectionIconURLL,
-        connectionSmallIconURL: microbitV2ConnectionSmallIconURL,
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
@@ -315,7 +272,6 @@ const deviceData = [
         disabled: true,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '115200',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -333,6 +289,43 @@ const deviceData = [
         programLanguage: ['block', 'python'],
         tags: ['microPython'],
         helpLink: 'https://maixduino.sipeed.com/'
+    },
+    {
+        name: 'Makey Makey',
+        deviceId: 'makeymakey',
+        baseDeviceId: 'arduinoUno',
+        manufactor: 'makeymakey.com',
+        leanMore: 'https://makeymakey.com/',
+        type: 'arduino',
+        iconURL: makeymakeyIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Makey Makey"
+                description="Description for the Makey Makey device"
+                id="gui.device.makeymakey.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: makeymakeyConnectionIconURLL,
+        connectionSmallIconURL: makeymakeyConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their arduino."
+                id="gui.device.arduino.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'], // due to the software serilport realtim mode is unstable
+        programLanguage: ['block', 'c', 'cpp'],
+        tags: ['arduino'],
+        helpLink: 'https://makeymakey.com'
     }
 ];
 
