@@ -1,5 +1,7 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
+import defaultsDeep from 'lodash.defaultsdeep';
+import log from '../../log';
 
 import arduinoBaseToolBox from './baseToolbox/arduino';
 import microbitBaseToolBox from './baseToolbox/microbit';
@@ -329,21 +331,50 @@ const deviceData = [
     }
 ];
 
-const makeDeviceLibrary = data => data.map(dev => {
-    const matchedDevice = deviceData.find(item => dev.deviceId === item.deviceId);
-    if (matchedDevice) {
-        return matchedDevice;
+/**
+ * To get real device id. eg: the third party id like ironKit_arduinoUno.
+ * @param {string} deviceId - the id of the device.
+ * @return {string} deviceId - the real device id.
+ */
+const analysisRealDeviceId = deviceId => {
+    if (deviceId){
+        // if the id contain '_' use the string afer the '_'.
+        if (deviceId.indexOf('_') !== -1) {
+            deviceId = deviceId.split('_')[1];
+        }
     }
-    switch (dev.baseToolBoxXml) {
-    case 'arduinoBaseToolBox':
-        dev.baseToolBoxXml = arduinoBaseToolBox;
-        break;
-    case 'microbitBaseToolBox':
-        dev.baseToolBoxXml = microbitBaseToolBox;
-        break;
-    }
-    return dev;
-});
+    return deviceId;
+};
+
+/**
+ * Make device data from the input data. If it is a buid-in device, return the buid-in
+ * data. If it is a third party device, find it's parent device, and overwrite its attributes
+ * with the input data.
+ * @param {string} data - the data of devices.
+ * @return {string} fullData - processed data of devices.
+ */
+const makeDeviceLibrary = data => {
+    let fullData = data.map(dev => {
+        // Check if this is a build-in device.
+        const matchedDevice = deviceData.find(item => dev.deviceId === item.deviceId);
+        if (matchedDevice) {
+            return matchedDevice;
+        }
+
+        // This is a third party device. Try to parse it's parent deivce.
+        const realDeviceId = analysisRealDeviceId(dev.deviceId);
+        if (realDeviceId) {
+            const parentDevice = deviceData.find(item => realDeviceId === item.deviceId);
+            if (parentDevice) {
+                return defaultsDeep({}, dev, parentDevice);
+            }
+        }
+        log.warn('Cannot find this device or it\'s parent device :', dev.deviceId);
+        return null;
+    });
+    fullData = fullData.filter(dev => !!dev);
+    return fullData;
+};
 
 export {
     deviceData as default,

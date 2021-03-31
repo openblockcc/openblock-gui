@@ -57,7 +57,7 @@
     "mkdirp": "^0.5.1",
     "monaco-editor": "^0.15.1",
     "omggif": "1.0.9",
-    "openblock-blocks": "0.1.0-prerelease.20210327030720",
+    "openblock-blocks": "0.1.0-prerelease.20210329023133",
     "openblock-l10n": "^3.10.20210327125234",
     "openblock-save-svg-as-png": "^1.4.18",
     "openblock-vm": "^0.2.0-prerelease.20210327054050",
