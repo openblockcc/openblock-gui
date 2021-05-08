@@ -53,7 +53,7 @@ class ConnectionModal extends React.Component {
             peripheralName: peripheralName
         });
         analytics.event({
-            category: 'extensions',
+            category: 'devices',
             action: 'connecting',
             label: this.props.deviceId
         });
@@ -88,7 +88,7 @@ class ConnectionModal extends React.Component {
                 phase: PHASES.error
             });
             analytics.event({
-                category: 'extensions',
+                category: 'devices',
                 action: 'connecting error',
                 label: this.props.deviceId
             });
@@ -99,7 +99,7 @@ class ConnectionModal extends React.Component {
             phase: PHASES.connected
         });
         analytics.event({
-            category: 'extensions',
+            category: 'devices',
             action: 'connected',
             label: this.props.deviceId
         });
@@ -108,8 +108,8 @@ class ConnectionModal extends React.Component {
     handleHelp () {
         window.open(this.state.extension.helpLink, '_blank');
         analytics.event({
-            category: 'extensions',
-            action: 'help',
+            category: 'devices',
+            action: 'device help',
             label: this.props.deviceId
         });
     }

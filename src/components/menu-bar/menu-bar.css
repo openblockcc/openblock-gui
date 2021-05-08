@@ -200,6 +200,11 @@
     margin-right: 0.35rem;
 }
 
+.setting-icon {
+    width: 24px;
+    height: 24px;
+}
+
 .unconnected-icon {
     margin-right: 0.35rem;
 }
@@ -212,7 +217,7 @@
     margin-right: 0.35rem;
 }
 
-.device-realtime-connection {
+.link-socket-icon {
     height: 20px;
     margin-right: 0.35rem;
 }

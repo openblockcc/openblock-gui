@@ -134,6 +134,7 @@ const mapStateToProps = state => {
         cardsVisible: state.scratchGui.cards.visible,
         connectionModalVisible: state.scratchGui.modals.connectionModal,
         uploadProgressVisible: state.scratchGui.modals.uploadProgress,
+        updateModalVisible: state.scratchGui.modals.updateModal,
         costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
         costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
         error: state.scratchGui.projectState.error,

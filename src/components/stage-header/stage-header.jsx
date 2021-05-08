@@ -16,6 +16,8 @@ import largeStageIcon from './icon--large-stage.svg';
 import smallStageIcon from './icon--small-stage.svg';
 import unFullScreenIcon from './icon--unfullscreen.svg';
 
+import signalIcon from './icon--signal.svg';
+
 import scratchLogo from '../menu-bar/scratch-logo.svg';
 import styles from './stage-header.css';
 
@@ -56,6 +58,7 @@ const StageHeaderComponent = function (props) {
         onSetStageSmall,
         onSetStageFull,
         onSetStageUnFull,
+        realtimeConnection,
         showBranding,
         stageSizeMode,
         vm
@@ -150,6 +153,18 @@ const StageHeaderComponent = function (props) {
             <Box className={styles.stageHeaderWrapper}>
                 <Box className={styles.stageMenuWrapper}>
                     <Controls vm={vm} />
+                    <Box
+                        className={classNames(
+                            styles.deviceRealtimeConnectionWrapper,
+                            (realtimeConnection) ? null : styles.deviceRealtimeConnectionOff
+                        )}
+                    >
+                        <img
+                            className={styles.signalIcon}
+                            draggable={false}
+                            src={signalIcon}
+                        />
+                    </Box>
                     <div className={styles.stageSizeRow}>
                         {stageControls}
                         <div>
@@ -176,6 +191,7 @@ const StageHeaderComponent = function (props) {
 };
 
 const mapStateToProps = state => ({
+    realtimeConnection: state.scratchGui.connectionModal.realtimeConnection,
     // This is the button's mode, as opposed to the actual current state
     stageSizeMode: state.scratchGui.stageSize.stageSize
 });
@@ -189,6 +205,7 @@ StageHeaderComponent.propTypes = {
     onSetStageLarge: PropTypes.func.isRequired,
     onSetStageSmall: PropTypes.func.isRequired,
     onSetStageUnFull: PropTypes.func.isRequired,
+    realtimeConnection: PropTypes.bool.isRequired,
     showBranding: PropTypes.bool.isRequired,
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
     vm: PropTypes.instanceOf(VM).isRequired

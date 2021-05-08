@@ -20,8 +20,16 @@ const messages = defineMessages({
         defaultMessage: 'Upload error',
         description: 'Prompt for upload error',
         id: 'gui.uploadProgress.uploadErrorMessage'
+    },
+    uploadTimeout: {
+        defaultMessage: 'Upload timout',
+        description: 'Prompt for upload timout',
+        id: 'gui.uploadProgress.uploadTimeoutMessage'
     }
 });
+
+// 1min
+const UPLOAD_TIMEOUT_TIME = 20 * 1000;
 
 class UploadProgress extends React.Component {
     constructor (props) {
@@ -31,7 +39,8 @@ class UploadProgress extends React.Component {
             'handleHelp',
             'handleStdout',
             'handleUploadError',
-            'handleUploadSuccess'
+            'handleUploadSuccess',
+            'handleUploadTimeout'
         ]);
         this.state = {
             extension: this.props.deviceData.find(dev => dev.deviceId === props.deviceId),
@@ -39,16 +48,20 @@ class UploadProgress extends React.Component {
             peripheralName: null,
             text: ''
         };
+        this.uploadTimeout = setTimeout(() => this.handleUploadTimeout(), UPLOAD_TIMEOUT_TIME);
     }
     componentDidMount () {
         this.props.vm.on('PERIPHERAL_UPLOAD_STDOUT', this.handleStdout);
         this.props.vm.on('PERIPHERAL_UPLOAD_ERROR', this.handleUploadError);
+        this.props.vm.on('PERIPHERAL_CONNECTION_LOST_ERROR', this.handleUploadError);
         this.props.vm.on('PERIPHERAL_UPLOAD_SUCCESS', this.handleUploadSuccess);
     }
     componentWillUnmount () {
         this.props.vm.removeListener('PERIPHERAL_UPLOAD_STDOUT', this.handleStdout);
         this.props.vm.removeListener('PERIPHERAL_UPLOAD_ERROR', this.handleUploadError);
+        this.props.vm.removeListener('PERIPHERAL_CONNECTION_LOST_ERROR', this.handleUploadError);
         this.props.vm.removeListener('PERIPHERAL_UPLOAD_SUCCESS', this.handleUploadSuccess);
+        clearTimeout(this.uploadTimeout);
     }
     handleCancel () {
         this.props.oncloseUploadProgress();
@@ -56,8 +69,8 @@ class UploadProgress extends React.Component {
     handleHelp () {
         window.open(this.state.extension.helpLink, '_blank');
         analytics.event({
-            category: 'extensions',
-            action: 'help',
+            category: 'devices',
+            action: 'upload help',
             label: this.props.deviceId
         });
     }
@@ -65,6 +78,8 @@ class UploadProgress extends React.Component {
         this.setState({
             text: this.state.text + data.message
         });
+        clearTimeout(this.uploadTimeout);
+        this.uploadTimeout = setTimeout(() => this.handleUploadTimeout(), UPLOAD_TIMEOUT_TIME);
     }
     handleUploadError (data) {
         this.setState({
@@ -72,6 +87,7 @@ class UploadProgress extends React.Component {
             phase: PHASES.error
         });
         this.props.onUploadError();
+        clearTimeout(this.uploadTimeout);
     }
     handleUploadSuccess () {
         this.setState({
@@ -79,6 +95,15 @@ class UploadProgress extends React.Component {
         });
         this.props.onUploadSuccess();
         // this.handleCancel();
+        clearTimeout(this.uploadTimeout);
+    }
+    handleUploadTimeout () {
+        this.setState({
+            text: `${this.state.text}\r\n${this.props.intl.formatMessage(messages.uploadTimeout)}`,
+            phase: PHASES.timeout
+        });
+        this.props.onUploadError();
+        clearTimeout(this.uploadTimeout);
     }
 
     render () {

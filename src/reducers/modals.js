@@ -14,6 +14,7 @@ const MODAL_CONNECTION = 'connectionModal';
 const MODAL_TIPS_LIBRARY = 'tipsLibrary';
 const MODAL_UPLOAD_PROGRESS = 'uploadProgress';
 const MODAL_DEVICE_LIBRARY = 'deviceLibrary';
+const MODAL_UPDATE = 'updateModal';
 
 const initialState = {
     [MODAL_BACKDROP_LIBRARY]: false,
@@ -28,7 +29,8 @@ const initialState = {
     [MODAL_CONNECTION]: false,
     [MODAL_UPLOAD_PROGRESS]: false,
     [MODAL_DEVICE_LIBRARY]: false,
-    [MODAL_TIPS_LIBRARY]: false
+    [MODAL_TIPS_LIBRARY]: false,
+    [MODAL_UPDATE]: false
 };
 
 const reducer = function (state, action) {
@@ -97,6 +99,9 @@ const openDeviceLibrary = function () {
 const openTipsLibrary = function () {
     return openModal(MODAL_TIPS_LIBRARY);
 };
+const openUpdateModal = function () {
+    return openModal(MODAL_UPDATE);
+};
 const closeBackdropLibrary = function () {
     return closeModal(MODAL_BACKDROP_LIBRARY);
 };
@@ -136,6 +141,9 @@ const closeUploadProgress = function () {
 const closeDeviceLibrary = function () {
     return closeModal(MODAL_DEVICE_LIBRARY);
 };
+const closeUpdateModal = function () {
+    return closeModal(MODAL_UPDATE);
+};
 export {
     reducer as default,
     initialState as modalsInitialState,
@@ -152,6 +160,7 @@ export {
     openConnectionModal,
     openUploadProgress,
     openDeviceLibrary,
+    openUpdateModal,
     closeBackdropLibrary,
     closeCameraCapture,
     closeCostumeLibrary,
@@ -164,5 +173,6 @@ export {
     closeTelemetryModal,
     closeTipsLibrary,
     closeConnectionModal,
-    closeUploadProgress
+    closeUploadProgress,
+    closeUpdateModal
 };

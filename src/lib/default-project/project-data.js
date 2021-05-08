@@ -2,10 +2,10 @@ import {defineMessages} from 'react-intl';
 import sharedMessages from '../shared-messages';
 
 let messages = defineMessages({
-    meow: {
-        defaultMessage: 'Meow',
-        description: 'Name for the meow sound',
-        id: 'gui.defaultProject.meow'
+    chirp: {
+        defaultMessage: 'Chirp',
+        description: 'Name for the chirp sound',
+        id: 'gui.defaultProject.chirp'
     },
     variable: {
         defaultMessage: 'my variable',
@@ -69,19 +69,19 @@ const projectData = translateFunction => {
                 currentCostume: 0,
                 costumes: [
                     {
-                        assetId: 'b7853f557e4426412e64bb3da6531a99',
+                        assetId: '5de48e72637db4d7fc7f6bb526354114',
                         name: translator(messages.costume, {index: 1}),
                         bitmapResolution: 1,
-                        md5ext: 'b7853f557e4426412e64bb3da6531a99.svg',
+                        md5ext: '5de48e72637db4d7fc7f6bb526354114.svg',
                         dataFormat: 'svg',
                         rotationCenterX: 48,
                         rotationCenterY: 50
                     },
                     {
-                        assetId: 'e6ddc55a6ddd9cc9d84fe0b4c21e016f',
+                        assetId: '48bbc82a10af3d0e0b7d5c677097df0e',
                         name: translator(messages.costume, {index: 2}),
                         bitmapResolution: 1,
-                        md5ext: 'e6ddc55a6ddd9cc9d84fe0b4c21e016f.svg',
+                        md5ext: '48bbc82a10af3d0e0b7d5c677097df0e.svg',
                         dataFormat: 'svg',
                         rotationCenterX: 46,
                         rotationCenterY: 53
@@ -89,13 +89,13 @@ const projectData = translateFunction => {
                 ],
                 sounds: [
                     {
-                        assetId: '83c36d806dc92327b9e7049a565c6bff',
-                        name: translator(messages.meow),
+                        assetId: '4e080acae1c3dc65eef30f07c2b0d4a5',
+                        name: translator(messages.chirp),
                         dataFormat: 'wav',
                         format: '',
                         rate: 22050,
                         sampleCount: 18688,
-                        md5ext: '83c36d806dc92327b9e7049a565c6bff.wav'
+                        md5ext: '4e080acae1c3dc65eef30f07c2b0d4a5.wav'
                     }
                 ],
                 volume: 100,

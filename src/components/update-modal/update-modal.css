@@ -1,0 +1,100 @@
+@import "../../css/colors.css";
+@import "../../css/units.css";
+
+.modal-content {
+    width: 480px;
+}
+
+.body {
+    background: $ui-white;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background: $ui-white;
+    height: 0;
+}
+
+.update-title {
+    padding: 2rem 2.5rem 1rem 2.5rem;
+    color: $motion-primary;
+    font-weight: 600;
+}
+
+.update-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem 2.5rem 1rem 2.5rem;
+    white-space: pre-line;
+    max-height: 240px;
+    overflow-y: auto;
+    position: relative;
+    font-size: 0.85rem;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.bottom-area {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: $ui-white;
+    padding-top: 1rem;
+    padding-bottom: .75rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.update-button-wrapper {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bottom-area .bottom-area-item+.bottom-area-item {
+    margin-left: 1.5rem;
+}
+
+.upgrade-button {
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    background: $motion-primary;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0.25rem;
+    border: 2px solid $motion-primary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.primary {
+    background: $ui-white-dim;
+    border: 2px solid $text-primary-transparent;
+    color: $text-primary-transparent;
+}
+
+.progress-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.upgrade-info-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}

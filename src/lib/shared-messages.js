@@ -26,6 +26,11 @@ export default defineMessages({
         defaultMessage: 'Replace contents of the current project?',
         description: 'Confirmation that user wants to overwrite the current project contents'
     },
+    clearCacheWarning: {
+        id: 'gui.sharedMessages.clearCacheWarning',
+        defaultMessage: 'Make sure you want to clear cache and restart?',
+        description: 'Confirmation that user wants clear cache'
+    },
     loadFromComputerTitle: {
         id: 'gui.sharedMessages.loadFromComputerTitle',
         defaultMessage: 'Load from your computer',

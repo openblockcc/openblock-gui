@@ -63,6 +63,8 @@ const eolList = [
     {key: 'lfAndCr', value: messages.lfAndCr}
 ];
 
+const MAX_CONSOLE_LENGTH = 32768;
+
 // eslint-disable-next-line react/prefer-stateless-function
 class HardwareConsole extends React.Component {
     constructor (props) {
@@ -82,6 +84,7 @@ class HardwareConsole extends React.Component {
             consoleArray: new Uint8Array(0),
             dataToSend: ''
         };
+        this._recivceBuffer = new Uint8Array(0);
     }
 
     componentDidMount () {
@@ -107,18 +110,27 @@ class HardwareConsole extends React.Component {
             return;
         }
 
-        // If length over
-        if (this.state.consoleArray.byteLength >= 4096) {
-            this.setState({
-                consoleArray: this.state.consoleArray.slice(data.byteLength)
-            });
+        // limit data length to MAX_CONSOLE_LENGTH
+        if (this._recivceBuffer.byteLength + data.byteLength >= MAX_CONSOLE_LENGTH) {
+            this._recivceBuffer = this._recivceBuffer.slice(
+                this._recivceBuffer.byteLength + data.byteLength - MAX_CONSOLE_LENGTH);
         }
-        this.setState({
-            consoleArray: this.appendBuffer(this.state.consoleArray, data)
-        });
+
+        this._recivceBuffer = this.appendBuffer(this._recivceBuffer, data);
+
+        // update the display per 0.1s
+        if (!this._updateTimeoutID) {
+            this._updateTimeoutID = setTimeout(() => {
+                this.setState({
+                    consoleArray: this._recivceBuffer
+                });
+                this._updateTimeoutID = null;
+            }, 50);
+        }
     }
 
     handleClickClean () {
+        this._recivceBuffer = new Uint8Array(0);
         this.setState({
             consoleArray: new Uint8Array(0)
         });

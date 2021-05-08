@@ -27,6 +27,7 @@
     "url": "git+ssh://git@github.com/openblockcc/openblock-gui.git"
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^3.1.0",
     "ansi-to-react": "^6.0.8",
     "arraybuffer-loader": "^1.0.6",
     "autoprefixer": "^9.0.1",
@@ -57,10 +58,10 @@
     "mkdirp": "^0.5.1",
     "monaco-editor": "^0.15.1",
     "omggif": "1.0.9",
-    "openblock-blocks": "0.1.0-prerelease.20210329023133",
-    "openblock-l10n": "^3.10.20210327125234",
+    "openblock-blocks": "0.1.0-prerelease.20210507134900",
+    "openblock-l10n": "^3.10.20210507134550",
     "openblock-save-svg-as-png": "^1.4.18",
-    "openblock-vm": "^0.2.0-prerelease.20210327054050",
+    "openblock-vm": "^0.2.0-prerelease.20210507051126",
     "papaparse": "5.1.1",
     "postcss-import": "^12.0.0",
     "postcss-loader": "^3.0.0",

@@ -16,7 +16,8 @@ import styles from './upload-progress.css';
 const PHASES = keyMirror({
     uploading: null,
     success: null,
-    error: null
+    error: null,
+    timeout: null
 });
 
 const UploadProgressComponent = props => (
@@ -67,6 +68,13 @@ const UploadProgressComponent = props => (
                             defaultMessage="Upload error"
                             description="Prompt for upload error"
                             id="gui.uploadProgress.uploadError"
+                        />
+                    ) : null}
+                    {props.phase === PHASES.timeout ? (
+                        <FormattedMessage
+                            defaultMessage="Upload timeout"
+                            description="Prompt for upload timeout"
+                            id="gui.uploadProgress.uploadTimeout"
                         />
                     ) : null}
                 </Box>

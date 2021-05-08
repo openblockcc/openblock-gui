@@ -28,8 +28,8 @@ class LibraryItem extends React.PureComponent {
             isProcessing: false
         };
     }
-    componentWillUpdate (prevProps) {
-        if (this.props.isLoaded !== prevProps.isLoaded) {
+    componentWillUpdate (newProps) {
+        if (this.props.isLoaded !== newProps.isLoaded) {
             this.setState({
                 isProcessing: false
             });

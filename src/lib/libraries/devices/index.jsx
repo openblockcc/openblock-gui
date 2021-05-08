@@ -34,9 +34,10 @@ import maixduinoIconURL from './maixduino/maixduino.png';
 import maixduinoConnectionIconURLL from './maixduino/maixduino-illustration.svg';
 import maixduinoConnectionSmallIconURL from './maixduino/maixduino-small.svg';
 
-import makeymakeyIconURL from './makeymakey/makeymakey.png';
-import makeymakeyConnectionIconURLL from './makeymakey/makeymakey-illustration.svg';
-import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
+import esp32IconURL from './esp32/esp32.png';
+import esp32ConnectionIconURLL from './esp32/esp32-illustration.svg';
+import esp32ConnectionSmallIconURL from './esp32/esp32-small.svg';
+
 
 const deviceData = [
     {
@@ -257,12 +258,49 @@ const deviceData = [
         helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
     },
     {
-        name: 'Maixduino',
-        deviceId: 'maixduino',
-        manufactor: 'sipeed',
-        leanMore: 'https://www.sipeed.com/',
-        type: 'maixduino',
-        iconURL: maixduinoIconURL,
+        name: 'ESP32',
+        deviceId: 'arduinoEsp32',
+        manufactor: 'espressif',
+        leanMore: 'https://www.espressif.com/',
+        type: 'arduino',
+        iconURL: esp32IconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
+                description="Description for the esp32 device"
+                id="gui.device.arduinoEsp32.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: esp32ConnectionIconURLL,
+        connectionSmallIconURL: esp32ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their esp32."
+                id="gui.device.arduinoEsp32.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'python'],
+        tags: ['arduino'],
+        helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
+    },
+    {
+        name: 'Micro:bit V2',
+        deviceId: 'microbitV2',
+        manufactor: 'microbit.org',
+        leanMore: 'https://microbit.org/',
+        type: 'microbit',
+        iconURL: microbitV2IconURL,
         description: (
             <FormattedMessage
                 defaultMessage="The K210 RISC-V board with ESP32 inside"

@@ -102,7 +102,7 @@ ModalComponent.propTypes = {
     contentLabel: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.object
-    ]).isRequired,
+    ]),
     fullScreen: PropTypes.bool,
     headerClassName: PropTypes.string,
     headerImage: PropTypes.string,

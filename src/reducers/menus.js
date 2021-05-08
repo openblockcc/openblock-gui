@@ -7,6 +7,7 @@ const MENU_EDIT = 'editMenu';
 const MENU_LANGUAGE = 'languageMenu';
 const MENU_LOGIN = 'loginMenu';
 const MENU_SERIALPORT = 'serialportMenu';
+const MENU_SETTING = 'setting';
 
 
 const initialState = {
@@ -15,7 +16,8 @@ const initialState = {
     [MENU_EDIT]: false,
     [MENU_LANGUAGE]: false,
     [MENU_LOGIN]: false,
-    [MENU_SERIALPORT]: false
+    [MENU_SERIALPORT]: false,
+    [MENU_SETTING]: false
 };
 
 const reducer = function (state, action) {
@@ -59,6 +61,9 @@ const loginMenuOpen = state => state.scratchGui.menus[MENU_LOGIN];
 const openSerialportMenu = () => openMenu(MENU_LOGIN);
 const closeSerialportMenu = () => closeMenu(MENU_LOGIN);
 const serialportMenuOpen = state => state.scratchGui.menus[MENU_LOGIN];
+const openSettingMenu = () => openMenu(MENU_SETTING);
+const closeSettingMenu = () => closeMenu(MENU_SETTING);
+const settingMenuOpen = state => state.scratchGui.menus[MENU_SETTING];
 
 export {
     reducer as default,
@@ -80,5 +85,8 @@ export {
     loginMenuOpen,
     openSerialportMenu,
     closeSerialportMenu,
-    serialportMenuOpen
+    serialportMenuOpen,
+    openSettingMenu,
+    closeSettingMenu,
+    settingMenuOpen
 };

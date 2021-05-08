@@ -10,6 +10,7 @@ const MenuBarHOC = function (WrappedComponent) {
 
             bindAll(this, [
                 'confirmReadyToReplaceProject',
+                'confirmClearCache',
                 'shouldSaveBeforeTransition'
             ]);
         }
@@ -19,6 +20,11 @@ const MenuBarHOC = function (WrappedComponent) {
                 readyToReplaceProject = this.props.confirmWithMessage(message);
             }
             return readyToReplaceProject;
+        }
+        confirmClearCache (message) {
+            let readyClearCache = true;
+            readyClearCache = this.props.confirmWithMessage(message);
+            return readyClearCache;
         }
         shouldSaveBeforeTransition () {
             return (this.props.canSave && this.props.projectChanged);
@@ -32,6 +38,7 @@ const MenuBarHOC = function (WrappedComponent) {
             } = this.props;
             return (<WrappedComponent
                 confirmReadyToReplaceProject={this.confirmReadyToReplaceProject}
+                confirmClearCache={this.confirmClearCache}
                 shouldSaveBeforeTransition={this.shouldSaveBeforeTransition}
                 {...props}
             />);

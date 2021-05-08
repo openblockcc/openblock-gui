@@ -34,6 +34,7 @@ import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import UploadProgress from '../../containers/upload-progress.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
+import UpdateModal from '../../containers/update-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -86,6 +87,7 @@ const GUIComponent = props => {
         uploadProgressVisible,
         costumeLibraryVisible,
         costumesTabVisible,
+        updateModalVisible,
         enableCommunity,
         intl,
         isCreating,
@@ -106,6 +108,10 @@ const GUIComponent = props => {
         onActivateSoundsTab,
         onActivateTab,
         onClickLogo,
+        onClickCheckUpdate,
+        onClickUpgrade,
+        onClickClearCache,
+        onClickInstallDriver,
         onExtensionButtonClick,
         onProjectTelemetryEvent,
         onRequestCloseBackdropLibrary,
@@ -221,6 +227,12 @@ const GUIComponent = props => {
                         onRequestClose={onRequestCloseBackdropLibrary}
                     />
                 ) : null}
+                {updateModalVisible ? (
+                    <UpdateModal
+                        vm={vm}
+                        onClickUpgrade={onClickUpgrade}
+                    />
+                ) : null}
                 <MenuBar
                     accountNavOpen={accountNavOpen}
                     authorId={authorId}
@@ -250,6 +262,9 @@ const GUIComponent = props => {
                     onSeeCommunity={onSeeCommunity}
                     onShare={onShare}
                     onToggleLoginOpen={onToggleLoginOpen}
+                    onClickCheckUpdate={onClickCheckUpdate}
+                    onClickClearCache={onClickClearCache}
+                    onClickInstallDriver={onClickInstallDriver}
                 />
                 <Box className={styles.bodyWrapper}>
                     <Box className={styles.flexWrapper}>
@@ -432,6 +447,10 @@ GUIComponent.propTypes = {
     onClickAbout: PropTypes.func,
     onClickAccountNav: PropTypes.func,
     onClickLogo: PropTypes.func,
+    onClickCheckUpdate: PropTypes.func,
+    onClickUpgrade: PropTypes.func,
+    onClickClearCache: PropTypes.func,
+    onClickInstallDriver: PropTypes.func,
     onCloseAccountNav: PropTypes.func,
     onExtensionButtonClick: PropTypes.func,
     onLogOut: PropTypes.func,

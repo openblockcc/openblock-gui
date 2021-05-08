@@ -82,7 +82,6 @@ const vmListenerHOC = function (WrappedComponent) {
             }
         }
         componentWillUnmount () {
-            // TODO 在这里将 onShowExtensionAlert 的完整数据写入 而不在 redux alert中 检索设备id
             this.props.vm.removeListener('PERIPHERAL_CONNECTION_LOST_ERROR', this.handleDeviceAlert);
             this.props.vm.removeListener('PERIPHERAL_REALTIME_CONNECTION_LOST_ERROR',
                 this.handleDeviceRealtimeAlert);
@@ -159,6 +158,7 @@ const vmListenerHOC = function (WrappedComponent) {
             const {
                 /* eslint-disable no-unused-vars */
                 attachKeyboardEvents,
+                deviceData,
                 projectChanged,
                 shouldUpdateTargets,
                 shouldUpdateProjectChanged,
