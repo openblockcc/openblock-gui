@@ -42,6 +42,10 @@ import esp32IconURL from './esp32/esp32.png';
 import esp32ConnectionIconURLL from './esp32/esp32-illustration.svg';
 import esp32ConnectionSmallIconURL from './esp32/esp32-small.svg';
 
+import esp8266IconURL from './esp8266/esp8266.png';
+import esp8266ConnectionIconURL from './esp8266/esp8266-illustration.svg';
+import esp8266ConnectionSmallIconURL from './esp8266/esp8266-small.svg';
+
 import makeymakeyIconURL from './makeymakey/makeymakey.png';
 import makeymakeyConnectionIconURL from './makeymakey/makeymakey-illustration.svg';
 import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
@@ -306,6 +310,43 @@ const deviceData = [
         programLanguage: ['block', 'python'],
         tags: ['microPython'],
         helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
+    },
+    {
+        name: 'ESP8266',
+        deviceId: 'arduinoEsp8266',
+        manufactor: 'espressif',
+        leanMore: 'https://www.espressif.com/',
+        type: 'arduino',
+        iconURL: esp8266IconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
+                description="Description for the esp8266 device"
+                id="gui.device.arduinoEsp8266.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: esp8266ConnectionIconURL,
+        connectionSmallIconURL: esp8266ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their esp8266."
+                id="gui.device.arduinoEsp8266.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'python'],
+        tags: ['arduino'],
+        helpLink: ''
     },
     {
         name: 'Micro:bit V2',
