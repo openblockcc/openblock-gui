@@ -21,14 +21,14 @@ const messages = defineMessages({
         id: 'gui.uploadProgress.uploadErrorMessage'
     },
     uploadTimeout: {
-        defaultMessage: 'Upload timout',
-        description: 'Prompt for upload timout',
+        defaultMessage: 'Upload timeout',
+        description: 'Prompt for upload timeout',
         id: 'gui.uploadProgress.uploadTimeoutMessage'
     }
 });
 
-// 1min
-const UPLOAD_TIMEOUT_TIME = 20 * 1000;
+// 40s
+const UPLOAD_TIMEOUT_TIME = 40 * 1000;
 
 class UploadProgress extends React.Component {
     constructor (props) {

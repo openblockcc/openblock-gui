@@ -86,10 +86,11 @@ class DeviceLibrary extends React.PureComponent {
     }
 
     render () {
-        const deviceLibraryThumbnailData = this.props.deviceData.map(device => ({
-            rawURL: device.iconURL || deviceIcon,
-            ...device
-        }));
+        const deviceLibraryThumbnailData = this.props.deviceData.filter(device => device.hide !== true)
+            .map(device => ({
+                rawURL: device.iconURL || deviceIcon,
+                ...device
+            }));
 
         return (
             <LibraryComponent
