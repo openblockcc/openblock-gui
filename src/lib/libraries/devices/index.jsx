@@ -42,6 +42,9 @@ import esp32IconURL from './esp32/esp32.png';
 import esp32ConnectionIconURLL from './esp32/esp32-illustration.svg';
 import esp32ConnectionSmallIconURL from './esp32/esp32-small.svg';
 
+import makeymakeyIconURL from './makeymakey/makeymakey.png';
+import makeymakeyConnectionIconURL from './makeymakey/makeymakey-illustration.svg';
+import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
 
 const deviceData = [
     {
@@ -340,6 +343,43 @@ const deviceData = [
         programLanguage: ['block', 'python'],
         tags: ['microPython'],
         helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
+    },
+    {
+        name: 'Makey Makey',
+        deviceId: 'makeyMakey',
+        manufactor: 'makeymakey.com',
+        leanMore: 'https://makeymakey.com/',
+        type: 'arduino',
+        iconURL: makeymakeyIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Makey Makey"
+                description="Description for the Makey Makey device"
+                id="gui.device.makeymakey.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: makeymakeyConnectionIconURL,
+        connectionSmallIconURL: makeymakeyConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their arduino."
+                id="gui.device.arduino.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'c', 'cpp'],
+        tags: ['arduino'],
+        helpLink: 'https://makeymakey.com'
     },
     {
         name: 'Maixduino',

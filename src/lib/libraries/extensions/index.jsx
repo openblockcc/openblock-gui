@@ -16,8 +16,8 @@ import text2speechInsetIconURL from './text2speech/text2speech-small.svg';
 import translateIconURL from './translate/translate.png';
 import translateInsetIconURL from './translate/translate-small.png';
 
-// import makeymakeyIconURL from './makeymakey/makeymakey.png';
-// import makeymakeyInsetIconURL from './makeymakey/makeymakey-small.svg';
+import makeymakeyIconURL from './makeymakey/makeymakey.png';
+import makeymakeyInsetIconURL from './makeymakey/makeymakey-small.svg';
 
 // import microbitIconURL from './microbit/microbit.png';
 // import microbitInsetIconURL from './microbit/microbit-small.svg';
@@ -150,22 +150,28 @@ export default [
         ),
         featured: true,
         internetConnectionRequired: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Makey Makey"
+                description="Name for the Makey Makey extension"
+                id="gui.extension.makeymakey.name"
+            />
+        ),
+        extensionId: 'makeymakey',
+        collaborator: 'JoyLabz',
+        iconURL: makeymakeyIconURL,
+        insetIconURL: makeymakeyInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Make anything into a key."
+                description="Description for the 'Makey Makey' extension"
+                id="gui.extension.makeymakey.description"
+            />
+        ),
+        featured: true
     }
-    // {
-    //     name: 'Makey Makey',
-    //     extensionId: 'makeymakey',
-    //     collaborator: 'JoyLabz',
-    //     iconURL: makeymakeyIconURL,
-    //     insetIconURL: makeymakeyInsetIconURL,
-    //     description: (
-    //         <FormattedMessage
-    //             defaultMessage="Make anything into a key."
-    //             description="Description for the 'Makey Makey' extension"
-    //             id="gui.extension.makeymakey.description"
-    //         />
-    //     ),
-    //     featured: true
-    // }
     // {
     //     name: 'micro:bit',
     //     extensionId: 'microbit',
