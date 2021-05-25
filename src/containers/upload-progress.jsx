@@ -47,6 +47,8 @@ class UploadProgress extends React.Component {
             peripheralName: null,
             text: ''
         };
+        // if the upload progress stack some seconds with out any info.
+        // set state to timeout let user could colse the modal.
         this.uploadTimeout = setTimeout(() => this.handleUploadTimeout(), UPLOAD_TIMEOUT_TIME);
         analytics.event({
             category: 'devices',
@@ -86,17 +88,21 @@ class UploadProgress extends React.Component {
         this.uploadTimeout = setTimeout(() => this.handleUploadTimeout(), UPLOAD_TIMEOUT_TIME);
     }
     handleUploadError (data) {
-        this.setState({
-            text: `${this.state.text + data.message}\r\n${this.props.intl.formatMessage(messages.uploadErrorMessage)}`,
-            phase: PHASES.error
-        });
-        this.props.onUploadError();
-        analytics.event({
-            category: 'devices',
-            action: 'upload error',
-            label: this.props.deviceId
-        });
-        clearTimeout(this.uploadTimeout);
+        // if the upload progress has been in success don't handle the upload error.
+        if (this.state.phase !== PHASES.success){
+            this.setState({
+                text: `${this.state.text + data.message}\r\n` +
+                    `${this.props.intl.formatMessage(messages.uploadErrorMessage)}`,
+                phase: PHASES.error
+            });
+            this.props.onUploadError();
+            analytics.event({
+                category: 'devices',
+                action: 'upload error',
+                label: this.props.deviceId
+            });
+            clearTimeout(this.uploadTimeout);
+        }
     }
     handleUploadSuccess () {
         this.setState({
