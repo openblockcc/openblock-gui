@@ -174,9 +174,9 @@ class Blocks extends React.Component {
         }
 
         // If program mode changed, call functio to update the toolbox
-        if (this.props.isRealtimeMode !== this._programMode) {
-            // Do not updatecode before toolbox is updated.
-            this.props.vm.removeListener('CODE_NEED_UPDATE', this.handleCodeNeedUpdate);
+        if (this.props.isRealtimeMode !== this._programMode && this.props.isRealtimeMode === false) {
+            // Do not update code before toolbox is updated.
+            this._toolboxUpdating = true;
             // Clear possible errors witch print in to code editor.
             this.props.onSetCodeEditorValue('');
             this.onProgramModeUpdate();
@@ -255,8 +255,7 @@ class Blocks extends React.Component {
         this.workspace.updateToolbox(this.props.toolboxXML);
         this._renderedToolboxXML = this.props.toolboxXML;
 
-        // Relisten the CODE_NEED_UPDATE event after the toolbox is updated.
-        this.props.vm.addListener('CODE_NEED_UPDATE', this.handleCodeNeedUpdate);
+        this._toolboxUpdating = false;
 
         // In order to catch any changes that mutate the toolbox during "normal runtime"
         // (variable changes/etc), re-enable toolbox refresh.
@@ -656,8 +655,10 @@ class Blocks extends React.Component {
     handleToolboxUploadFinish () {
         this.props.onToolboxDidUpdate();
     }
-    handleCodeNeedUpdate (){
-        this.props.onSetCodeEditorValue(this.workspaceToCode());
+    handleCodeNeedUpdate () {
+        if (this._toolboxUpdating !== true && this.props.isRealtimeMode === false) {
+            this.props.onSetCodeEditorValue(this.workspaceToCode());
+        }
     }
     handleOpenSoundRecorder () {
         this.props.onOpenSoundRecorder();
