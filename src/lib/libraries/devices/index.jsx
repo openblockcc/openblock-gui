@@ -275,43 +275,6 @@ const deviceData = [
         helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
     },
     {
-        name: 'Micro:bit',
-        deviceId: 'microbit',
-        manufactor: 'microbit.org',
-        leanMore: 'https://microbit.org/',
-        type: 'microbit',
-        iconURL: microbitIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="The pocket-sized computer transforming digital skills learning."
-                description="Description for the 'micro:bit' device"
-                id="gui.device.microbit.description"
-            />
-        ),
-        featured: true,
-        disabled: false,
-        bluetoothRequired: false,
-        serialportRequired: true,
-        defaultBaudRate: '115200',
-        internetConnectionRequired: false,
-        launchPeripheralConnectionFlow: true,
-        useAutoScan: false,
-        connectionIconURL: microbitConnectionIconURLL,
-        connectionSmallIconURL: microbitConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to their microbit."
-                id="gui.device.microbit.connectingMessage"
-            />
-        ),
-        baseToolBoxXml: microbitBaseToolBox,
-        programMode: ['upload'],
-        programLanguage: ['block', 'python'],
-        tags: ['microPython'],
-        helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
-    },
-    {
         name: 'ESP8266',
         deviceId: 'arduinoEsp8266',
         manufactor: 'espressif',
@@ -347,6 +310,43 @@ const deviceData = [
         programLanguage: ['block', 'python'],
         tags: ['arduino'],
         helpLink: ''
+    },
+    {
+        name: 'Micro:bit',
+        deviceId: 'microbit',
+        manufactor: 'microbit.org',
+        leanMore: 'https://microbit.org/',
+        type: 'microbit',
+        iconURL: microbitIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="The pocket-sized computer transforming digital skills learning."
+                description="Description for the 'micro:bit' device"
+                id="gui.device.microbit.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: microbitConnectionIconURLL,
+        connectionSmallIconURL: microbitConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their microbit."
+                id="gui.device.microbit.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: microbitBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'python'],
+        tags: ['microPython'],
+        helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
     },
     {
         name: 'Micro:bit V2',
