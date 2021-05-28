@@ -309,7 +309,7 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'python'],
         tags: ['arduino'],
-        helpLink: ''
+        helpLink: 'https://arduino-esp8266.readthedocs.io/en/3.0.0/index.html'
     },
     {
         name: 'Micro:bit',
