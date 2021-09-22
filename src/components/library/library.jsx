@@ -236,7 +236,7 @@ class LibraryComponent extends React.Component {
                             isUnloadble={this.props.isUnloadble}
                             isPlaying={this.state.playingItem === index}
                             key={typeof dataItem.name === 'string' ? dataItem.name : dataItem.rawURL}
-                            leanMore={dataItem.leanMore}
+                            learnMore={dataItem.learnMore}
                             manufactor={dataItem.manufactor}
                             name={dataItem.name}
                             showPlayButton={this.props.showPlayButton}

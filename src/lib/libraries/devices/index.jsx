@@ -79,7 +79,7 @@ const deviceData = [
         name: 'Arduino Uno',
         deviceId: 'arduinoUno',
         manufactor: 'arduino.cc',
-        leanMore: 'https://store.arduino.cc/usa/arduino-uno-rev3',
+        learnMore: 'https://store.arduino.cc/usa/arduino-uno-rev3',
         type: 'arduino',
         iconURL: arduinoUnoIconURL,
         description: (
@@ -117,7 +117,7 @@ const deviceData = [
         deviceId: 'arduinoNano_arduinoUno',
         deviceExtensionsCompatible: 'arduinoUno',
         manufactor: 'arduino.cc',
-        leanMore: 'https://store.arduino.cc/usa/arduino-nano',
+        learnMore: 'https://store.arduino.cc/usa/arduino-nano',
         type: 'arduino',
         iconURL: arduinoNanoIconURL,
         description: (
@@ -156,7 +156,7 @@ const deviceData = [
         deviceExtensionsCompatible: 'arduinoUno',
         manufactor: 'arduino.cc',
         // Discontinued board
-        // leanMore: 'https://store.arduino.cc/usa/arduino/boards-modules',
+        // learnMore: 'https://store.arduino.cc/usa/arduino/boards-modules',
         type: 'arduino',
         iconURL: arduinoMiniIconURL,
         description: (
@@ -193,7 +193,7 @@ const deviceData = [
         name: 'Arduino Leonardo',
         deviceId: 'arduinoLeonardo',
         manufactor: 'arduino.cc',
-        leanMore: 'https://store.arduino.cc/usa/leonardo',
+        learnMore: 'https://store.arduino.cc/usa/leonardo',
         type: 'arduino',
         iconURL: arduinoLeonardoIconURL,
         description: (
@@ -230,7 +230,7 @@ const deviceData = [
         name: 'Arduino Mega 2560',
         deviceId: 'arduinoMega2560',
         manufactor: 'arduino.cc',
-        leanMore: 'https://store.arduino.cc/usa/mega-2560-r3',
+        learnMore: 'https://store.arduino.cc/usa/mega-2560-r3',
         type: 'arduino',
         iconURL: arduinoMega2560IconURL,
         description: (
@@ -267,7 +267,7 @@ const deviceData = [
         name: 'ESP32',
         deviceId: 'arduinoEsp32',
         manufactor: 'espressif',
-        leanMore: 'https://www.espressif.com/',
+        learnMore: 'https://www.espressif.com/',
         type: 'arduino',
         iconURL: esp32IconURL,
         description: (
@@ -304,7 +304,7 @@ const deviceData = [
         name: 'ESP8266',
         deviceId: 'arduinoEsp8266',
         manufactor: 'espressif',
-        leanMore: 'https://www.espressif.com/',
+        learnMore: 'https://www.espressif.com/',
         type: 'arduino',
         iconURL: esp8266IconURL,
         description: (
@@ -341,7 +341,7 @@ const deviceData = [
         name: 'Micro:bit',
         deviceId: 'microbit',
         manufactor: 'microbit.org',
-        leanMore: 'https://microbit.org/',
+        learnMore: 'https://microbit.org/',
         type: 'microbit',
         iconURL: microbitIconURL,
         description: (
@@ -378,7 +378,7 @@ const deviceData = [
         name: 'Micro:bit V2',
         deviceId: 'microbitV2',
         manufactor: 'microbit.org',
-        leanMore: 'https://microbit.org/',
+        learnMore: 'https://microbit.org/',
         type: 'microbit',
         iconURL: microbitV2IconURL,
         description: (
@@ -415,7 +415,7 @@ const deviceData = [
         name: 'Makey Makey',
         deviceId: 'makeyMakey',
         manufactor: 'makeymakey.com',
-        leanMore: 'https://makeymakey.com/',
+        learnMore: 'https://makeymakey.com/',
         type: 'arduino',
         iconURL: makeymakeyIconURL,
         description: (
