@@ -1,6 +1,9 @@
 # openblock-gui
 
-![](https://img.shields.io/circleci/build/github/openblockcc/openblock-gui/develop) ![](https://img.shields.io/github/license/openblockcc/openblock-gui) [![Gitter](https://badges.gitter.im/openblockcc/community.svg)](https://gitter.im/openblockcc/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![ko-fi](https://img.shields.io/badge/donate-sponsors-ea4aaa.svg?logo=ko-fi)](https://ko-fi.com/X8X66DATO)
+[![Publish Npm Package And Deploy Github Pages](https://github.com/openblockcc/openblock-gui/actions/workflows/publish-npm-package-and-deploy-gh-pages.yml/badge.svg)](https://github.com/openblockcc/openblock-gui/actions/workflows/publish-npm-package-and-deploy-gh-pages.yml) 
+![License](https://img.shields.io/github/license/openblockcc/openblock-gui) 
+[![Gitter](https://badges.gitter.im/openblockcc/community.svg)](https://gitter.im/openblockcc/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) 
+[![ko-fi](https://img.shields.io/badge/donate-sponsors-ea4aaa.svg?logo=ko-fi)](https://ko-fi.com/X8X66DATO) 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fopenblockcc%2Fopenblock-gui.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fopenblockcc%2Fopenblock-gui?ref=badge_shield)
 
 **OpenBlock GUI is a set of React components that comprise the interface for creating and running OpenBlock projects**
@@ -14,9 +17,7 @@ OpenBlock Online: [https://openblockcc.github.io/openblock-gui/develop/](https:/
 
 ## Getting Start
 
-Visit the wiki: [https://openblockcc.github.io/wiki/main](https://openblockcc.github.io/wiki/main)
-
-Visit the wiki on gitee (mirror): [https://openblockcc.gitee.io/wiki/main](https://openblockcc.gitee.io/wiki/main)
+Visit the wiki: [https://wiki.openblock.cc](https://wiki.openblock.cc)
 
 ## Join chat
 

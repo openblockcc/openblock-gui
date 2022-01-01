@@ -1,0 +1,60 @@
+name: Weekly Update Translations
+
+on:
+  schedule:
+    - cron: '0 1 * * 1,4' # Runs at 01:00 UTC on Monday and Thursday
+
+jobs:
+  weekly-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - run: npm ci
+
+      - name: Update openblock-l10n
+        run: npm i --save openblock-l10n@latest
+
+      - name: Check for modified files
+        id: git-check
+        # Check if there are any files update, but ignore the case where only package-lock.json is updated.
+        run: |
+          echo ::set-output name=modified::$(if [ -n "$(git status --porcelain)" ] && [ "$(git status --porcelain)" != " M package-lock.json" ]; then echo "true"; else echo "false"; fi)
+
+      - name: Update translations changes in GitHub repository
+        if: ${{ steps.git-check.outputs.modified == 'true' }}
+        id: git-push
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git add .
+          git commit -m '[skip ci] Update translations from transifex'
+          git remote add origin-translation https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git push --set-upstream origin-translation develop
+
+      - name: Get branch name
+        id: get-branch-name
+        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./build
+          destination_dir: ${{ steps.get-branch-name.outputs.short_ref }}

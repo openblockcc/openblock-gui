@@ -553,12 +553,13 @@ class MenuBar extends React.Component {
                         <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
                     </div>)}
                     <div
-                        className={classNames(styles.menuBarItem, styles.hoverable, {
-                            [styles.active]: this.props.editMenuOpen
-                        })}
-                        onMouseUp={this.props.onClickEdit}
+                        className={classNames(styles.menuBarItem,
+                            this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
+                            {[styles.active]: this.props.editMenuOpen
+                            })}
+                        onMouseUp={this.props.isRealtimeMode ? this.props.onClickEdit : null}
                     >
-                        <div className={classNames(styles.editMenu)}>
+                        <div className={classNames(styles.editMenu)} >
                             <FormattedMessage
                                 defaultMessage="Edit"
                                 description="Text for edit dropdown menu"

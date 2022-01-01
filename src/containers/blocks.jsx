@@ -134,6 +134,12 @@ class Blocks extends React.Component {
         // This is used in componentDidUpdate to control should update toolbox xml.
         this._programMode = this.props.isRealtimeMode;
 
+        // Creat a flag to control insert spaces that have no actual function after a device is added,
+        // to forcefully update the blocks in the flyout area. In order to avoid the problem of the
+        // rendering of the flyout blocks is not triggered because the contents of the toolbox are
+        // exactly the same when the device blocks have the same opcode but different drop - down menus.
+        this.deviceFakeToolboxHead = '';
+
         // we actually never want the workspace to enable "refresh toolbox" - this basically re-renders the
         // entire toolbox every time we reset the workspace.  We call updateToolbox as a part of
         // componentDidUpdate so the toolbox will still correctly be updated
@@ -570,21 +576,20 @@ class Blocks extends React.Component {
             this.props.onSetSupportSwitchMode(false);
         }
 
-        // Update the toolbox with new blocks if possible, use timeout to let props update first
-        this.requestGetXMLAndUpdateToolbox();
-    }
-    requestGetXMLAndUpdateToolbox () {
-        clearTimeout(this.getXMLAndUpdateToolboxTimeout);
-        this.getXMLAndUpdateToolboxTimeout = setTimeout(() => {
-            this.getXMLAndUpdateToolbox();
-        }, 0);
-    }
-    getXMLAndUpdateToolbox () {
-        this.getXMLAndUpdateToolboxTimeout = false;
-        const toolboxXML = this.getToolboxXML();
-        if (toolboxXML) {
-            this.props.updateToolboxState(toolboxXML);
+        if (this.deviceFakeToolboxHead) {
+            this.deviceFakeToolboxHead = '';
+        } else {
+            this.deviceFakeToolboxHead = ' ';
         }
+
+        // Update the toolbox with new blocks if possible, use timeout to let props update first
+        setTimeout(() => {
+            const toolboxXML = this.getToolboxXML();
+            if (toolboxXML) {
+                this.props.updateToolboxState(this.deviceFakeToolboxHead + toolboxXML);
+            }
+        }, 0);
+
     }
     handleDeviceExtensionAdded (deviceExtensionsRegister) {
         if (deviceExtensionsRegister.addMsg) {
@@ -762,6 +767,7 @@ class Blocks extends React.Component {
                     <Prompt
                         defaultValue={this.state.prompt.defaultValue}
                         isStage={vm.runtime.getEditingTarget().isStage}
+                        showListMessage={this.state.prompt.varType === this.ScratchBlocks.LIST_VARIABLE_TYPE}
                         label={this.state.prompt.message}
                         showCloudOption={this.state.prompt.showCloudOption}
                         showVariableOptions={this.state.prompt.showVariableOptions}
