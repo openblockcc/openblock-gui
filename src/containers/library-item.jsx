@@ -22,7 +22,6 @@ class LibraryItem extends React.PureComponent {
             'startRotatingIcons',
             'stopRotatingIcons'
         ]);
-        this.hasIconsArray = Array.isArray(props.icons);
         this.state = {
             iconIndex: 0,
             isRotatingIcon: false,
@@ -73,7 +72,7 @@ class LibraryItem extends React.PureComponent {
         // only show hover effects on the item if not showing a play button
         if (!this.props.showPlayButton) {
             this.props.onMouseEnter(this.props.id);
-            if (this.hasIconsArray) {
+            if (this.props.icons && this.props.icons.length) {
                 this.stopRotatingIcons();
                 this.setState({
                     isRotatingIcon: true
@@ -85,7 +84,7 @@ class LibraryItem extends React.PureComponent {
         // only show hover effects on the item if not showing a play button
         if (!this.props.showPlayButton) {
             this.props.onMouseLeave(this.props.id);
-            if (this.hasIconsArray) {
+            if (this.props.icons && this.props.icons.length) {
                 this.setState({
                     isRotatingIcon: false
                 }, this.stopRotatingIcons);
@@ -111,22 +110,23 @@ class LibraryItem extends React.PureComponent {
         const nextIconIndex = (this.state.iconIndex + 1) % this.props.icons.length;
         this.setState({iconIndex: nextIconIndex});
     }
-    curIconSource () {
-        if (this.hasIconsArray) {
-            if (this.state.isRotatingIcon &&
-                this.state.iconIndex < this.props.icons.length &&
-                this.props.icons[this.state.iconIndex]) {
-                // multiple icons, currently animating: show current frame
-                return this.props.icons[this.state.iconIndex];
-            }
-            // multiple icons, not currently animating: show first frame
-            return this.props.icons[0];
+    curIconMd5 () {
+        const iconMd5Prop = this.props.iconMd5;
+        if (this.props.icons &&
+            this.state.isRotatingIcon &&
+            this.state.iconIndex < this.props.icons.length) {
+            const icon = this.props.icons[this.state.iconIndex] || {};
+            return icon.md5ext || // 3.0 library format
+                icon.baseLayerMD5 || // 2.0 library format, TODO GH-5084
+                iconMd5Prop;
         }
-        // single icon
-        return this.props.icons;
+        return iconMd5Prop;
     }
     render () {
-        const iconSource = this.curIconSource();
+        const iconMd5 = this.curIconMd5();
+        const iconURL = iconMd5 ?
+            `https://openblockcc.github.io/openblock-asset/assets/${iconMd5}` :
+            this.props.iconRawURL;
         return (
             <LibraryItemComponent
                 author={this.props.author}
@@ -140,7 +140,8 @@ class LibraryItem extends React.PureComponent {
                 featured={this.props.featured}
                 helpLink={this.props.helpLink}
                 hidden={this.props.hidden}
-                iconSource={iconSource}
+                iconURL={iconURL}
+                icons={this.props.icons}
                 id={this.props.id}
                 insetIconURL={this.props.insetIconURL}
                 internetConnectionRequired={this.props.internetConnectionRequired}
@@ -184,10 +185,14 @@ LibraryItem.propTypes = {
     featured: PropTypes.bool,
     helpLink: PropTypes.string,
     hidden: PropTypes.bool,
-    icons: PropTypes.oneOfType([
-        LibraryItemComponent.propTypes.iconSource, // single icon
-        PropTypes.arrayOf(LibraryItemComponent.propTypes.iconSource) // rotating icons
-    ]),
+    iconMd5: PropTypes.string,
+    iconRawURL: PropTypes.string,
+    icons: PropTypes.arrayOf(
+        PropTypes.shape({
+            baseLayerMD5: PropTypes.string, // 2.0 library format, TODO GH-5084
+            md5ext: PropTypes.string // 3.0 library format
+        })
+    ),
     id: PropTypes.number.isRequired,
     insetIconURL: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
