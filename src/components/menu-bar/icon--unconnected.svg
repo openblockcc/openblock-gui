@@ -1,15 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0"
-    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAQAAAAngNWGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAAmJLR0QA/4ePzL8AAAAJcEhZ
-cwAACxMAAAsTAQCanBgAAAAHdElNRQfkChsQCwaaGOSFAAABWklEQVQoz4XRv0tbURjG8W+u14jY
-ksFCwSqKQysZHEWoiV38E6oWqS7i0KkFNxcHV8FJwcVVRx3sKLYWhEALCk6aTmpBHPwRaWuTb4fk
-XoNo8gxnePicw/ty8JtZESctmLNbAMRucxaclHKD+tMpU26qRcdiOGZR/Wyy3ISU6GKBN3QAAUmi
-JAniEwiY5ZhmRklTMwFzvOMLVm6GRDPdS4h8ZYRppngKvCegJJTIAPCCcTb8lSAavdG3HvhQCmaM
-WasvxVeu+ac2zLrvhE22+MmTWjDjjTcu2iFm3Lb4GHztlVpy1yHxufNexvDC/jvY6VGlPnPGlA1V
-q+Wjb0VscDl+4dZ1e8UeV/2r/nalmqbdq5rr0AmTPvGjp6p+dziC2OeWtzG9dsk2caCyWgHu6DM/
-eB7TMwelstqF1f8qtpuPYd52y23oiD9C6iSB/1hjpy6EBMBxUB+W8x9jO3l/wCVG6AAAACV0RVh0
-ZGF0ZTpjcmVhdGUAMjAyMC0xMC0yN1QxNjoxMTowNiswMDowMDBIimkAAAAldEVYdGRhdGU6bW9k
-aWZ5ADIwMjAtMTAtMjdUMTY6MTE6MDYrMDA6MDBBFTLVAAAAAElFTkSuQmCC" />
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="20px" height="20px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 2.72 2.72"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFE}
+   ]]>
+  </style>
+ </defs>
+ <g id="图层_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="2.72" height="2.72"/>
+  <path class="fil1" d="M1.81 2.14l0 0.58 -0.85 0 0 -0.63c-0.31,-0.02 -0.57,-0.31 -0.57,-0.65l0 -0.48 1.42 1.18zm0.52 -1.33l0 0.63c0,0.18 -0.08,0.35 -0.19,0.47l0.58 0.48 0 0.26 -2.72 -2.26 0 -0.26 0.68 0.57 0 -0.46c0,-0.1 0.08,-0.17 0.17,-0.17l0.11 0c0.09,0 0.17,0.07 0.17,0.17l0 0.57 0.46 0 0 -0.57c0,-0.1 0.07,-0.17 0.17,-0.17l0.11 0c0.09,0 0.16,0.07 0.16,0.17l0 0.57 0.3 0z"/>
+ </g>
 </svg>

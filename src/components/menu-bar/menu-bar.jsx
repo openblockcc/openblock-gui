@@ -415,15 +415,35 @@ class MenuBar extends React.Component {
         // each item must have a 'title' FormattedMessage and a 'handleClick' function
         // generate a menu with items for each object in the array
         return (
-            onClickAbout.map(itemProps => (
-                <MenuItem
-                    key={itemProps.title}
-                    isRtl={this.props.isRtl}
-                    onClick={this.wrapAboutMenuCallback(itemProps.onClick)}
+            <div
+                className={classNames(styles.menuBarItem, styles.hoverable, {
+                    [styles.active]: this.props.aboutMenuOpen
+                })}
+                onMouseUp={this.props.onRequestOpenAbout}
+            >
+                <img
+                    className={styles.aboutIcon}
+                    src={aboutIcon}
+                />
+                <MenuBarMenu
+                    className={classNames(styles.menuBarMenu)}
+                    open={this.props.aboutMenuOpen}
+                    place={this.props.isRtl ? 'right' : 'left'}
+                    onRequestClose={this.props.onRequestCloseAbout}
                 >
-                    {itemProps.title}
-                </MenuItem>
-            ))
+                    {
+                        onClickAbout.map(itemProps => (
+                            <MenuItem
+                                key={itemProps.title}
+                                isRtl={this.props.isRtl}
+                                onClick={this.wrapAboutMenuCallback(itemProps.onClick)}
+                            >
+                                {itemProps.title}
+                            </MenuItem>
+                        ))
+                    }
+                </MenuBarMenu>
+            </div>
         );
     }
     wrapAboutMenuCallback (callback) {
@@ -514,152 +534,11 @@ class MenuBar extends React.Component {
                             })}
                             draggable={false}
                             src={this.props.logo}
-                            onClick={this.props.onClickLogo}
+                            //onClick={this.props.onClickLogo}
                         />
                     </div>
-                    {(this.props.canChangeLanguage) && (<div
-                        className={classNames(styles.menuBarItem, styles.hoverable, styles.languageMenu)}
-                    >
-                        <div>
-                            <img
-                                className={styles.languageIcon}
-                                src={languageIcon}
-                            />
-                            <img
-                                className={styles.languageCaret}
-                                src={dropdownCaret}
-                            />
-                        </div>
-                        <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
-                    </div>)}
-                    <div
-                        className={classNames(styles.menuBarItem,
-                            this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
-                            {[styles.active]: this.props.editMenuOpen
-                            })}
-                        onMouseUp={this.props.isRealtimeMode ? this.props.onClickEdit : null}
-                    >
-                        <div className={classNames(styles.editMenu)} >
-                            <FormattedMessage
-                                defaultMessage="Edit"
-                                description="Text for edit dropdown menu"
-                                id="gui.menuBar.edit"
-                            />
-                        </div>
-                        <MenuBarMenu
-                            className={classNames(styles.menuBarMenu)}
-                            open={this.props.editMenuOpen}
-                            place={this.props.isRtl ? 'left' : 'right'}
-                            onRequestClose={this.props.onRequestCloseEdit}
-                        >
-                            <DeletionRestorer>{(handleRestore, {restorable, deletedItem}) => (
-                                <MenuItem
-                                    className={classNames({[styles.disabled]: !restorable})}
-                                    onClick={this.handleRestoreOption(handleRestore)}
-                                >
-                                    {this.restoreOptionMessage(deletedItem)}
-                                </MenuItem>
-                            )}</DeletionRestorer>
-                            <MenuSection>
-                                <TurboMode>{(toggleTurboMode, {turboMode}) => (
-                                    <MenuItem onClick={toggleTurboMode}>
-                                        {turboMode ? (
-                                            <FormattedMessage
-                                                defaultMessage="Turn off Turbo Mode"
-                                                description="Menu bar item for turning off turbo mode"
-                                                id="gui.menuBar.turboModeOff"
-                                            />
-                                        ) : (
-                                            <FormattedMessage
-                                                defaultMessage="Turn on Turbo Mode"
-                                                description="Menu bar item for turning on turbo mode"
-                                                id="gui.menuBar.turboModeOn"
-                                            />
-                                        )}
-                                    </MenuItem>
-                                )}</TurboMode>
-                            </MenuSection>
-                        </MenuBarMenu>
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
-                    <div
-                        className={classNames(styles.menuBarItem, styles.hoverable)}
-                        onMouseUp={this.handleSelectDeviceMouseUp}
-                    >
-                        <img
-                            className={styles.deviceIcon}
-                            src={deviceIcon}
-                        />
-                        {
-                            this.props.deviceName ? (
-                                <div>
-                                    {this.props.deviceName}
-                                </div>
-                            ) : (
-                                <FormattedMessage
-                                    defaultMessage="No device selected"
-                                    description="Text for menubar no device select button"
-                                    id="gui.menuBar.noDeviceSelected"
-                                />
-                            )}
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
-                    <div
-                        className={classNames(styles.menuBarItem, styles.hoverable)}
-                        onMouseUp={this.handleConnectionMouseUp}
-                    >
-                        {this.props.peripheralName ? (
-                            <React.Fragment>
-                                <img
-                                    className={styles.connectedIcon}
-                                    src={connectedIcon}
-                                />
-                                {this.props.peripheralName}
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <img
-                                    className={styles.unconnectedIcon}
-                                    src={unconnectedIcon}
-                                />
-                                <FormattedMessage
-                                    defaultMessage="Unconnected"
-                                    description="Text for menubar unconnected button"
-                                    id="gui.menuBar.noConnection"
-                                />
-                            </React.Fragment>
-                        )}
-                    </div>
-                    {/* <div
-                        className={classNames(styles.menuBarItem)}
-                    >
-                        <img
-                            className={classNames(styles.linkSocketIcon)}
-                            src={linkSocketIcon}
-                        />
-                    </div>*/}
-                </div>
-                <div className={styles.fileMenu}>
-                    {this.props.canEditTitle ? (
-                        <div className={classNames(styles.menuBarItem, styles.growable)}>
-                            <MenuBarItemTooltip
-                                enable
-                                id="title-field"
-                            >
-                                <ProjectTitleInput
-                                    className={classNames(styles.titleFieldGrowable)}
-                                />
-                            </MenuBarItemTooltip>
-                        </div>
-                    ) : ((this.props.authorUsername && this.props.authorUsername !== this.props.username) ? (
-                        <AuthorInfo
-                            className={styles.authorInfo}
-                            imageUrl={this.props.authorThumbnailUrl}
-                            projectTitle={this.props.projectTitle}
-                            userId={this.props.authorId}
-                            username={this.props.authorUsername}
-                        />
-                    ) : null)}
+                    <div className={styles.fileMenu}>
+                    
                     {(this.props.canManageFiles) && (
                         <div
                             className={classNames(styles.menuBarItem, styles.hoverable, {
@@ -731,7 +610,151 @@ class MenuBar extends React.Component {
                             </MenuBarMenu>
                         </div>
                     )}
+                    {this.props.canEditTitle ? (
+                        <div className={classNames(styles.menuBarItem, styles.growable)}>
+                            <MenuBarItemTooltip
+                                enable
+                                id="title-field"
+                            >
+                                <ProjectTitleInput
+                                    className={classNames(styles.titleFieldGrowable)}
+                                />
+                            </MenuBarItemTooltip>
+                        </div>
+                    ) : ((this.props.authorUsername && this.props.authorUsername !== this.props.username) ? (
+                        <AuthorInfo
+                            className={styles.authorInfo}
+                            imageUrl={this.props.authorThumbnailUrl}
+                            projectTitle={this.props.projectTitle}
+                            userId={this.props.authorId}
+                            username={this.props.authorUsername}
+                        />
+                    ) : null)}
                 </div>
+                    {(this.props.canChangeLanguage) && (<div
+                        className={classNames(styles.menuBarItem, styles.hoverable, styles.languageMenu)}
+                    >
+                        <div>
+                            <img
+                                className={styles.languageIcon}
+                                src={languageIcon}
+                            />
+                            <img
+                                className={styles.languageCaret}
+                                src={dropdownCaret}
+                            />
+                        </div>
+                        <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
+                    </div>)}
+                    {/*
+                    <div
+                        className={classNames(styles.menuBarItem,
+                            this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
+                            {[styles.active]: this.props.editMenuOpen
+                            })}
+                        onMouseUp={this.props.isRealtimeMode ? this.props.onClickEdit : null}
+                    >
+                        <div className={classNames(styles.editMenu)} >
+                            <FormattedMessage
+                                defaultMessage="Edit"
+                                description="Text for edit dropdown menu"
+                                id="gui.menuBar.edit"
+                            />
+                        </div>
+                        <MenuBarMenu
+                            className={classNames(styles.menuBarMenu)}
+                            open={this.props.editMenuOpen}
+                            place={this.props.isRtl ? 'left' : 'right'}
+                            onRequestClose={this.props.onRequestCloseEdit}
+                        >
+                            <DeletionRestorer>{(handleRestore, {restorable, deletedItem}) => (
+                                <MenuItem
+                                    className={classNames({[styles.disabled]: !restorable})}
+                                    onClick={this.handleRestoreOption(handleRestore)}
+                                >
+                                    {this.restoreOptionMessage(deletedItem)}
+                                </MenuItem>
+                            )}</DeletionRestorer>
+                            <MenuSection>
+                                <TurboMode>{(toggleTurboMode, {turboMode}) => (
+                                    <MenuItem onClick={toggleTurboMode}>
+                                        {turboMode ? (
+                                            <FormattedMessage
+                                                defaultMessage="Turn off Turbo Mode"
+                                                description="Menu bar item for turning off turbo mode"
+                                                id="gui.menuBar.turboModeOff"
+                                            />
+                                        ) : (
+                                            <FormattedMessage
+                                                defaultMessage="Turn on Turbo Mode"
+                                                description="Menu bar item for turning on turbo mode"
+                                                id="gui.menuBar.turboModeOn"
+                                            />
+                                        )}
+                                    </MenuItem>
+                                )}</TurboMode>
+                            </MenuSection>
+                        </MenuBarMenu>
+                    </div>*/}
+                    <Divider className={classNames(styles.divider)} />
+                    <div
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onMouseUp={this.handleSelectDeviceMouseUp}
+                    >
+                        <img
+                            className={styles.deviceIcon}
+                            src={deviceIcon}
+                        />
+                        {
+                            this.props.deviceName ? (
+                                <div>
+                                    {this.props.deviceName}
+                                </div>
+                            ) : (
+                                <FormattedMessage
+                                    defaultMessage="No device selected"
+                                    description="Text for menubar no device select button"
+                                    id="gui.menuBar.noDeviceSelected"
+                                />
+                            )}
+                    </div>
+                    <Divider className={classNames(styles.divider)} />
+                    <div
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onMouseUp={this.handleConnectionMouseUp}
+                    >
+                        {this.props.peripheralName ? (
+                            <React.Fragment>
+                                <img
+                                    className={styles.connectedIcon}
+                                    src={connectedIcon}
+                                />
+                                {this.props.peripheralName}
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <img
+                                    className={styles.unconnectedIcon}
+                                    src={unconnectedIcon}
+                                />
+                                <FormattedMessage
+                                    defaultMessage="Unconnected"
+                                    description="Text for menubar unconnected button"
+                                    id="gui.menuBar.noConnection"
+                                />
+                            </React.Fragment>
+                        )}
+                    </div>
+                    {/* <div
+                        className={classNames(styles.menuBarItem)}
+                    >
+                        <img
+                            className={classNames(styles.linkSocketIcon)}
+                            src={linkSocketIcon}
+                        />
+                    </div>*/}
+                </div>
+                
                 <div className={styles.tailMenu}>
                     <div
                         className={classNames(styles.menuBarItem, styles.hoverable)}
@@ -822,7 +845,7 @@ class MenuBar extends React.Component {
                             <MenuBarMenu
                                 className={classNames(styles.menuBarMenu)}
                                 open={this.props.settingMenuOpen}
-                                place={this.props.isRtl ? 'right' : 'left'}
+                                place={'left'}
                                 onRequestClose={this.props.onRequestCloseSetting}
                             >
                                 <MenuSection>
@@ -847,14 +870,11 @@ class MenuBar extends React.Component {
                                         {installDriver}
                                     </MenuItem>
                                 </MenuSection>
-                                <MenuSection>
-                                    {typeof this.props.onClickAbout === 'object' ? aboutButton : null}
-                                </MenuSection>
                             </MenuBarMenu>
                         </div>
                     ) : null}
                 </div>
-                { (typeof this.props.onClickAbout === 'function') ? aboutButton : null}
+                {aboutButton}
             </Box>
         );
     }

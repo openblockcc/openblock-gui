@@ -1,15 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0"
-    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAhFBMVEUAAAD///8GBwf/////
-////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////8GBwcG
-Bwf///+oCCY4AAAAK3RSTlMAAABk9csiBrf9Wwi9YRhm2Io9Qfr2O/PxOB/d2xwDmirSNr/7FGrt
-3gIB9A6FHwAAAAFiS0dEAf8CLd4AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfkChsQCyRP
-eKVhAAAAmElEQVQY05XQRxKDMAwFUASmd0N66DXR/e8X2TiBybDhr/68jYqmaQAGMy2gYpnMACoU
-sB10PYGei46t0A8QQ4EhYuAfRIjiBDHlWcZTxCSOhAJniJifKDkVxlf85TCeL1u83iTeH1t8FhLL
-aotVuSxaN6s1tboI2q5fqO9a9SXSYZyETeNApuuKi1ngLIforz187+A3f/gBgj8fmFkLH6QAAAAl
-dEVYdGRhdGU6Y3JlYXRlADIwMjAtMTAtMjdUMTY6MTE6MzYrMDA6MDC+x42KAAAAJXRFWHRkYXRl
-Om1vZGlmeQAyMDIwLTEwLTI3VDE2OjExOjM2KzAwOjAwz5o1NgAAAABJRU5ErkJggg==" />
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="20px" height="20px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 3.91 3.91"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFE}
+   ]]>
+  </style>
+ </defs>
+ <g id="图层_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="3.91" height="3.91"/>
+  <path class="fil1" d="M3.35 1.16l0 0.91c0,0.47 -0.33,0.86 -0.75,0.92l0 0.92 -1.21 0 0 -0.91c-0.46,-0.03 -0.83,-0.43 -0.83,-0.93l0 -0.91 0.42 0 0 -0.82c0,-0.13 0.11,-0.24 0.24,-0.24l0.16 0c0.13,0 0.24,0.11 0.24,0.24l0 0.82 0.67 0 0 -0.82c0,-0.13 0.1,-0.24 0.24,-0.24l0.16 0c0.13,0 0.24,0.11 0.24,0.24l0 0.82 0.42 0z"/>
+ </g>
 </svg>

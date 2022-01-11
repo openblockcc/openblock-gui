@@ -1,15 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0"
-    href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAQAAAAngNWGAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAAmJLR0QA/4ePzL8AAAAJcEhZ
-cwAACxMAAAsTAQCanBgAAAAHdElNRQfkChsQMAvYG3cAAAABL0lEQVQoz5WSMUsCcRjGf56XbcZJ
-EIQ4RmtbSUUKgghyY9BU36HFDxCNjroVrk3S1tANNdcm6JxKkzgc13l6T4MSV5xw/db3+T+8z/t/
-ICEpAIGBTTlm/kyXcCWSpbwONZYkzRUqylhFFWQJgwpNHGy2gCfq3PAVccxi49CkggKF8tSWq7nO
-hXY1iDi6astTqMCgwQsBMyDNGXlO2f615YyAVxopwR55drhjk4AhObIRmc8VnwzpswpUla84fFUF
-gKkcNiXeCGPPF7LPhRy6qKeJPLXkxjq6asnTRD0j6c+YHGNTok/8E4M+Dzh0/xFmeR4LxToKi7I+
-GJhcU+eAexaxwgVHXPLOo8ktaXwya1Nk2OCEokGNDiOma4VTRnSoLWtWUHFVs7/81Cx5cZPyDcMB
-AZ63tDKJAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTEwLTI3VDE2OjQ4OjExKzAwOjAwtAcz8QAA
-ACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0xMC0yN1QxNjo0ODoxMSswMDowMMVai00AAAAASUVORK5C
-YII=" />
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="20px" height="20px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 1.67 1.67"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFE}
+   ]]>
+  </style>
+ </defs>
+ <g id="图层_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="1.67" height="1.67"/>
+  <path class="fil1" d="M0.51 0.2l0.65 0c0.07,0 0.12,0.06 0.12,0.13l0 1.01c0,0.07 -0.05,0.13 -0.12,0.13l-0.65 0c-0.06,0 -0.12,-0.06 -0.12,-0.13l0 -1.01c0,-0.07 0.06,-0.13 0.12,-0.13zm0.11 0.14c0.05,0 0.1,0.04 0.1,0.1 0,0.05 -0.05,0.1 -0.1,0.1 -0.06,0 -0.1,-0.05 -0.1,-0.1 0,-0.06 0.04,-0.1 0.1,-0.1zm0.72 -0.01l0.19 0c0.04,0 0.08,0.04 0.08,0.08l0 0.04c0,0.04 -0.04,0.08 -0.08,0.08l-0.19 0 0 -0.2zm0 0.4l0.19 0c0.04,0 0.08,0.04 0.08,0.08l0 0.04c0,0.04 -0.04,0.08 -0.08,0.08l-0.19 0 0 -0.2zm0 0.4l0.19 0c0.04,0 0.08,0.04 0.08,0.08l0 0.04c0,0.04 -0.04,0.08 -0.08,0.08l-0.19 0 0 -0.2zm-1.01 -0.8l-0.19 0c-0.04,0 -0.07,0.04 -0.07,0.08l0 0.04c0,0.04 0.03,0.08 0.07,0.08l0.19 0 0 -0.2zm0 0.4l-0.19 0c-0.04,0 -0.07,0.04 -0.07,0.08l0 0.04c0,0.04 0.03,0.08 0.07,0.08l0.19 0 0 -0.2zm0 0.4l-0.19 0c-0.04,0 -0.07,0.04 -0.07,0.08l0 0.04c0,0.04 0.03,0.08 0.07,0.08l0.19 0 0 -0.2z"/>
+ </g>
 </svg>

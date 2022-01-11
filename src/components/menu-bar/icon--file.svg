@@ -1,43 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">  <image id="image0" width="20" height="20" x="0" y="0"
-    href="data:image/png;base64,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
-AERvdCBHYWluIDE1JeymfsoAAAAASUVORK5CYII=" />
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="20px" height="20px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 2.05 2.05"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:none}
+    .fil1 {fill:#FEFEFE;fill-rule:nonzero}
+   ]]>
+  </style>
+ </defs>
+ <g id="图层_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="2.05" height="2.05"/>
+  <path class="fil1" d="M0.49 1.28c0,0.05 0.04,0.1 0.1,0.1 0.05,0 0.09,-0.05 0.09,-0.1 0,-0.05 -0.04,-0.1 -0.09,-0.1 -0.06,0 -0.1,0.05 -0.1,0.1zm-0.37 -0.98l0 1.38c0,0.15 0.12,0.13 0.12,0.13l1.61 0c0.14,0 0.12,-0.14 0.12,-0.14l0 -1.16c0,-0.14 -0.13,-0.13 -0.13,-0.13 0,0 -0.77,0 -0.73,0 -0.04,0 -0.06,-0.02 -0.06,-0.02 0,0 -0.03,-0.05 -0.09,-0.14 -0.05,-0.08 -0.12,-0.07 -0.12,-0.07l-0.57 0c-0.13,0 -0.15,0.12 -0.15,0.15zm0.37 0.62c0,0.05 0.04,0.09 0.1,0.09 0.05,0 0.09,-0.04 0.09,-0.09 0,-0.06 -0.04,-0.1 -0.09,-0.1 -0.06,0 -0.1,0.04 -0.1,0.1zm1.36 0.68c0,0.05 -0.04,0.1 -0.09,0.1l-1.43 0c-0.06,0 -0.1,-0.05 -0.1,-0.1l0 -0.97c0,-0.05 0.04,-0.09 0.1,-0.09l1.43 0c0.05,0 0.09,0.04 0.09,0.09l0 0.97zm-0.3 -0.23l-0.62 0c-0.05,0 -0.1,-0.04 -0.1,-0.09 0,-0.05 0.05,-0.09 0.1,-0.09l0.62 0c0.05,0 0.09,0.04 0.09,0.09 0,0.05 -0.04,0.09 -0.09,0.09zm0 -0.36l-0.62 0c-0.05,0 -0.1,-0.04 -0.1,-0.09 0,-0.05 0.05,-0.09 0.1,-0.09l0.62 0c0.05,0 0.09,0.04 0.09,0.09 0,0.05 -0.04,0.09 -0.09,0.09z"/>
+ </g>
 </svg>
