@@ -40,6 +40,10 @@ import esp32IconURL from './esp32/esp32.png';
 import esp32ConnectionIconURLL from './esp32/esp32-illustration.svg';
 import esp32ConnectionSmallIconURL from './esp32/esp32-small.svg';
 
+import ZQ202IconURL from './ZQ202/ZQ202.png';
+import ZQ202ConnectionIconURLL from './ZQ202/ZQ202-illustration.svg';
+import ZQ202ConnectionSmallIconURL from './ZQ202/ZQ202-small.svg';
+
 import esp8266IconURL from './esp8266/esp8266.png';
 import esp8266ConnectionIconURL from './esp8266/esp8266-illustration.svg';
 import esp8266ConnectionSmallIconURL from './esp8266/esp8266-small.svg';
@@ -75,43 +79,117 @@ const deviceData = [
         programMode: ['realtime'],
         programLanguage: ['block'],
         tags: ['realtime']
+    },*/
+    {
+        name: '卓器机器人202',
+        deviceId: 'ZQ202',
+        //manufactor: '卓器机器人',
+        //learnMore: 'https://www.espressif.com/',
+        type: 'arduino',
+        iconURL: ZQ202IconURL,
+        //description: (
+            //<FormattedMessage
+                //defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
+                //description="Description for the esp32 device"
+                //id="gui.device.arduinoEsp32.description"
+            ///>
+        //),
+        featured: true,
+        disabled: false,
+        //bluetoothRequired: false,
+        //serialportRequired: true,
+        defaultBaudRate: '115200',
+        //internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: false,
+        useAutoScan: false,
+        connectionIconURL: ZQ202ConnectionIconURLL,
+        connectionSmallIconURL: ZQ202ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their esp32."
+                id="gui.device.arduinoEsp32.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block'],
+        tags: ['arduino'],
+        //helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
     },
+    {
+        name: 'Esp32',
+        deviceId: 'arduinoEsp32',
+        //manufactor: '卓器机器人',
+        //learnMore: 'https://www.espressif.com/',
+        type: 'arduino',
+        iconURL: esp32IconURL,
+        //description: (
+            //<FormattedMessage
+                //defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
+                //description="Description for the esp32 device"
+                //id="gui.device.arduinoEsp32.description"
+            ///>
+        //),
+        featured: true,
+        disabled: false,
+        //bluetoothRequired: false,
+        //serialportRequired: true,
+        defaultBaudRate: '115200',
+        //internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: false,
+        useAutoScan: false,
+        connectionIconURL: esp32ConnectionIconURLL,
+        connectionSmallIconURL: esp32ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their esp32."
+                id="gui.device.arduinoEsp32.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: arduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block'],
+        tags: ['arduino'],
+        //helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
+    },/*
     {
         name: 'Arduino Uno',
         deviceId: 'arduinoUno',
-        manufactor: 'arduino.cc',
-        learnMore: 'https://store.arduino.cc/usa/arduino-uno-rev3',
+        //manufactor: 'arduino.cc',
+        //learnMore: 'https://store.arduino.cc/usa/arduino-uno-rev3',
         type: 'arduino',
         iconURL: arduinoUnoIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="A great board to get started with electronics and coding."
-                description="Description for the Arduino Uno device"
-                id="gui.device.arduinoUno.description"
-            />
-        ),
+        //description: (
+            //<FormattedMessage
+                //defaultMessage="A great board to get started with electronics and coding."
+                //description="Description for the Arduino Uno device"
+                //id="gui.device.arduinoUno.description"
+            ///>
+        //),
         featured: true,
         disabled: false,
-        bluetoothRequired: false,
-        serialportRequired: true,
+        //bluetoothRequired: false,  //蓝牙连接图标
+        //serialportRequired: true,  //串口连接图标
         defaultBaudRate: '9600',
-        internetConnectionRequired: false,
+        //internetConnectionRequired: false,   //网络连接图标
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
         connectionIconURL: arduinoUnoConnectionIconURLL,
         connectionSmallIconURL: arduinoUnoConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
-            />
-        ),
+        //connectingMessage: (
+            //<FormattedMessage
+                //defaultMessage="Connecting"
+                //description="Message to help people connect to their arduino."
+                //id="gui.device.arduino.connectingMessage"
+            ///>
+        //),
         baseToolBoxXml: arduinoBaseToolBox,
-        programMode: ['realtime', 'upload'],
+        programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/usa/arduino-uno-rev3'
+        //helpLink: 'https://store.arduino.cc/usa/arduino-uno-rev3'
     },
     {
         name: 'Arduino Nano',
@@ -150,7 +228,7 @@ const deviceData = [
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
         helpLink: 'https://store.arduino.cc/usa/arduino-nano'
-    },
+    }*//*
     {
         name: 'Arduino Mini',
         deviceId: 'arduinoMini_arduinoUno',
@@ -187,9 +265,10 @@ const deviceData = [
         baseToolBoxXml: arduinoBaseToolBox,
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
-        tags: ['arduino']
-        // helpLink: 'https://store.arduino.cc/usa/arduino-nano'
-    },
+        tags: ['arduino'],
+        helpLink: 'https://store.arduino.cc/usa/arduino-nano'
+    },*/
+    /*
     {
         name: 'Arduino Leonardo',
         deviceId: 'arduinoLeonardo',
@@ -264,43 +343,7 @@ const deviceData = [
         tags: ['arduino'],
         helpLink: 'https://store.arduino.cc/usa/mega-2560-r3'
     },*/
-    {
-        name: 'ESP32',
-        deviceId: 'arduinoEsp32',
-        manufactor: 'espressif',
-        learnMore: 'https://www.espressif.com/',
-        type: 'arduino',
-        iconURL: esp32IconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
-                description="Description for the esp32 device"
-                id="gui.device.arduinoEsp32.description"
-            />
-        ),
-        featured: true,
-        disabled: false,
-        bluetoothRequired: false,
-        serialportRequired: true,
-        defaultBaudRate: '115200',
-        internetConnectionRequired: false,
-        launchPeripheralConnectionFlow: true,
-        useAutoScan: false,
-        connectionIconURL: esp32ConnectionIconURLL,
-        connectionSmallIconURL: esp32ConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to their esp32."
-                id="gui.device.arduinoEsp32.connectingMessage"
-            />
-        ),
-        baseToolBoxXml: arduinoBaseToolBox,
-        programMode: ['upload'],
-        programLanguage: ['block', 'c', 'cpp'],
-        tags: ['arduino'],
-        helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
-    },
+    
     /*
     {
         name: 'ESP8266',
@@ -473,7 +516,7 @@ const deviceData = [
 const analysisRealDeviceId = deviceId => {
     if (deviceId){
         // if the id contain '_' use the string afer the '_'.
-        if (deviceId.indexOf('_') !== -1) {
+        if (deviceId.indexOf('_') !== 0) {
             deviceId = deviceId.split('_')[1];
         }
     }
@@ -497,6 +540,8 @@ const makeDeviceLibrary = data => {
             }
 
             // This is a third party device. Try to parse it's parent deivce.
+            //这是一个第三方设备。尝试解析它的母公司deivce。
+            
             const realDeviceId = analysisRealDeviceId(dev.deviceId);
             if (realDeviceId) {
                 const parentDevice = deviceData.find(item => realDeviceId === item.deviceId);
@@ -509,7 +554,7 @@ const makeDeviceLibrary = data => {
         })
         .filter(dev => dev); // filter null data.
 
-    fullData.unshift(deviceData[0]); // add unselect deive in the head.
+    //fullData.unshift(deviceData[0]); // add unselect deive in the head.
 
     return fullData;
 };
