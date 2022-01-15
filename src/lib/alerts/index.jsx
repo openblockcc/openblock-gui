@@ -302,6 +302,36 @@ const alerts = [
         ),
         level: AlertLevels.WARN,
         maxDisplaySecs: 5
+    },
+    {
+        alertId: 'codeEditorIsLocked',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['codeEditorIsLocked', 'codeEditorIsUnlocked'],
+        closeButton: true,
+        content: (
+            <FormattedMessage
+                defaultMessage="Code editor is in lock state, if you want to edit the code, please click the unlock button first" // eslint-disable-line max-len
+                description="Message indicating that code editor is in lock state"
+                id="gui.alerts.codeEditorIsLocked"
+            />
+        ),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 5
+    },
+    {
+        alertId: 'codeEditorIsUnlocked',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['codeEditorIsUnlocked', 'codeEditorIslocked'],
+        closeButton: true,
+        content: (
+            <FormattedMessage
+                defaultMessage="Code editor is in unlock state, if you want to generate code from block, please click the lock button first" // eslint-disable-line max-len
+                description="Message indicating that code editor is in unlock state"
+                id="gui.alerts.codeEditorIsUnlocked"
+            />
+        ),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 5
     }
 ];
 

@@ -299,7 +299,8 @@ const GUIComponent = props => {
                                     </Tab>
                                     <Tab
                                         className={classNames(tabClassNames.tab,
-                                            isRealtimeMode ? styles.hideCustomAndSoundTab : styles.showCustomAndSoundTab)}
+                                            isRealtimeMode ? styles.hideCustomAndSoundTab :
+                                                styles.showCustomAndSoundTab)}
                                         onClick={onActivateCostumesTab}
                                     >
                                         <img
@@ -322,7 +323,8 @@ const GUIComponent = props => {
                                     </Tab>
                                     <Tab
                                         className={classNames(tabClassNames.tab,
-                                            isRealtimeMode ? styles.hideCustomAndSoundTab : styles.showCustomAndSoundTab)}
+                                            isRealtimeMode ? styles.hideCustomAndSoundTab :
+                                                styles.showCustomAndSoundTab)}
                                         onClick={onActivateSoundsTab}
                                     >
                                         <img

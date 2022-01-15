@@ -16,6 +16,7 @@ const CodeEditorComponent = props => {
         width,
         height,
         onChange,
+        editorWillMount,
         editorDidMount,
         theme,
         ...componentProps
@@ -28,10 +29,11 @@ const CodeEditorComponent = props => {
             <MonacoEditor
                 language={language}
                 value={value}
-                options={options}
+                options={Object.assign({}, CodeEditorComponent.defaultProps.options, options)}
                 width={width}
                 height={height}
                 onChange={onChange}
+                editorWillMount={editorWillMount}
                 editorDidMount={editorDidMount}
                 theme={theme}
                 {...componentProps}
@@ -56,13 +58,14 @@ CodeEditorComponent.propTypes = {
     height: PropTypes.number,
     width: PropTypes.number.isRequired,
     onChange: PropTypes.func,
+    editorWillMount: PropTypes.func,
     editorDidMount: PropTypes.func,
     theme: PropTypes.string
 };
 
 CodeEditorComponent.defaultProps = {
     language: 'cpp',
-    theme: 'vs-light',
+    theme: 'vs',
     options: {
         highlightActiveIndentGuide: false,
         cursorSmoothCaretAnimation: true,

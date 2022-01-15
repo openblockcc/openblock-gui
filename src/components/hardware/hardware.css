@@ -12,6 +12,7 @@
 }
 
 .code-editor-wrapper {
+    position: relative;
     display: flex;
     flex-grow: 1;
     flex-basis: 0;
@@ -38,4 +39,26 @@
 
 .narrow-wrapper {
     width: calc(240px + 2px);
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.lock-button {
+    position: absolute;
+    z-index: $z-index-add-button;
+    top: -1px;
+    right: -1px;
+    border: 1px solid $ui-black-transparent;
+    background-color: $ui-white;
+    height: 34px;
+    width: 34px;
+    border-radius: 0 0.5rem 0 0.5rem;
+    outline: none;
+}
+
+.lock-icon{
+    height: 16px;
+    width: 16px;
 }

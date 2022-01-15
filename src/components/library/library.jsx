@@ -10,6 +10,7 @@ import Divider from '../divider/divider.jsx';
 import Filter from '../filter/filter.jsx';
 import TagButton from '../../containers/tag-button.jsx';
 import Spinner from '../spinner/spinner.jsx';
+import storage from '../../lib/storage';
 
 import styles from './library.css';
 
@@ -28,6 +29,61 @@ const messages = defineMessages({
 
 const ALL_TAG = {tag: 'all', intlLabel: messages.allTag};
 const tagListPrefix = [ALL_TAG];
+
+/**
+ * Find the AssetType which corresponds to a particular file extension. For example, 'png' => AssetType.ImageBitmap.
+ * @param {string} fileExtension - the file extension to look up.
+ * @returns {AssetType} - the AssetType corresponding to the extension, if any.
+ */
+const getAssetTypeForFileExtension = function (fileExtension) {
+    const compareOptions = {
+        sensitivity: 'accent',
+        usage: 'search'
+    };
+    for (const assetTypeId in storage.AssetType) {
+        const assetType = storage.AssetType[assetTypeId];
+        if (fileExtension.localeCompare(assetType.runtimeFormat, compareOptions) === 0) {
+            return assetType;
+        }
+    }
+};
+
+/**
+ * Figure out one or more icon(s) for a library item.
+ * If it's an animated thumbnail, this will return an array of `imageSource`.
+ * Otherwise it'll return just one `imageSource`.
+ * @param {object} item - either a library item or one of a library item's costumes.
+ *   The latter is used internally as part of processing an animated thumbnail.
+ * @returns {LibraryItem.PropTypes.icons} - an `imageSource` or array of them, ready for `LibraryItem` & `ScratchImage`
+ */
+const getItemIcons = function (item) {
+    const costumes = (item.json && item.json.costumes) || item.costumes;
+    if (costumes) {
+        return costumes.map(getItemIcons);
+    }
+
+    if (item.rawURL) {
+        return {
+            uri: item.rawURL
+        };
+    }
+
+    if (item.assetId && item.dataFormat) {
+        return {
+            assetId: item.assetId,
+            assetType: getAssetTypeForFileExtension(item.dataFormat)
+        };
+    }
+
+    const md5ext = item.md5ext || item.md5 || item.baseLayerMD5;
+    if (md5ext) {
+        const [assetId, fileExtension] = md5ext.split('.');
+        return {
+            assetId: assetId,
+            assetType: getAssetTypeForFileExtension(fileExtension)
+        };
+    }
+};
 
 class LibraryComponent extends React.Component {
     constructor (props) {
@@ -211,8 +267,9 @@ class LibraryComponent extends React.Component {
                     })}
                     ref={this.setFilteredDataRef}
                 >
-                    {this.state.loaded ? this.getFilteredData().map((dataItem, index) => (
-                        <LibraryItem
+                    {this.state.loaded ? this.getFilteredData().map((dataItem, index) => {
+                        const icons = getItemIcons(dataItem);
+                        return (<LibraryItem
                             author={dataItem.author}
                             bluetoothRequired={dataItem.bluetoothRequired}
                             serialportRequired={dataItem.serialportRequired}
@@ -228,7 +285,7 @@ class LibraryComponent extends React.Component {
                             hidden={dataItem.hidden}
                             iconMd5={dataItem.costumes ? dataItem.costumes[0].md5ext : dataItem.md5ext}
                             iconRawURL={dataItem.rawURL}
-                            icons={dataItem.costumes}
+                            icons={icons}
                             id={index}
                             insetIconURL={dataItem.insetIconURL}
                             internetConnectionRequired={dataItem.internetConnectionRequired}
@@ -244,8 +301,8 @@ class LibraryComponent extends React.Component {
                             onMouseLeave={this.handleMouseLeave}
                             onSelect={this.handleSelect}
                             version={dataItem.version}
-                        />
-                    )) : (
+                        />);
+                    }) : (
                         <div className={styles.spinnerWrapper}>
                             <Spinner
                                 large

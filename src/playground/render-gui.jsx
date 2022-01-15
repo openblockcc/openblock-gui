@@ -40,6 +40,21 @@ const handleTelemetryModalOptOut = () => {
     log('User opted out of telemetry');
 };
 
+const onClickAbout = [
+    {
+        title: 'About',
+        onClick: () => log('About')
+    },
+    {
+        title: 'Privacy Policy',
+        onClick: () => log('Privacy Policy')
+    },
+    {
+        title: 'Data Settings',
+        onClick: () => log('Data Settings')
+    }
+];
+
 const handleShowMessageBox = (type, message) => {
     if (type === MessageBoxType.confirm) {
         return confirm(message); // eslint-disable-line no-alert
@@ -92,6 +107,7 @@ export default appTarget => {
             <WrappedGui
                 canEditTitle
                 isScratchDesktop
+                onClickAbout={onClickAbout}
                 showTelemetryModal
                 canSave={false}
                 onTelemetryModalCancel={handleTelemetryModalCancel}
