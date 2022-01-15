@@ -30,12 +30,6 @@ const messages = defineMessages({
         description: 'A message that displays in a variable modal when the stage is selected indicating ' +
             'that the variable being created will available to all sprites.',
         id: 'gui.gui.variablePromptAllSpritesMessage'
-    },
-    listAvailableToAllSpritesMessage: {
-        defaultMessage: 'This list will be available to all sprites.',
-        description: 'A message that displays in a list modal when the stage is selected indicating ' +
-            'that the list being created will available to all sprites.',
-        id: 'gui.gui.listPromptAllSpritesMessage'
     }
 });
 
@@ -64,15 +58,9 @@ const PromptComponent = props => (
                 <div>
                     {props.isStage ?
                         <div className={styles.infoMessage}>
-                            {props.showListMessage ? (
-                                <FormattedMessage
-                                    {...messages.listAvailableToAllSpritesMessage}
-                                />
-                            ) : (
-                                <FormattedMessage
-                                    {...messages.availableToAllSpritesMessage}
-                                />
-                            )}
+                            <FormattedMessage
+                                {...messages.availableToAllSpritesMessage}
+                            />
                         </div> :
                         <Box className={styles.optionsRow}>
                             <label>
@@ -153,7 +141,6 @@ PromptComponent.propTypes = {
     defaultValue: PropTypes.string,
     globalSelected: PropTypes.bool.isRequired,
     isStage: PropTypes.bool.isRequired,
-    showListMessage: PropTypes.bool.isRequired,
     label: PropTypes.string.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,

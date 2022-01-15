@@ -28,7 +28,7 @@ const ScanningStep = props => (
                         type="checkbox"
                         name="hexform"
                         checked={props.isListAll}
-                        onChange={props.onClickListAll}
+                        onClick={props.onClickListAll}
                     />
                 </div>
             </Box>

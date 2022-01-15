@@ -1,4 +1,8 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {injectIntl} from 'react-intl';
 import bindAll from 'lodash.bindall';
 
 import CodeEditorComponent from '../components/code-editor/code-editor.jsx';
@@ -30,6 +34,15 @@ class CodeEditor extends React.Component {
         });
     }
 
+    getLanguage (type) {
+        if (type === 'arduino') {
+            return 'cpp';
+        } else if (type === 'microbit') {
+            return 'python';
+        }
+        return 'null';
+    }
+
     containerRef (el) {
         if (el){
             this.containerElement = el;
@@ -40,11 +53,14 @@ class CodeEditor extends React.Component {
     }
 
     render () {
+        const language = this.getLanguage(this.props.deviceType);
         const {
             ...props
         } = this.props;
         return (
             <CodeEditorComponent
+                value={this.props.codeEditorValue}
+                language={language}
                 height={this.state.clientHeight}
                 containerRef={this.containerRef}
                 {...props}
@@ -53,4 +69,19 @@ class CodeEditor extends React.Component {
     }
 }
 
-export default CodeEditor;
+CodeEditor.propTypes = {
+    codeEditorValue: PropTypes.string,
+    deviceType: PropTypes.string
+};
+
+const mapStateToProps = state => ({
+    codeEditorValue: state.scratchGui.code.codeEditorValue,
+    deviceType: state.scratchGui.device.deviceType
+});
+
+export default compose(
+    injectIntl,
+    connect(
+        mapStateToProps
+    )
+)(CodeEditor);
