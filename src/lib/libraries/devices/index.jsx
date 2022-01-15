@@ -52,6 +52,7 @@ const deviceData = [
     /**
      * Unselect the deivce back to pure scratch mode
      */
+    /*
     {
         name: (
             <FormattedMessage
@@ -262,7 +263,7 @@ const deviceData = [
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
         helpLink: 'https://store.arduino.cc/usa/mega-2560-r3'
-    },
+    },*/
     {
         name: 'ESP32',
         deviceId: 'arduinoEsp32',
@@ -300,6 +301,7 @@ const deviceData = [
         tags: ['arduino'],
         helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
     },
+    /*
     {
         name: 'ESP8266',
         deviceId: 'arduinoEsp8266',
@@ -447,10 +449,11 @@ const deviceData = [
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
         helpLink: 'https://makeymakey.com'
-    },
+    },*/
     /**
      * For those parent devices that exist in VM but are not displayed in GUI
      */
+    /*
     {
         deviceId: 'arduinoUnoUltra',
         type: 'arduino',
@@ -458,7 +461,7 @@ const deviceData = [
         disabled: false,
         hide: true,
         baseToolBoxXml: arduinoBaseToolBox
-    }
+    }*/
 ];
 
 /**
@@ -466,6 +469,7 @@ const deviceData = [
  * @param {string} deviceId - the id of the device.
  * @return {string} deviceId - the real device id.
  */
+/*
 const analysisRealDeviceId = deviceId => {
     if (deviceId){
         // if the id contain '_' use the string afer the '_'.
@@ -474,7 +478,7 @@ const analysisRealDeviceId = deviceId => {
         }
     }
     return deviceId;
-};
+};*/
 
 /**
  * Make device data from the input data. If it is a buid-in device, return the buid-in
