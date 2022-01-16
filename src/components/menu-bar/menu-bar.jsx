@@ -415,15 +415,35 @@ class MenuBar extends React.Component {
         // each item must have a 'title' FormattedMessage and a 'handleClick' function
         // generate a menu with items for each object in the array
         return (
-            onClickAbout.map(itemProps => (
-                <MenuItem
-                    key={itemProps.title}
-                    isRtl={this.props.isRtl}
-                    onClick={this.wrapAboutMenuCallback(itemProps.onClick)}
+            <div
+                className={classNames(styles.menuBarItem, styles.hoverable, {
+                    [styles.active]: this.props.aboutMenuOpen
+                })}
+                onMouseUp={this.props.onRequestOpenAbout}
+            >
+                <img
+                    className={styles.aboutIcon}
+                    src={aboutIcon}
+                />
+                <MenuBarMenu
+                    className={classNames(styles.menuBarMenu)}
+                    open={this.props.aboutMenuOpen}
+                    place={this.props.isRtl ? 'right' : 'left'}
+                    onRequestClose={this.props.onRequestCloseAbout}
                 >
-                    {itemProps.title}
-                </MenuItem>
-            ))
+                    {
+                        onClickAbout.map(itemProps => (
+                            <MenuItem
+                                key={itemProps.title}
+                                isRtl={this.props.isRtl}
+                                onClick={this.wrapAboutMenuCallback(itemProps.onClick)}
+                            >
+                                {itemProps.title}
+                            </MenuItem>
+                        ))
+                    }
+                </MenuBarMenu>
+            </div>
         );
     }
     wrapAboutMenuCallback (callback) {
@@ -825,7 +845,7 @@ class MenuBar extends React.Component {
                             <MenuBarMenu
                                 className={classNames(styles.menuBarMenu)}
                                 open={this.props.settingMenuOpen}
-                                place={this.props.isRtl ? 'right' : 'left'}
+                                place={'left'}
                                 onRequestClose={this.props.onRequestCloseSetting}
                             >
                                 <MenuSection>
@@ -850,14 +870,11 @@ class MenuBar extends React.Component {
                                         {installDriver}
                                     </MenuItem>
                                 </MenuSection>
-                                <MenuSection>
-                                    {typeof this.props.onClickAbout === 'object' ? aboutButton : null}
-                                </MenuSection>
                             </MenuBarMenu>
                         </div>
                     ) : null}
                 </div>
-                { (typeof this.props.onClickAbout === 'function') ? aboutButton : null}
+                {aboutButton}
             </Box>
         );
     }
