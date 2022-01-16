@@ -15,10 +15,6 @@ const initialAnalytics = (clientId = null) => {
         };
 
         GoogleAnalytics.initialize(GA_ID, arg);
-
-        GoogleAnalytics.set({checkProtocolTask: null});
-        GoogleAnalytics.set({checkStorageTask: null});
-        GoogleAnalytics.set({historyImportTask: null});
     } else {
         log.info('Disabling GA because GA_ID is not set.');
         window.ga = () => {
