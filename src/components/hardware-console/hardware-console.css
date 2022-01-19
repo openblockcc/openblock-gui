@@ -15,7 +15,7 @@
 	white-space: pre-wrap;
     user-select: text;
     color: $text-primary;
-    font-family: "monospace", Helvetica, Arial, sans-serif;
+    font-family:  "Courier New", "monospace", Helvetica, Arial, sans-serif;
     font-size: $menu-bar-standard-font-size;
 }
 
@@ -161,4 +161,3 @@
     box-shadow: 0 0 0 calc($space * .25) $ui-modal-overlay;
     color: $text-primary;
 }
-
