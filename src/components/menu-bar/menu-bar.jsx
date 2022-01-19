@@ -747,9 +747,9 @@ class MenuBar extends React.Component {
                     <Divider className={classNames(styles.divider)} />
                     <div
                         className={classNames(styles.menuBarItem, this.props.isRealtimeMode &&
-                            this.props.peripheralName ? styles.hoverable : styles.disabled)}
+						this.props.peripheralName? styles.hoverable :  this.props.deviceName === 'Maixduino' && this.props.peripheralName ? styles.hoverable: styles.disabled)}
                         onMouseUp={this.props.isRealtimeMode && this.props.peripheralName ?
-                            this.handleDownloadFirmware : null}
+                            this.handleDownloadFirmware :this.props.deviceName === 'Maixduino' && this.props.peripheralName ?this.handleDownloadFirmware: null}
                     >
                         <img
                             alt="DownloadFirmware"
