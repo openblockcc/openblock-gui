@@ -367,10 +367,10 @@ const events = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
                 </value>
             </block>
         ` : `
-            <block type="event_whenmicrobitbegin"/>
-            <block type="event_whenmicrobitbuttonpressed"/>
-            <block type="event_whenmicrobitpinbeingtouched"/>
-            <block type="event_whenmicrobitgesture"/>
+            <block type="event_whenmaixduinobegin"/>
+            <block type="event_whenmaixduinobuttonpressed"/>
+            <block type="event_whenmaixduinopinbeingtouched"/>
+            <block type="event_whenmaixduinogesture"/>
         `}
         ${categorySeparator}
     </category>
@@ -380,7 +380,7 @@ const events = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
 const control = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
     return `
     <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
-        ${isRealtimeMode ?`
+        ${isRealtimeMode ?` 
 		<block type="control_wait">
             <value name="DURATION">
                 <shadow type="math_positive_number">

@@ -5,6 +5,8 @@ import log from '../../log';
 
 import arduinoBaseToolBox from './baseToolbox/arduino';
 import microbitBaseToolBox from './baseToolbox/microbit';
+import maixduinoBaseToolBox from './baseToolbox/maixduino';
+import raspberrypicoBaseToolBox from './baseToolbox/raspberrypico';
 
 import unselectDeviceIconURL from './unselectDevice/unselectDevice.png';
 
@@ -47,6 +49,14 @@ import esp8266ConnectionSmallIconURL from './esp8266/esp8266-small.svg';
 import makeymakeyIconURL from './makeymakey/makeymakey.png';
 import makeymakeyConnectionIconURL from './makeymakey/makeymakey-illustration.svg';
 import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
+
+import maixduinoIconURL from './maixduino/maixduino.png';
+import maixduinoConnectionIconURL from './maixduino/maixduino-illustration.svg';
+import maixduinoConnectionSmallIconURL from './maixduino/maixduino-small.svg';
+
+import raspberryPicoIconURL from './raspberrypico/raspberrypico.png';
+import raspberryPicoConnectionIconURL from './raspberrypico/raspberrypico-illustration.svg';
+import raspberryPicoConnectionSmallIconURL from './raspberrypico/raspberrypico-small.svg';
 
 const deviceData = [
     /**
@@ -301,7 +311,7 @@ const deviceData = [
         helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
     },
     {
-        name: 'ESP8266',
+        name: 'NodeMCU',
         deviceId: 'arduinoEsp8266',
         manufactor: 'espressif',
         learnMore: 'https://www.espressif.com/',
@@ -318,7 +328,7 @@ const deviceData = [
         disabled: false,
         bluetoothRequired: false,
         serialportRequired: true,
-        defaultBaudRate: '76800',
+        defaultBaudRate: '115200',
         internetConnectionRequired: false,
         launchPeripheralConnectionFlow: true,
         useAutoScan: false,
@@ -458,6 +468,80 @@ const deviceData = [
         disabled: false,
         hide: true,
         baseToolBoxXml: arduinoBaseToolBox
+    },
+    {
+        name: 'RaspberryPi Pico',
+        deviceId: 'raspberrypico',
+        manufactor: 'raspberrypi',
+        leanMore: 'https://www.raspberrypi.com/products/raspberry-pi-pico/',
+        type: 'raspberrypico',
+        iconURL: raspberryPicoIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Raspberry Pi Pico is a tiny, fast, and versatile board built using RP2040"
+                description="Description for the raspberrypico device"
+                id="gui.device.raspberrypico.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: raspberryPicoConnectionIconURL,
+        connectionSmallIconURL: raspberryPicoConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their raspberrypico."
+                id="gui.device.raspberrypico.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: raspberrypicoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'python'],
+        tags: ['microPython'],
+        helpLink: 'https://projects.raspberrypi.org/en/projects/getting-started-with-the-pico'
+    },
+    {
+        name: 'Maixduino',
+        deviceId: 'maixduino',
+        manufactor: 'sipeed',
+        leanMore: 'https://www.sipeed.com/',
+        type: 'maixduino',
+        iconURL: maixduinoIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="The K210 RISC-V board with ESP32 inside"
+                description="Description for the maixduino device"
+                id="gui.device.maixduino.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '115200',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: maixduinoConnectionIconURL,
+        connectionSmallIconURL: maixduinoConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their maixduino."
+                id="gui.device.maixduino.connectingMessage"
+            />
+        ),
+        baseToolBoxXml: maixduinoBaseToolBox,
+        programMode: ['upload'],
+        programLanguage: ['block', 'python'],
+        tags: ['microPython'],
+        helpLink: 'https://maixduino.sipeed.com/'
     }
 ];
 

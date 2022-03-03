@@ -740,7 +740,6 @@ const getXML = function (isInitialSetup, isStage, targetId, isRealtimeMode, cost
         ];
     } else {
         baseToolboxXml = [
-            eventsXML, gap,
             controlXML, gap,
             operatorsXML, gap,
             variablesXML, gap,
