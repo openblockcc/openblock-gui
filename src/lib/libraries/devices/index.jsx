@@ -55,8 +55,8 @@ const deviceData = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Unselect deivce"
-                description="Name for the unselect deivce"
+                defaultMessage="Unselect device"
+                description="Name for the unselect device"
                 id="gui.device.unselectDevice.name"
             />
         ),
@@ -64,8 +64,8 @@ const deviceData = [
         iconURL: unselectDeviceIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Unselect the deivce, return to pure realtime programming mode."
-                description="Description for the unselect deivce"
+                defaultMessage="Unselect the device, return to pure realtime programming mode."
+                description="Description for the unselect device"
                 id="gui.device.unselectDevice.description"
             />
         ),
