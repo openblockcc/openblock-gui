@@ -334,7 +334,7 @@ const sound = function (isInitialSetup, isStage, targetId, soundName) {
 const events = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
     return `
     <category name="%{BKY_CATEGORY_EVENTS}" id="events" colour="#FFD500" secondaryColour="#CC9900">
-    ${isRealtimeMode ? `
+        ${isRealtimeMode ? `
             <block type="event_whenflagclicked"/>
             <block type="event_whenkeypressed">
             </block>

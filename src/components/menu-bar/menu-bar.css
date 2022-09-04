@@ -85,7 +85,7 @@
 }
 
 .upload-firmware-logo {
-    height:  1.4rem;
+    height:  20px;
     margin-right: 0.35rem;
     vertical-align: middle;
 }
@@ -196,29 +196,42 @@
     margin-right: 0.35rem;
 }
 
-.file-icon {
-    margin-right: 0.35rem;
-}
-
 .setting-icon {
     width: 24px;
     height: 24px;
 }
 
 .unconnected-icon {
+    width: 20px;
     margin-right: 0.35rem;
 }
 
 .connected-icon {
+    height: 20px;
     margin-right: 0.35rem;
 }
 
 .device-icon {
+    height: 20px;
     margin-right: 0.35rem;
+}
+
+.save-icon {
+    height: 1.1rem;
 }
 
 .link-socket-icon {
     height: 20px;
+    margin-right: 0.35rem;
+}
+
+.community-icon{
+    height: 20px;
+    margin-right: 0.35rem;
+}
+
+.wiki-icon{
+    height: 1.4rem;
     margin-right: 0.35rem;
 }
 

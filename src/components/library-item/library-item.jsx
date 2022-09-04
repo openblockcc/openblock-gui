@@ -14,10 +14,11 @@ import internetConnectionIconURL from './internet-connection.svg';
 import prgramModeRealtimeIconURL from './program-mode-realtime.svg';
 import prgramModeUploadIconURL from './program-mode-upload.svg';
 
-import prgramLanguageBlockIconURL from './program-language-block.svg';
-import prgramLanguageCIconURL from './program-language-c.svg';
-import prgramLanguageCppIconURL from './program-language-cpp.svg';
-import prgramLanguagePythonIconURL from './program-language-python.svg';
+import programLanguageBlockIconURL from './program-language-block.svg';
+import programLanguageCIconURL from './program-language-c.svg';
+import programLanguageCppIconURL from './program-language-cpp.svg';
+import programLanguagePythonIconURL from './program-language-python.svg';
+import programLanguageMicroPythonIconURL from './program-language-microPython.svg';
 
 /* eslint-disable react/prefer-stateless-function */
 class LibraryItemComponent extends React.PureComponent {
@@ -220,16 +221,19 @@ class LibraryItemComponent extends React.PureComponent {
                                         className={styles.featuredExtensionMetadataDetail}
                                     >
                                         {this.props.programLanguage.includes('block') ? (
-                                            <img src={prgramLanguageBlockIconURL} />
+                                            <img src={programLanguageBlockIconURL} />
                                         ) : null}
                                         {this.props.programLanguage.includes('c') ? (
-                                            <img src={prgramLanguageCIconURL} />
+                                            <img src={programLanguageCIconURL} />
                                         ) : null}
                                         {this.props.programLanguage.includes('cpp') ? (
-                                            <img src={prgramLanguageCppIconURL} />
+                                            <img src={programLanguageCppIconURL} />
                                         ) : null}
                                         {this.props.programLanguage.includes('python') ? (
-                                            <img src={prgramLanguagePythonIconURL} />
+                                            <img src={programLanguagePythonIconURL} />
+                                        ) : null}
+                                        {this.props.programLanguage.includes('microPython') ? (
+                                            <img src={programLanguageMicroPythonIconURL} />
                                         ) : null}
                                     </div>
                                 </div>

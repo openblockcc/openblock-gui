@@ -130,7 +130,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         setProjectId: PropTypes.func
     };
     ProjectFetcherComponent.defaultProps = {
-        assetHost: 'https://openblockcc.github.io/openblock-asset',
+        assetHost: 'https://openblockcc.github.io/openblock-assets',
         projectHost: 'https://projects.scratch.mit.edu'
     };
 

@@ -88,7 +88,10 @@ import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
 import languageIcon from '../language-selector/language-icon.svg';
 import aboutIcon from './icon--about.svg';
+import saveIcon from './icon--save.svg';
 import linkSocketIcon from './icon--link-socket.svg'; // eslint-disable-line no-unused-vars
+import communityIcon from './icon--community.svg';
+import wikiIcon from './icon--wiki.svg';
 
 import scratchLogo from './scratch-logo.svg';
 
@@ -99,7 +102,6 @@ import Switch from 'react-switch';
 import deviceIcon from './icon--device.svg';
 import unconnectedIcon from './icon--unconnected.svg';
 import connectedIcon from './icon--connected.svg';
-import fileIcon from './icon--file.svg';
 import screenshotIcon from './icon--screenshot.svg';
 import settingIcon from './icon--setting.svg';
 
@@ -117,6 +119,16 @@ const ariaMessages = defineMessages({
         id: 'gui.menuBar.tutorialsLibrary',
         defaultMessage: 'Tutorials',
         description: 'accessibility text for the tutorials button'
+    },
+    community: {
+        id: 'gui.menuBar.community',
+        defaultMessage: 'Open Community',
+        description: 'accessibility text for the community button'
+    },
+    wiki: {
+        id: 'gui.menuBar.wiki',
+        defaultMessage: 'Wiki',
+        description: 'accessibility text for the wiki button'
     }
 });
 
@@ -193,6 +205,8 @@ class MenuBar extends React.Component {
         bindAll(this, [
             'handleClickNew',
             'handleClickRemix',
+            'handleClickOpenCommunity',
+            'handleClickOpenWiki',
             'handleClickSave',
             'handleClickSaveAsCopy',
             'handleClickSeeCommunity',
@@ -297,6 +311,12 @@ class MenuBar extends React.Component {
         if (!this.props.languageMenuOpen) {
             this.props.onClickLanguage(e);
         }
+    }
+    handleClickOpenCommunity () {
+        window.open('https://community.openblock.cc');
+    }
+    handleClickOpenWiki () {
+        window.open('https://wiki.openblock.cc');
     }
     restoreOptionMessage (deletedItem) {
         switch (deletedItem) {
@@ -533,6 +553,73 @@ class MenuBar extends React.Component {
                         </div>
                         <LanguageSelector label={this.props.intl.formatMessage(ariaMessages.language)} />
                     </div>)}
+                    {(this.props.canManageFiles) && (
+                        <div
+                            className={classNames(styles.menuBarItem, styles.hoverable, {
+                                [styles.active]: this.props.fileMenuOpen
+                            })}
+                            onMouseUp={this.props.onClickFile}
+                        >
+                            <FormattedMessage
+                                defaultMessage="File"
+                                description="Text for file dropdown menu"
+                                id="gui.menuBar.file"
+                            />
+                            <MenuBarMenu
+                                className={classNames(styles.menuBarMenu)}
+                                open={this.props.fileMenuOpen}
+                                place={this.props.isRtl ? 'left' : 'right'}
+                                onRequestClose={this.props.onRequestCloseFile}
+                            >
+                                <MenuSection>
+                                    <MenuItem
+                                        isRtl={this.props.isRtl}
+                                        onClick={this.handleClickNew}
+                                    >
+                                        {newProjectMessage}
+                                    </MenuItem>
+                                </MenuSection>
+                                {(this.props.canSave || this.props.canCreateCopy || this.props.canRemix) && (
+                                    <MenuSection>
+                                        {this.props.canSave && (
+                                            <MenuItem onClick={this.handleClickSave}>
+                                                {saveNowMessage}
+                                            </MenuItem>
+                                        )}
+                                        {this.props.canCreateCopy && (
+                                            <MenuItem onClick={this.handleClickSaveAsCopy}>
+                                                {createCopyMessage}
+                                            </MenuItem>
+                                        )}
+                                        {this.props.canRemix && (
+                                            <MenuItem onClick={this.handleClickRemix}>
+                                                {remixMessage}
+                                            </MenuItem>
+                                        )}
+                                    </MenuSection>
+                                )}
+                                <MenuSection>
+                                    <MenuItem
+                                        onClick={this.props.onStartSelectingFileUpload}
+                                    >
+                                        {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
+                                    </MenuItem>
+                                    <SB3Downloader>{(className, downloadProjectCallback) => (
+                                        <MenuItem
+                                            className={className}
+                                            onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Save to your computer"
+                                                description="Menu bar item for downloading a project to your computer" // eslint-disable-line max-len
+                                                id="gui.menuBar.downloadToComputer"
+                                            />
+                                        </MenuItem>
+                                    )}</SB3Downloader>
+                                </MenuSection>
+                            </MenuBarMenu>
+                        </div>
+                    )}
                     <div
                         className={classNames(styles.menuBarItem,
                             this.props.isRealtimeMode ? styles.hoverable : styles.disabled,
@@ -662,78 +749,54 @@ class MenuBar extends React.Component {
                         />
                     ) : null)}
                     {(this.props.canManageFiles) && (
-                        <div
-                            className={classNames(styles.menuBarItem, styles.hoverable, {
-                                [styles.active]: this.props.fileMenuOpen
-                            })}
-                            onMouseUp={this.props.onClickFile}
-                        >
-                            <img
-                                className={styles.fileIcon}
-                                src={fileIcon}
-                            />
-                            <FormattedMessage
-                                defaultMessage="File"
-                                description="Text for file dropdown menu"
-                                id="gui.menuBar.file"
-                            />
-                            <MenuBarMenu
-                                className={classNames(styles.menuBarMenu)}
-                                open={this.props.fileMenuOpen}
-                                place={this.props.isRtl ? 'left' : 'right'}
-                                onRequestClose={this.props.onRequestCloseFile}
+                        <SB3Downloader>{(className, downloadProjectCallback) => (
+                            <div
+                                className={classNames(styles.menuBarItem, styles.hoverable)}
+                                onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
                             >
-                                <MenuSection>
-                                    <MenuItem
-                                        isRtl={this.props.isRtl}
-                                        onClick={this.handleClickNew}
-                                    >
-                                        {newProjectMessage}
-                                    </MenuItem>
-                                </MenuSection>
-                                {(this.props.canSave || this.props.canCreateCopy || this.props.canRemix) && (
-                                    <MenuSection>
-                                        {this.props.canSave && (
-                                            <MenuItem onClick={this.handleClickSave}>
-                                                {saveNowMessage}
-                                            </MenuItem>
-                                        )}
-                                        {this.props.canCreateCopy && (
-                                            <MenuItem onClick={this.handleClickSaveAsCopy}>
-                                                {createCopyMessage}
-                                            </MenuItem>
-                                        )}
-                                        {this.props.canRemix && (
-                                            <MenuItem onClick={this.handleClickRemix}>
-                                                {remixMessage}
-                                            </MenuItem>
-                                        )}
-                                    </MenuSection>
-                                )}
-                                <MenuSection>
-                                    <MenuItem
-                                        onClick={this.props.onStartSelectingFileUpload}
-                                    >
-                                        {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
-                                    </MenuItem>
-                                    <SB3Downloader>{(className, downloadProjectCallback) => (
-                                        <MenuItem
-                                            className={className}
-                                            onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
-                                        >
-                                            <FormattedMessage
-                                                defaultMessage="Save to your computer"
-                                                description="Menu bar item for downloading a project to your computer" // eslint-disable-line max-len
-                                                id="gui.menuBar.downloadToComputer"
-                                            />
-                                        </MenuItem>
-                                    )}</SB3Downloader>
-                                </MenuSection>
-                            </MenuBarMenu>
-                        </div>
+                                <img
+                                    className={styles.saveIcon}
+                                    src={saveIcon}
+                                />
+                            </div>
+                        )}</SB3Downloader>
                     )}
                 </div>
                 <div className={styles.tailMenu}>
+                    <div
+                        aria-label={this.props.intl.formatMessage(ariaMessages.community)}
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onClick={this.handleClickOpenCommunity}
+                    >
+                        <img
+                            className={styles.communityIcon}
+                            src={communityIcon}
+                        />
+                        <FormattedMessage {...ariaMessages.community} />
+                    </div>
+                    <div
+                        aria-label={this.props.intl.formatMessage(ariaMessages.wiki)}
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onClick={this.handleClickOpenWiki}
+                    >
+                        <img
+                            className={styles.wikiIcon}
+                            src={wikiIcon}
+                        />
+                        <FormattedMessage {...ariaMessages.wiki} />
+                    </div>
+                    <div
+                        aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
+                        className={classNames(styles.menuBarItem, styles.hoverable)}
+                        onClick={this.props.onOpenTipLibrary}
+                    >
+                        <img
+                            className={styles.helpIcon}
+                            src={helpIcon}
+                        />
+                        <FormattedMessage {...ariaMessages.tutorials} />
+                    </div>
+                    <Divider className={classNames(styles.divider)} />
                     <div
                         className={classNames(styles.menuBarItem, styles.hoverable)}
                         onMouseUp={this.handleScreenshot}
@@ -763,18 +826,6 @@ class MenuBar extends React.Component {
                             description="Button to upload the realtime firmware"
                             id="gui.menuBar.uploadFirmware"
                         />
-                    </div>
-                    <Divider className={classNames(styles.divider)} />
-                    <div
-                        aria-label={this.props.intl.formatMessage(ariaMessages.tutorials)}
-                        className={classNames(styles.menuBarItem, styles.hoverable)}
-                        onClick={this.props.onOpenTipLibrary}
-                    >
-                        <img
-                            className={styles.helpIcon}
-                            src={helpIcon}
-                        />
-                        <FormattedMessage {...ariaMessages.tutorials} />
                     </div>
                     <Divider className={classNames(styles.divider)} />
                     <div className={classNames(styles.menuBarItem, styles.programModeGroup)}>

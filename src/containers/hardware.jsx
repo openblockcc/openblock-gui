@@ -9,7 +9,7 @@ import {injectIntl} from 'react-intl';
 import {showAlertWithTimeout} from '../reducers/alerts';
 import {setCodeEditorValue, toggleLock} from '../reducers/code';
 
-import {getLanguageFromDeviceType} from '../lib/code';
+import {getLanguageFromDeviceType} from '../lib/device';
 
 import HardwareComponent from '../components/hardware/hardware.jsx';
 

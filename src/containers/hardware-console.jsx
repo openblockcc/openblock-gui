@@ -74,9 +74,12 @@ class HardwareConsole extends React.Component {
             'handleClickPause',
             'handleClickSend',
             'handleInputChange',
+            'handleKeyPress',
+            'handleKeyDown',
             'handleSelectBaudrate',
             'handleSelectEol',
-            'onReciveData'
+            'onReciveData',
+            'writeToPeripheral'
         ]);
         this.state = {
             consoleArray: new Uint8Array(0),
@@ -138,28 +141,63 @@ class HardwareConsole extends React.Component {
         this.props.onSwitchPause();
     }
 
+    handleKeyPress (e) {
+        const keyCode = e.keyCode || e.which || e.charCode;
+
+        // User pressed enter
+        if (keyCode === 13) {
+            this.handleClickSend();
+        }
+    }
+
+    handleKeyDown (e) {
+        const keyCode = e.keyCode || e.which || e.charCode;
+        const ctrlKey = e.ctrlKey || e.metaKey;
+
+        // Ctrl + A
+        if (keyCode === 65 && ctrlKey) {
+            this.writeToPeripheral(String.fromCharCode(1));
+        }
+        // Ctrl + B
+        if (keyCode === 66 && ctrlKey) {
+            this.writeToPeripheral(String.fromCharCode(2));
+        }
+        // Ctrl + C
+        if (keyCode === 67 && ctrlKey) {
+            this.writeToPeripheral(String.fromCharCode(3));
+        }
+        // Ctrl + D
+        if (keyCode === 68 && ctrlKey) {
+            this.writeToPeripheral(String.fromCharCode(4));
+        }
+    }
+
     handleInputChange (e) {
         this.setState({
             dataToSend: e.target.value
         });
     }
 
-    handleClickSend () {
+    writeToPeripheral (data) {
         if (this.props.peripheralName) {
-            let data = this.state.dataToSend;
-            if (this.props.eol === 'lf') {
-                data = `${data}\n`;
-            } else if (this.props.eol === 'cr'){
-
-                data = `${data}\r`;
-            } else if (this.props.eol === 'lfAndCr'){
-
-                data = `${data}\r\n`;
-            }
             this.props.vm.writeToPeripheral(this.props.deviceId, data);
         } else {
             this.props.onNoPeripheralIsConnected();
         }
+    }
+
+    handleClickSend () {
+        let data = this.state.dataToSend;
+        if (this.props.eol === 'lf') {
+            data = `${data}\n`;
+        } else if (this.props.eol === 'cr'){
+
+            data = `${data}\r`;
+        } else if (this.props.eol === 'lfAndCr'){
+
+            data = `${data}\r\n`;
+        }
+        this.writeToPeripheral(data);
     }
 
     handleSelectBaudrate (e) {
@@ -206,6 +244,8 @@ class HardwareConsole extends React.Component {
                 onClickHexForm={this.handleClickHexForm}
                 onClickSend={this.handleClickSend}
                 onClickSerialportMenu={this.props.handleClickSerialportMenu}
+                onKeyPress={this.handleKeyPress}
+                onKeyDown={this.handleKeyDown}
                 onInputChange={this.handleInputChange}
                 onRequestSerialportMenu={this.props.handleRequestSerialportMenu}
                 onSelectBaudrate={this.handleSelectBaudrate}

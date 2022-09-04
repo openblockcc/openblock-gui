@@ -56,6 +56,14 @@ const onClickAbout = [
     },
     {
         title: (<FormattedMessage
+            defaultMessage="License"
+            description="Menu bar item for license"
+            id="gui.desktopMenuBar.license"
+        />),
+        onClick: () => log('License')
+    },
+    {
+        title: (<FormattedMessage
             defaultMessage="Privacy policy"
             description="Menu bar item for privacy policy"
             id="gui.menuBar.privacyPolicy"

@@ -1,7 +1,9 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
-import defaultsDeep from 'lodash.defaultsdeep';
+import {defaults} from 'lodash';
 import log from '../../log';
+import {DeviceType} from '../../device';
+
 
 import arduinoBaseToolBox from './baseToolbox/arduino';
 import microbitBaseToolBox from './baseToolbox/microbit';
@@ -15,10 +17,6 @@ import arduinoUnoConnectionSmallIconURL from './arduinoUno/arduinoUno-small.svg'
 import arduinoNanoIconURL from './arduinoNano/arduinoNano.png';
 import arduinoNanoConnectionIconURLL from './arduinoNano/arduinoNano-illustration.svg';
 import arduinoNanoConnectionSmallIconURL from './arduinoNano/arduinoNano-small.svg';
-
-import arduinoMiniIconURL from './arduinoMini/arduinoMini.png';
-import arduinoMiniConnectionIconURLL from './arduinoMini/arduinoMini-illustration.svg';
-import arduinoMiniConnectionSmallIconURL from './arduinoMini/arduinoMini-small.svg';
 
 import arduinoLeonardoIconURL from './arduinoLeonardo/arduinoLeonardo.png';
 import arduinoLeonardoConnectionIconURLL from './arduinoLeonardo/arduinoLeonardo-illustration.svg';
@@ -80,7 +78,7 @@ const deviceData = [
         deviceId: 'arduinoUno',
         manufactor: 'arduino.cc',
         learnMore: 'https://store.arduino.cc/usa/arduino-uno-rev3',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: arduinoUnoIconURL,
         description: (
             <FormattedMessage
@@ -102,8 +100,8 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.arduinoUno.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -114,11 +112,10 @@ const deviceData = [
     },
     {
         name: 'Arduino Nano',
-        deviceId: 'arduinoNano_arduinoUno',
-        deviceExtensionsCompatible: 'arduinoUno',
+        deviceId: 'arduinoNano',
         manufactor: 'arduino.cc',
         learnMore: 'https://store.arduino.cc/usa/arduino-nano',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: arduinoNanoIconURL,
         description: (
             <FormattedMessage
@@ -140,8 +137,8 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.arduinoNano.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -151,50 +148,11 @@ const deviceData = [
         helpLink: 'https://store.arduino.cc/usa/arduino-nano'
     },
     {
-        name: 'Arduino Mini',
-        deviceId: 'arduinoMini_arduinoUno',
-        deviceExtensionsCompatible: 'arduinoUno',
-        manufactor: 'arduino.cc',
-        // Discontinued board
-        // learnMore: 'https://store.arduino.cc/usa/arduino/boards-modules',
-        type: 'arduino',
-        iconURL: arduinoMiniIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="The Arduino Mini a classic smaller board to build your projects with."
-                description="Description for the Arduino Mini device"
-                id="gui.device.arduinoMini.description"
-            />
-        ),
-        featured: true,
-        disabled: false,
-        bluetoothRequired: false,
-        serialportRequired: true,
-        defaultBaudRate: '9600',
-        internetConnectionRequired: false,
-        launchPeripheralConnectionFlow: true,
-        useAutoScan: false,
-        connectionIconURL: arduinoMiniConnectionIconURLL,
-        connectionSmallIconURL: arduinoMiniConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
-            />
-        ),
-        baseToolBoxXml: arduinoBaseToolBox,
-        programMode: ['realtime', 'upload'],
-        programLanguage: ['block', 'c', 'cpp'],
-        tags: ['arduino']
-        // helpLink: 'https://store.arduino.cc/usa/arduino-nano'
-    },
-    {
         name: 'Arduino Leonardo',
         deviceId: 'arduinoLeonardo',
         manufactor: 'arduino.cc',
         learnMore: 'https://store.arduino.cc/usa/leonardo',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: arduinoLeonardoIconURL,
         description: (
             <FormattedMessage
@@ -216,8 +174,8 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.arduinoLeonardo.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -231,7 +189,7 @@ const deviceData = [
         deviceId: 'arduinoMega2560',
         manufactor: 'arduino.cc',
         learnMore: 'https://store.arduino.cc/usa/mega-2560-r3',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: arduinoMega2560IconURL,
         description: (
             <FormattedMessage
@@ -253,8 +211,8 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.arduinoMega2560.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -268,13 +226,13 @@ const deviceData = [
         deviceId: 'arduinoEsp32',
         manufactor: 'espressif',
         learnMore: 'https://www.espressif.com/',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: esp32IconURL,
         description: (
             <FormattedMessage
                 defaultMessage="Wi-Fi & Bluetooth control board with rich functions."
                 description="Description for the esp32 device"
-                id="gui.device.arduinoEsp32.description"
+                id="gui.device.esp32.description"
             />
         ),
         featured: true,
@@ -291,7 +249,7 @@ const deviceData = [
             <FormattedMessage
                 defaultMessage="Connecting"
                 description="Message to help people connect to their esp32."
-                id="gui.device.arduinoEsp32.connectingMessage"
+                id="gui.device.esp32.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -301,17 +259,17 @@ const deviceData = [
         helpLink: 'https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/hw-reference/esp32/get-started-devkitc.html'
     },
     {
-        name: 'ESP8266',
-        deviceId: 'arduinoEsp8266',
+        name: 'NodeMCU ',
+        deviceId: 'arduinoEsp8266NodeMCU',
         manufactor: 'espressif',
-        learnMore: 'https://www.espressif.com/',
-        type: 'arduino',
+        learnMore: 'https://www.nodemcu.com',
+        type: DeviceType.arduino,
         iconURL: esp8266IconURL,
         description: (
             <FormattedMessage
                 defaultMessage="Low-cost Wi-Fi SOC control board."
-                description="Description for the esp8266 device"
-                id="gui.device.arduinoEsp8266.description"
+                description="Description for the esp8266 NodeMCU device"
+                id="gui.device.esp8266NodeMCU.description"
             />
         ),
         featured: true,
@@ -327,11 +285,12 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their esp8266."
-                id="gui.device.arduinoEsp8266.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.esp8266NodeMCU.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
+        deviceExtensionsCompatible: 'arduinoEsp8266',
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
@@ -342,12 +301,12 @@ const deviceData = [
         deviceId: 'microbit',
         manufactor: 'microbit.org',
         learnMore: 'https://microbit.org/',
-        type: 'microbit',
+        type: DeviceType.microbit,
         iconURL: microbitIconURL,
         description: (
             <FormattedMessage
                 defaultMessage="The pocket-sized computer transforming digital skills learning."
-                description="Description for the 'micro:bit' device"
+                description="Description for the micro:bit device"
                 id="gui.device.microbit.description"
             />
         ),
@@ -364,13 +323,13 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their microbit."
+                description="Message to help people connect to their device."
                 id="gui.device.microbit.connectingMessage"
             />
         ),
         baseToolBoxXml: microbitBaseToolBox,
         programMode: ['upload'],
-        programLanguage: ['block', 'python'],
+        programLanguage: ['block', 'microPython'],
         tags: ['microPython'],
         helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
     },
@@ -379,12 +338,12 @@ const deviceData = [
         deviceId: 'microbitV2',
         manufactor: 'microbit.org',
         learnMore: 'https://microbit.org/',
-        type: 'microbit',
+        type: DeviceType.microbit,
         iconURL: microbitV2IconURL,
         description: (
             <FormattedMessage
                 defaultMessage="Upgraded processor, built-In speaker and microphone, touch sensitive logo."
-                description="Description for the 'micro:bit V2' device"
+                description="Description for the micro:bit V2 device"
                 id="gui.device.microbitV2.description"
             />
         ),
@@ -401,13 +360,13 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their microbit."
-                id="gui.device.microbit.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.microbitV2.connectingMessage"
             />
         ),
         baseToolBoxXml: microbitBaseToolBox,
         programMode: ['upload'],
-        programLanguage: ['block', 'python'],
+        programLanguage: ['block', 'microPython'],
         tags: ['microPython'],
         helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
     },
@@ -416,7 +375,7 @@ const deviceData = [
         deviceId: 'makeyMakey',
         manufactor: 'makeymakey.com',
         learnMore: 'https://makeymakey.com/',
-        type: 'arduino',
+        type: DeviceType.arduino,
         iconURL: makeymakeyIconURL,
         description: (
             <FormattedMessage
@@ -438,8 +397,8 @@ const deviceData = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to their arduino."
-                id="gui.device.arduino.connectingMessage"
+                description="Message to help people connect to their device."
+                id="gui.device.makeyMakey.connectingMessage"
             />
         ),
         baseToolBoxXml: arduinoBaseToolBox,
@@ -453,7 +412,23 @@ const deviceData = [
      */
     {
         deviceId: 'arduinoUnoUltra',
-        type: 'arduino',
+        type: DeviceType.arduino,
+        featured: true,
+        disabled: false,
+        hide: true,
+        baseToolBoxXml: arduinoBaseToolBox
+    },
+    {
+        deviceId: 'arduinoSE',
+        type: DeviceType.arduino,
+        featured: true,
+        disabled: false,
+        hide: true,
+        baseToolBoxXml: arduinoBaseToolBox
+    },
+    {
+        deviceId: 'arduinoEsp8266',
+        type: DeviceType.arduino,
         featured: true,
         disabled: false,
         hide: true,
@@ -480,16 +455,25 @@ const analysisRealDeviceId = deviceId => {
  * Make device data from the input data. If it is a buid-in device, return the buid-in
  * data. If it is a third party device, find it's parent device, and overwrite its attributes
  * with the input data.
- * @param {string} data - the data of devices.
+ * @param {string} deviceList - the list of devices.
  * @return {string} fullData - processed data of devices.
  */
-const makeDeviceLibrary = data => {
-    const fullData = data
-        .map(dev => {
-        // Check if this is a build-in device.
+const makeDeviceLibrary = (deviceList = null) => {
+    let regeneratedDeviceData = [];
+
+    if (deviceList) {
+        deviceList.forEach(dev => {
+            // Because the micropython framework is not included in the community version,
+            // for a control board that supports multiple programming frameworks, if it
+            // also supports arduino, then we only load the arduino version of the device.
+            if ((typeof dev.typeList !== 'undefined') && (dev.deviceId.indexOf('arduino') !== -1)) {
+                dev.hide = false;
+            }
+
+            // Check if this is a build-in device.
             const matchedDevice = deviceData.find(item => dev.deviceId === item.deviceId);
             if (matchedDevice) {
-                return matchedDevice;
+                return regeneratedDeviceData.push(matchedDevice);
             }
 
             // This is a third party device. Try to parse it's parent deivce.
@@ -497,17 +481,19 @@ const makeDeviceLibrary = data => {
             if (realDeviceId) {
                 const parentDevice = deviceData.find(item => realDeviceId === item.deviceId);
                 if (parentDevice) {
-                    return defaultsDeep({}, dev, {hide: false}, parentDevice);
+                    return regeneratedDeviceData.push(defaults({}, dev, {hide: false}, parentDevice));
                 }
             }
             log.warn('Cannot find this device or it\'s parent device :', dev.deviceId);
             return null;
-        })
-        .filter(dev => dev); // filter null data.
+        });
 
-    fullData.unshift(deviceData[0]); // add unselect deive in the head.
+        regeneratedDeviceData.unshift(deviceData[0]); // add unselect deive in the head.
+    } else {
+        regeneratedDeviceData = deviceData;
+    }
 
-    return fullData;
+    return regeneratedDeviceData;
 };
 
 export {

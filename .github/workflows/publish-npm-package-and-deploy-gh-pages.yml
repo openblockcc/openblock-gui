@@ -2,7 +2,7 @@ name: Publish Npm Package And Deploy Github Pages
 
 on:
   push:
-    branches: [ develop, desktop ]
+    branches: [ develop, main, desktop ]
     paths-ignore:
       - 'README.md'
       - '.github/*'
@@ -76,19 +76,20 @@ jobs:
 
       - run: npm ci
 
-      - name: Push i18n
-        if: ${{ github.ref == 'refs/heads/develop' }}
-        run: |
-            export TX_TOKEN=${{ secrets.TX_TOKEN }}
-            npm run i18n:src
-            npm run i18n:push
+    # Don't push translations to TX. The push step will be run by the enterprise edition repository.
+    #   - name: Push i18n
+    #     if: ${{ github.ref == 'refs/heads/main' }}
+    #     run: |
+    #         export TX_TOKEN=${{ secrets.TX_TOKEN }}
+    #         npm run i18n:src
+    #         npm run i18n:push
 
       - name: Update openblock-l10n
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: npm i --save openblock-l10n@latest
 
       - name: Check for modified files
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         id: git-check
         # Check if there are any files update, but ignore the case where only package-lock.json is updated.
         run: |
@@ -113,27 +114,27 @@ jobs:
         run: npm run build
 
       - name: Get package main version
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.1.0
 
       - name: Generate release version
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           echo "RELEASE_VERSION=${{ steps.package-version.outputs.current-version }}-prerelease.$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
       - name: Set package version
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: npm --no-git-tag-version version $RELEASE_VERSION
 
       - name: Tag release
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           git tag $RELEASE_VERSION
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/$GITHUB_REPOSITORY $RELEASE_VERSION
 
       - uses: JS-DevTools/npm-publish@v1
-        if: ${{ github.ref == 'refs/heads/develop' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           token: ${{ secrets.NPM_TOKEN }}
 

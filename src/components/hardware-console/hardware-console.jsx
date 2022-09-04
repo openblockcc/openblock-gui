@@ -34,6 +34,8 @@ const HardwareConsoleComponent = props => {
         onClickAutoScroll,
         onClickSend,
         onInputChange,
+        onKeyPress,
+        onKeyDown,
         onRequestSerialportMenu,
         onSelectBaudrate,
         onSelectEol,
@@ -74,6 +76,8 @@ const HardwareConsoleComponent = props => {
                 <input
                     className={styles.consoleInput}
                     onChange={onInputChange}
+                    onKeyPress={onKeyPress}
+                    onKeyDown={onKeyDown}
                 />
                 <button
                     className={classNames(styles.button, styles.sendButton)}
@@ -220,6 +224,8 @@ HardwareConsoleComponent.propTypes = {
     onClickSend: PropTypes.func.isRequired,
     onClickSerialportMenu: PropTypes.func.isRequired,
     onInputChange: PropTypes.func.isRequired,
+    onKeyPress: PropTypes.func.isRequired,
+    onKeyDown: PropTypes.func.isRequired,
     onRequestSerialportMenu: PropTypes.func.isRequired,
     onSelectBaudrate: PropTypes.func.isRequired,
     onSelectEol: PropTypes.func.isRequired,
