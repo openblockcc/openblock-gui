@@ -58,7 +58,7 @@ class AutoScanningStep extends React.Component {
     }
     handleStartScan () {
         this.bindPeripheralUpdates();
-        this.props.vm.scanForPeripheral(this.props.extensionId);
+        this.props.vm.scanForPeripheral(this.props.deviceId);
         this.setState({
             phase: PHASES.pressbutton
         });
@@ -69,7 +69,7 @@ class AutoScanningStep extends React.Component {
             <ScanningStepComponent
                 connectionTipIconURL={this.props.connectionTipIconURL}
                 phase={this.state.phase}
-                title={this.props.extensionId}
+                title={this.props.deviceId}
                 onRefresh={this.handleRefresh}
                 onStartScan={this.handleStartScan}
             />
@@ -79,7 +79,7 @@ class AutoScanningStep extends React.Component {
 
 AutoScanningStep.propTypes = {
     connectionTipIconURL: PropTypes.string,
-    extensionId: PropTypes.string.isRequired,
+    deviceId: PropTypes.string.isRequired,
     onConnecting: PropTypes.func.isRequired,
     vm: PropTypes.instanceOf(VM).isRequired
 };

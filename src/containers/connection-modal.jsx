@@ -4,7 +4,6 @@ import bindAll from 'lodash.bindall';
 import ConnectionModalComponent, {PHASES} from '../components/connection-modal/connection-modal.jsx';
 import VM from 'openblock-vm';
 import analytics from '../lib/analytics';
-import extensionData from '../lib/libraries/extensions/index.jsx';
 import {connect} from 'react-redux';
 import {closeConnectionModal} from '../reducers/modals';
 import {setConnectionModalPeripheralName, setListAll} from '../reducers/connection-modal';
@@ -22,8 +21,7 @@ class ConnectionModal extends React.Component {
             'handleHelp'
         ]);
         this.state = {
-            extension: extensionData.find(ext => ext.extensionId === props.deviceId) ||
-                this.props.deviceData.find(ext => ext.deviceId === props.deviceId),
+            device: this.props.deviceData.find(device => device.deviceId === props.deviceId),
             phase: props.vm.getPeripheralIsConnected(props.deviceId) ?
                 PHASES.connected : PHASES.scanning,
             peripheralName: null
@@ -106,7 +104,7 @@ class ConnectionModal extends React.Component {
         this.props.onConnected(this.state.peripheralName);
     }
     handleHelp () {
-        window.open(this.state.extension.helpLink, '_blank');
+        window.open(this.state.device.helpLink, '_blank');
         analytics.event({
             category: 'devices',
             action: 'device help',
@@ -116,17 +114,17 @@ class ConnectionModal extends React.Component {
     render () {
         return (
             <ConnectionModalComponent
-                connectingMessage={this.state.extension && this.state.extension.connectingMessage}
-                connectionIconURL={this.state.extension && this.state.extension.connectionIconURL}
-                connectionSmallIconURL={this.state.extension && this.state.extension.connectionSmallIconURL}
-                isSerialport={this.state.extension && this.state.extension.serialportRequired}
+                connectingMessage={this.state.device && this.state.device.connectingMessage}
+                connectionIconURL={this.state.device && this.state.device.connectionIconURL}
+                connectionSmallIconURL={this.state.device && this.state.device.connectionSmallIconURL}
+                isSerialport={this.state.device && this.state.device.serialportRequired}
                 isListAll={this.props.isListAll}
-                connectionTipIconURL={this.state.extension && this.state.extension.connectionTipIconURL}
-                extensionId={this.props.deviceId}
-                name={this.state.extension && this.state.extension.name}
+                connectionTipIconURL={this.state.device && this.state.device.connectionTipIconURL}
+                deviceId={this.props.deviceId}
+                name={this.state.device && this.state.device.name}
                 phase={this.state.phase}
                 title={this.props.deviceId}
-                useAutoScan={this.state.extension && this.state.extension.useAutoScan}
+                useAutoScan={this.state.device && this.state.device.useAutoScan}
                 vm={this.props.vm}
                 onCancel={this.handleCancel}
                 onConnected={this.handleConnected}

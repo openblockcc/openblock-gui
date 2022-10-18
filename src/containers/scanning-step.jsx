@@ -33,7 +33,7 @@ class ScanningStep extends React.Component {
             'PERIPHERAL_SCAN_TIMEOUT', this.handlePeripheralScanTimeout);
     }
     scanForPeripheral (listAll) {
-        this.props.vm.scanForPeripheral(this.props.extensionId, listAll);
+        this.props.vm.scanForPeripheral(this.props.deviceId, listAll);
     }
     handlePeripheralScanTimeout () {
         this.setState({
@@ -68,7 +68,7 @@ class ScanningStep extends React.Component {
                 peripheralList={this.state.peripheralList}
                 phase={this.state.phase}
                 scanning={this.state.scanning}
-                title={this.props.extensionId}
+                title={this.props.deviceId}
                 onConnected={this.props.onConnected}
                 onConnecting={this.props.onConnecting}
                 onClickListAll={this.handleClickListAll}
@@ -82,7 +82,7 @@ ScanningStep.propTypes = {
     connectionSmallIconURL: PropTypes.string,
     isSerialport: PropTypes.bool.isRequired,
     isListAll: PropTypes.bool.isRequired,
-    extensionId: PropTypes.string.isRequired,
+    deviceId: PropTypes.string.isRequired,
     onConnected: PropTypes.func.isRequired,
     onConnecting: PropTypes.func.isRequired,
     onClickListAll: PropTypes.func.isRequired,

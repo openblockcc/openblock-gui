@@ -236,12 +236,14 @@ class Blocks extends React.Component {
             this.updateToolbox();
         }, 0);
     }
-    setLocale () {
+    setLocale (refreshWorkspace = true) {
         this.ScratchBlocks.ScratchMsgs.setLocale(this.props.locale);
         this.props.vm.setLocale(this.props.locale, this.props.messages)
             .then(() => {
                 this.workspace.getFlyout().setRecyclingEnabled(false);
-                this.props.vm.refreshWorkspace();
+                if (refreshWorkspace) {
+                    this.props.vm.refreshWorkspace();
+                }
                 this.requestToolboxUpdate();
                 this.withToolboxUpdates(() => {
                     this.workspace.getFlyout().setRecyclingEnabled(true);
@@ -249,6 +251,11 @@ class Blocks extends React.Component {
             });
     }
     onProgramModeUpdate () {
+        if (this.props.isRealtimeMode) {
+            this.ScratchBlocks.ProgramMode.setProgramMode(this.ScratchBlocks.ProgramMode.REALTIME);
+        } else {
+            this.ScratchBlocks.ProgramMode.setProgramMode(this.ScratchBlocks.ProgramMode.UPLOAD);
+        }
         this._programMode = this.props.isRealtimeMode;
         const toolboxXML = this.getToolboxXML();
         if (toolboxXML) {
@@ -610,7 +617,7 @@ class Blocks extends React.Component {
             this.ScratchBlocks = deviceExtensionsRegister.addBlocks(this.ScratchBlocks);
         }
 
-        this.setLocale();
+        this.setLocale(false);
 
         const toolboxXML = this.getToolboxXML();
         if (toolboxXML) {
