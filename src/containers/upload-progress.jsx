@@ -33,6 +33,7 @@ class UploadProgress extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
+            'handleAbort',
             'handleCancel',
             'handleHelp',
             'handleStdout',
@@ -66,6 +67,10 @@ class UploadProgress extends React.Component {
         this.props.vm.removeListener('PERIPHERAL_UPLOAD_ERROR', this.handleUploadError);
         this.props.vm.removeListener('PERIPHERAL_CONNECTION_LOST_ERROR', this.handleUploadError);
         this.props.vm.removeListener('PERIPHERAL_UPLOAD_SUCCESS', this.handleUploadSuccess);
+        clearTimeout(this.uploadTimeout);
+    }
+    handleAbort () {
+        this.props.vm.abortUploadToPeripheral(this.props.deviceId);
         clearTimeout(this.uploadTimeout);
     }
     handleCancel () {
@@ -130,6 +135,7 @@ class UploadProgress extends React.Component {
             <UploadProgressComponent
                 connectionSmallIconURL={this.state.extension && this.state.extension.connectionSmallIconURL}
                 name={this.state.extension && this.state.extension.name}
+                onAbort={this.handleAbort}
                 onCancel={this.handleCancel}
                 onHelp={this.handleHelp}
                 text={this.state.text}
