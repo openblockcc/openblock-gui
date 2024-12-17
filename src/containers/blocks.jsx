@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import VMScratchBlocks from '../lib/blocks';
 import VM from 'openblock-vm';
+import MessageBoxType from '../lib/message-box.js';
 
 import log from '../lib/log.js';
 import Prompt from './prompt.jsx';
@@ -93,6 +94,9 @@ class Blocks extends React.Component {
         this.ScratchBlocks.prompt = this.handlePromptStart;
         this.ScratchBlocks.statusButtonCallback = this.handleConnectionModalStart;
         this.ScratchBlocks.recordSoundCallback = this.handleOpenSoundRecorder;
+        this.ScratchBlocks.alert = message => {
+            this.props.onShowMessageBox(MessageBoxType.alert, message);
+        };
 
         this.state = {
             prompt: null
@@ -842,6 +846,7 @@ Blocks.propTypes = {
     onSetBaudrate: PropTypes.func.isRequired,
     onSetCodeEditorValue: PropTypes.func,
     onSetSupportSwitchMode: PropTypes.func,
+    onShowMessageBox: PropTypes.func.isRequired,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
     toolboxXML: PropTypes.string,
     updateMetrics: PropTypes.func,

@@ -351,6 +351,7 @@ const GUIComponent = props => {
                                             }}
                                             stageSize={stageSize}
                                             vm={vm}
+                                            onShowMessageBox={onShowMessageBox}
                                         />
                                     </Box>
                                     <Box className={styles.extensionButtonContainer}>

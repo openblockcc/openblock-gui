@@ -82,15 +82,15 @@ import collectMetadata from '../../lib/collect-metadata';
 import styles from './menu-bar.css';
 
 import helpIcon from '../../lib/assets/icon--tutorials.svg';
-import mystuffIcon from './icon--mystuff.png'; // eslint-disable-line no-unused-vars
-import profileIcon from './icon--profile.png'; // eslint-disable-line no-unused-vars
+// import mystuffIcon from './icon--mystuff.png';
+// import profileIcon from './icon--profile.png';
 import remixIcon from './icon--remix.svg';
 import dropdownCaret from './dropdown-caret.svg';
 import languageIcon from '../language-selector/language-icon.svg';
 import aboutIcon from './icon--about.svg';
 import saveIcon from './icon--save.svg';
-import linkSocketIcon from './icon--link-socket.svg'; // eslint-disable-line no-unused-vars
-import communityIcon from './icon--community.svg';
+// import linkSocketIcon from './icon--link-socket.svg';
+// import communityIcon from './icon--community.svg';
 import wikiIcon from './icon--wiki.svg';
 import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
@@ -811,7 +811,7 @@ class MenuBar extends React.Component {
                         )}
                     </div>)}
                 <div className={styles.tailMenu}>
-                    <div
+                    {/* <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.community)}
                         className={classNames(styles.menuBarItem, styles.hoverable)}
                         onClick={this.handleClickOpenCommunity}
@@ -821,7 +821,7 @@ class MenuBar extends React.Component {
                             src={communityIcon}
                         />
                         {this.state.isOverflow ? null : <FormattedMessage {...ariaMessages.community} />}
-                    </div>
+                    </div>*/}
                     <div
                         aria-label={this.props.intl.formatMessage(ariaMessages.wiki)}
                         className={classNames(styles.menuBarItem, styles.hoverable)}

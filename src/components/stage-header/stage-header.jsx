@@ -163,6 +163,7 @@ const StageHeaderComponent = function (props) {
                             className={styles.signalIcon}
                             draggable={false}
                             src={signalIcon}
+                            hidden={!props.deviceId}
                         />
                     </Box>
                     <div className={styles.stageSizeRow}>
@@ -191,12 +192,14 @@ const StageHeaderComponent = function (props) {
 };
 
 const mapStateToProps = state => ({
+    deviceId: state.scratchGui.device.deviceId,
     realtimeConnection: state.scratchGui.connectionModal.realtimeConnection,
     // This is the button's mode, as opposed to the actual current state
     stageSizeMode: state.scratchGui.stageSize.stageSize
 });
 
 StageHeaderComponent.propTypes = {
+    deviceId: PropTypes.string,
     intl: intlShape,
     isFullScreen: PropTypes.bool.isRequired,
     isPlayerOnly: PropTypes.bool.isRequired,

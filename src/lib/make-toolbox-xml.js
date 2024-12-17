@@ -384,7 +384,7 @@ const events = function (isInitialSetup, isStage) {
     `;
 };
 
-const control = function (isInitialSetup, isStage) {
+const control = function (isInitialSetup, isStage, targetId, isRealtimeMode) {
     return `
     <category name="%{BKY_CATEGORY_CONTROL}" id="control" colour="#FFAB19" secondaryColour="#CF8B17">
         <block type="control_wait">
@@ -409,24 +409,26 @@ const control = function (isInitialSetup, isStage) {
         <block id="wait_until" type="control_wait_until"/>
         <block id="repeat_until" type="control_repeat_until"/>
         ${blockSeparator}
-        <block type="control_stop"/>
-        ${blockSeparator}
-        ${isStage ? `
-            <block type="control_create_clone_of">
-                <value name="CLONE_OPTION">
-                    <shadow type="control_create_clone_of_menu"/>
-                </value>
-            </block>
-        ` : `
-            <block type="control_start_as_clone"/>
-            <block type="control_create_clone_of">
-                <value name="CLONE_OPTION">
-                    <shadow type="control_create_clone_of_menu"/>
-                </value>
-            </block>
-            <block type="control_delete_this_clone"/>
-        `}
-        ${categorySeparator}
+        ${isRealtimeMode ? `
+            <block type="control_stop"/>
+            ${blockSeparator}
+            ${isStage ? `
+                <block type="control_create_clone_of">
+                    <value name="CLONE_OPTION">
+                        <shadow type="control_create_clone_of_menu"/>
+                    </value>
+                </block>
+            ` : `
+                <block type="control_start_as_clone"/>
+                <block type="control_create_clone_of">
+                    <value name="CLONE_OPTION">
+                        <shadow type="control_create_clone_of_menu"/>
+                    </value>
+                </block>
+                <block type="control_delete_this_clone"/>
+            `}
+            ${categorySeparator}
+        ` : null}
     </category>
     `;
 };
@@ -765,7 +767,7 @@ const makeToolboxXML = function (isInitialSetup, device = null, isStage = true, 
     const looksXML = moveCategory('looks') || looks(isInitialSetup, isStage, targetId, costumeName, backdropName);
     const soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName);
     let eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId);
-    const controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId);
+    const controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, isRealtimeMode);
     const sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId);
     const operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId);
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId);

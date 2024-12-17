@@ -17,7 +17,7 @@ OpenBlock Online: [https://openblockcc.github.io/openblock-gui/develop/](https:/
 
 ## Getting Start
 
-Visit the wiki: [https://openblockcc.github.io](https://openblockcc.github.io)
+Visit the wiki: [https://wiki.openblock.cc](https://wiki.openblock.cc)
 
 ## Join chat
 
