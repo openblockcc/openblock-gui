@@ -5,7 +5,7 @@ var webpack = require('webpack');
 // Plugins
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin  = require('terser-webpack-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // PostCss
@@ -20,7 +20,7 @@ const base = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     devtool: 'cheap-module-source-map',
     devServer: {
-        contentBase: path.resolve(__dirname, 'build'),
+        static: path.resolve(__dirname, 'build'),
         host: '0.0.0.0',
         port: process.env.PORT || 8601
     },
@@ -30,7 +30,12 @@ const base = {
         chunkFilename: 'chunks/[name].js'
     },
     resolve: {
-        symlinks: false
+        symlinks: false,
+        fallback: {
+            Buffer: require.resolve('buffer/'),
+            stream: require.resolve('stream-browserify'),
+            "url": false,
+         },
     },
     module: {
         rules: [{
@@ -66,7 +71,7 @@ const base = {
                 options: {
                     modules: true,
                     importLoaders: 1,
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
+                    localIdentName: '[name]_[local]_[contenthash:base64:5]',
                     camelCase: true
                 }
             }, {
@@ -91,7 +96,7 @@ const base = {
     },
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 include: /\.min\.js$/
             })
         ]
@@ -100,7 +105,11 @@ const base = {
         new MonacoWebpackPlugin({
             languages: ['c', 'cpp', 'python', 'lua', 'javascript'],
             features: ['!gotoSymbol']
-        })
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+        }),
+            
     ]
 };
 
@@ -113,10 +122,10 @@ module.exports = [
     defaultsDeep({}, base, {
         entry: {
             'lib.min': ['react', 'react-dom'],
-            'gui': './src/playground/index.jsx',
-            'blocksonly': './src/playground/blocks-only.jsx',
-            'compatibilitytesting': './src/playground/compatibility-testing.jsx',
-            'player': './src/playground/player.jsx'
+            'gui': { import: './src/playground/index.jsx', dependOn: 'lib.min' },
+            'blocksonly': { import: './src/playground/blocks-only.jsx', dependOn: 'lib.min' },
+            'compatibilitytesting': { import: './src/playground/compatibility-testing.jsx', dependOn: 'lib.min' },
+            'player': { import: './src/playground/player.jsx', dependOn: 'lib.min' }
         },
         output: {
             path: path.resolve(__dirname, 'build'),
@@ -136,15 +145,11 @@ module.exports = [
         optimization: {
             splitChunks: {
                 chunks: 'all',
-                name: 'lib.min'
             },
-            runtimeChunk: {
-                name: 'lib.min'
-            }
+            runtimeChunk: 'single',
         },
         plugins: base.plugins.concat([
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': '"' + process.env.NODE_ENV + '"',
                 'process.env.DEBUG': Boolean(process.env.DEBUG),
                 'process.env.GA_ID': '"' + (process.env.GA_ID || 'UA-000000-01') + '"'
             }),
@@ -172,23 +177,24 @@ module.exports = [
                 filename: 'player.html',
                 title: 'OpenBlock GUI: Player Example'
             }),
-            new CopyWebpackPlugin([{
-                from: 'static',
-                to: 'static'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'node_modules/openblock-blocks/media',
-                to: 'static/blocks-media'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'extensions/**',
-                to: 'static',
-                context: 'src/examples'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'extension-worker.{js,js.map}',
-                context: 'node_modules/openblock-vm/dist/web'
-            }])
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: "static", to: "static" },
+                    {
+                        from: 'node_modules/openblock-blocks/media',
+                        to: 'static/blocks-media'
+                    },
+                    {
+                        from: 'extensions/**',
+                        to: 'static',
+                        context: 'src/examples'
+                    },
+                    {
+                        from: 'extension-worker.{js,js.map}',
+                        context: 'node_modules/openblock-vm/dist/web'
+                    },
+                ],
+            }),
         ])
     })
 ].concat(
