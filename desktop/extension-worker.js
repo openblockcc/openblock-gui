@@ -330,21 +330,6 @@ const ArgumentType = {
     NUMBER: 'number',
 
     /**
-     * String value with text field
-     */
-    STRING: 'string',
-
-    /**
-     * String value with matrix field
-     */
-    MATRIX: 'matrix',
-
-    /**
-     * MIDI note number with note picker (piano) field
-     */
-    NOTE: 'note',
-
-    /**
      * Intger numeric value with text field
      */
     INTEGER_NUMBER: 'intger_number',
@@ -407,7 +392,28 @@ const ArgumentType = {
     /**
      * Numeric value with slider field. from -100 to 100 value
      */
-    N100TO100_NUMBER: 'n100to100_number'
+    N100TO100_NUMBER: 'n100to100_number',
+
+    /**
+     * String value with text field
+     */
+    STRING: 'string',
+
+    /**
+     * String value with matrix field
+     */
+    MATRIX: 'matrix',
+
+    /**
+     * String value with matrix field
+     */
+    MATRIX8X12: 'matrix8x12',
+
+    /**
+     * MIDI note number with note picker (piano) field
+     */
+    NOTE: 'note'
+
 };
 
 module.exports = ArgumentType;
