@@ -155,7 +155,8 @@ class ExtensionLibrary extends React.PureComponent {
         const filterAndSort = extensions => extensions.filter(extension => {
             if (extension.supportDevice) {
                 return extension.supportDevice.includes(this.props.deviceId) ||
-                extension.supportDevice.includes(device.deviceExtensionsCompatible);
+                extension.supportDevice.includes(device.deviceExtensionsCompatible) ||
+                extension.supportDevice.includes('*');
             }
             return true;
         })
