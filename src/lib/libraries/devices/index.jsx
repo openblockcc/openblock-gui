@@ -109,7 +109,7 @@ const deviceData = [
         name: 'Arduino Uno',
         deviceId: 'arduinoUno',
         manufactor: 'arduino.cc',
-        learnMore: 'https://store.arduino.cc/products/arduino-uno-rev3',
+        learnMore: 'https://docs.arduino.cc/hardware/uno-rev3',
         type: DeviceType.arduino,
         iconURL: arduinoUnoIconURL,
         description: (
@@ -139,13 +139,13 @@ const deviceData = [
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/arduino-uno-rev3'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-uno'
     },
     {
         name: 'Arduino Nano',
         deviceId: 'arduinoNano',
         manufactor: 'arduino.cc',
-        learnMore: 'https://store.arduino.cc/products/arduino-nano',
+        learnMore: 'https://docs.arduino.cc/hardware/nano',
         type: DeviceType.arduino,
         iconURL: arduinoNanoIconURL,
         description: (
@@ -175,13 +175,13 @@ const deviceData = [
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/arduino-nano'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-nano'
     },
     {
         name: 'Arduino Leonardo',
         deviceId: 'arduinoLeonardo',
         manufactor: 'arduino.cc',
-        learnMore: 'https://store.arduino.cc/products/leonardo',
+        learnMore: 'https://docs.arduino.cc/hardware/leonardo',
         type: DeviceType.arduino,
         iconURL: arduinoLeonardoIconURL,
         description: (
@@ -211,13 +211,13 @@ const deviceData = [
         programMode: ['upload'], // due to the software serilport realtim mode is unstable
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/leonardo'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-leonardo'
     },
     {
         name: 'Arduino Mega 2560',
         deviceId: 'arduinoMega2560',
         manufactor: 'arduino.cc',
-        learnMore: 'https://store.arduino.cc/products/mega-2560-r3',
+        learnMore: 'https://docs.arduino.cc/hardware/mega-2560',
         type: DeviceType.arduino,
         iconURL: arduinoMega2560IconURL,
         description: (
@@ -247,13 +247,13 @@ const deviceData = [
         programMode: ['realtime', 'upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/mega-2560-r3'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-mega-2560-r3'
     },
     {
         name: 'Arduino Uno R4 Minima',
         deviceId: 'arduinoUnoR4Minima',
         manufactor: 'arduino',
-        learnMore: 'https://store.arduino.cc/products/uno-r4-minima',
+        learnMore: 'https://docs.arduino.cc/hardware/uno-r4-minima',
         type: DeviceType.arduino,
         iconURL: arduinoUnoR4MinimaIconURL,
         description: (
@@ -283,13 +283,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/uno-r4-minima?'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-uno-r4-minima'
     },
     {
         name: 'Arduino Uno R4 WiFi',
         deviceId: 'arduinoUnoR4Wifi',
         manufactor: 'arduino',
-        learnMore: 'https://store.arduino.cc/products/uno-r4-wifi',
+        learnMore: 'https://docs.arduino.cc/hardware/uno-r4-wifi',
         type: DeviceType.arduino,
         iconURL: arduinoUnoR4WifiIconURL,
         description: (
@@ -319,13 +319,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://store.arduino.cc/products/uno-r4-wifi?'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/arduino-uno-r4-wifi'
     },
     {
         name: 'ESP32',
         deviceId: 'arduinoEsp32',
         manufactor: 'espressif',
-        learnMore: 'https://www.espressif.com/',
+        learnMore: 'https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/index.html',
         type: DeviceType.arduino,
         iconURL: esp32IconURL,
         description: (
@@ -355,13 +355,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://docs.espressif.com/projects/esp-dev-kits/zh_CN/latest/esp32/index.html'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/esp32'
     },
     {
         name: 'ESP32-S3',
         deviceId: 'arduinoEsp32S3',
         manufactor: 'espressif',
-        learnMore: 'https://www.espressif.com/',
+        learnMore: 'https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/index.html',
         type: DeviceType.arduino,
         iconURL: esp32S3IconURL,
         description: (
@@ -391,7 +391,7 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://docs.espressif.com/projects/esp-dev-kits/zh_CN/latest/esp32s3/index.html'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/esp32s3'
     },
     {
         name: 'NodeMCU',
@@ -428,13 +428,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://arduino-esp8266.readthedocs.io/en/3.0.0/index.html'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/esp8266'
     },
     {
         name: 'MaixDock',
         deviceId: 'arduinoK210MaixDock',
         manufactor: 'sipeed',
-        learnMore: 'https://wiki.sipeed.com/',
+        learnMore: 'https://wiki.sipeed.com/hardware/en/maix/maixpy_develop_kit_board/Maix_dock.html',
         type: DeviceType.arduino,
         iconURL: k210MaixDockIconURL,
         description: (
@@ -464,13 +464,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://wiki.sipeed.com/hardware/zh/maix/maixpy_develop_kit_board/Maix_dock.html'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/maix-dock'
     },
     {
         name: 'Maixduino',
         deviceId: 'arduinoK210Maixduino',
         manufactor: 'sipeed',
-        learnMore: 'https://maixduino.sipeed.com/',
+        learnMore: 'https://wiki.sipeed.com/hardware/en/maix/maixpy_develop_kit_board/maix_duino.html',
         type: DeviceType.arduino,
         iconURL: k210MaixduinoIconURL,
         description: (
@@ -500,13 +500,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://wiki.sipeed.com/soft/maixpy/en/develop_kit_board/maix_duino.html'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/maixduino'
     },
     {
         name: 'Raspberry Pi Pico',
         deviceId: 'arduinoRaspberryPiPico',
         manufactor: 'Raspberry Pi Foundation',
-        learnMore: 'https://www.raspberrypi.com/',
+        learnMore: 'https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico-1-technical-specification',
         type: DeviceType.arduino,
         iconURL: raspberryPiPicoIconURL,
         description: (
@@ -542,7 +542,7 @@ const deviceData = [
         name: 'Raspberry Pi Pico W',
         deviceId: 'arduinoRaspberryPiPicoW',
         manufactor: 'Raspberry Pi Foundation',
-        learnMore: 'https://www.raspberrypi.com/',
+        learnMore: 'https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#picow-technical-specification',
         type: DeviceType.arduino,
         iconURL: raspberryPiPicoWIconURL,
         description: (
@@ -572,13 +572,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-pico-w'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-picow'
     },
     {
         name: 'Raspberry Pi Pico 2',
         deviceId: 'arduinoRaspberryPiPico2',
         manufactor: 'Raspberry Pi Foundation',
-        learnMore: 'https://www.raspberrypi.com/',
+        learnMore: 'https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico-2-technical-specification',
         type: DeviceType.arduino,
         iconURL: raspberryPiPico2IconURL,
         description: (
@@ -608,13 +608,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-pico-2'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-pico2'
     },
     {
         name: 'Raspberry Pi Pico 2 W',
         deviceId: 'arduinoRaspberryPiPico2W',
         manufactor: 'Raspberry Pi Foundation',
-        learnMore: 'https://www.raspberrypi.com/',
+        learnMore: 'https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico2w-technical-specification',
         type: DeviceType.arduino,
         iconURL: raspberryPiPico2WIconURL,
         description: (
@@ -644,13 +644,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-pico-2-w'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/raspberry-pi-pico2w'
     },
     {
         name: 'Micro:bit',
         deviceId: 'microbit',
         manufactor: 'microbit.org',
-        learnMore: 'https://microbit.org/',
+        learnMore: 'https://tech.microbit.org/hardware',
         type: DeviceType.microbit,
         iconURL: microbitIconURL,
         description: (
@@ -680,13 +680,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'microPython'],
         tags: ['microPython'],
-        helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/microbit'
     },
     {
         name: 'Micro:bit V2',
         deviceId: 'microbitV2',
         manufactor: 'microbit.org',
-        learnMore: 'https://microbit.org/',
+        learnMore: 'https://tech.microbit.org/hardware/1-5-revision/',
         type: DeviceType.microbit,
         iconURL: microbitV2IconURL,
         description: (
@@ -716,13 +716,13 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'microPython'],
         tags: ['microPython'],
-        helpLink: 'https://microbit.org/get-started/first-steps/introduction/'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/microbit-v2'
     },
     {
         name: 'Makey Makey',
         deviceId: 'makeyMakey',
         manufactor: 'makeymakey.com',
-        learnMore: 'https://makeymakey.com/',
+        learnMore: 'https://makeymakey.com/pages/how-to',
         type: DeviceType.arduino,
         iconURL: makeymakeyIconURL,
         description: (
@@ -752,7 +752,7 @@ const deviceData = [
         programMode: ['upload'],
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
-        helpLink: 'https://makeymakey.com'
+        helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/makeymakey'
     },
     /**
      * For those parent devices that exist in VM but are not displayed in GUI
