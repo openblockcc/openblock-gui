@@ -79,6 +79,10 @@ import makeymakeyIconURL from './makeymakey/makeymakey.png';
 import makeymakeyConnectionIconURL from './makeymakey/makeymakey-illustration.svg';
 import makeymakeyConnectionSmallIconURL from './makeymakey/makeymakey-small.svg';
 
+import lgt8f328pNanoIconURL from './lgt8f328pNano/lgt8f328pNano.png';
+import lgt8f328pNanoConnectionIconURLL from './lgt8f328pNano/lgt8f328pNano-illustration.svg';
+import lgt8f328pNanoConnectionSmallIconURL from './lgt8f328pNano/lgt8f328pNano-small.svg';
+
 const deviceData = [
     /**
      * Unselect the deivce back to pure scratch mode
@@ -753,6 +757,43 @@ const deviceData = [
         programLanguage: ['block', 'c', 'cpp'],
         tags: ['arduino'],
         helpLink: 'https://wiki.openblock.cc/general-hardware-guidelines/boards/makeymakey'
+    },
+    
+    {
+        name: 'Lgt8f328p Nano',
+        deviceId: 'lgt8f328pNano',
+        manufactor: 'LogicGreen',
+        learnMore: 'https://github.com/dbuezas/lgt8fx',
+        type: DeviceType.arduino,
+        iconURL: lgt8f328pNanoIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="The lgt8f328p Nano is a classic small board to build your projects with."
+                description="Description for the lgt8f328p Nano device"
+                id="gui.device.lgt8f328pNano.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        serialportRequired: true,
+        defaultBaudRate: '57600',
+        internetConnectionRequired: false,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: lgt8f328pNanoConnectionIconURLL,
+        connectionSmallIconURL: lgt8f328pNanoConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to their device."
+                id="gui.device.lgt8f328pNano.connectingMessage"
+            />
+        ),
+        programMode: ['realtime', 'upload'],
+        programLanguage: ['block', 'c', 'cpp'],
+        tags: ['arduino'],
+        helpLink: 'https://github.com/dbuezas/lgt8fx'
     },
     /**
      * For those parent devices that exist in VM but are not displayed in GUI
