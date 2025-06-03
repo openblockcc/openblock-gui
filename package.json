@@ -43,7 +43,6 @@
     "file-loader": "2.0.0",
     "get-float-time-domain-data": "0.1.0",
     "get-user-media-promise": "1.1.4",
-    "iconv-lite": "^0.6.3",
     "immutable": "3.8.2",
     "intl": "1.2.5",
     "js-base64": "2.4.9",
