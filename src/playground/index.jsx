@@ -14,6 +14,7 @@ import AppStateHOC from '../lib/app-state-hoc.jsx';
 import BrowserModalComponent from '../components/browser-modal/browser-modal.jsx';
 import supportedBrowser from '../lib/supported-browser';
 import {ensureIdeAuth} from '../lib/auth-client';
+import {LOCKED_REDIRECT, isAdvancedModeOn} from '../lib/advanced-mode';
 
 import styles from './index.css';
 
@@ -53,7 +54,7 @@ const bootEditor = appTarget => {
     hidePreloader();
 };
 
-try {
+const startEditor = () => {
     setBootMessage('Starting…');
 
     try {
@@ -85,6 +86,16 @@ try {
         showBootError(`Failed to start: ${bootError.message || bootError}`);
         throw bootError;
     });
+};
+
+try {
+    if (isAdvancedModeOn()) {
+        startEditor();
+    } else {
+        // Advanced mode is locked (src/lib/advanced-mode.js); the server redirects too.
+        setBootMessage('Advanced mode is paused. Opening Beginner Studio…');
+        window.location.replace(LOCKED_REDIRECT);
+    }
 } catch (bootError) {
     showBootError(`Failed to start: ${bootError.message || bootError}`);
     throw bootError;

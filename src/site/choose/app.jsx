@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
+import {isAdvancedModeOn} from '../../lib/advanced-mode';
 import {fetchAuthMe} from '../../lib/auth-client';
 import {clarityEvent, identifyClarityUser} from '../../lib/clarity';
 
@@ -51,6 +52,8 @@ const App = () => {
         );
     }
 
+    const advancedOn = isAdvancedModeOn();
+
     return (
         <main className="choose-shell">
             <section
@@ -69,7 +72,7 @@ const App = () => {
                 </a>
                 <h1 id="choose-title">How do you want to code?</h1>
                 <p className="choose-lead">
-                    Pick a path. You can switch later.
+                    {advancedOn ? 'Pick a path. You can switch later.' : 'Start building with Beginner.'}
                 </p>
                 <div className="choose-actions">
                     <a
@@ -78,16 +81,26 @@ const App = () => {
                         onClick={handleBeginner}
                     >
                         <span className="mode-label">Beginner</span>
-                        <span className="mode-hint">Wire modules, click blocks, see live C++</span>
+                        <span className="mode-hint">Wire modules, click blocks, see live MicroPython</span>
                     </a>
-                    <a
-                        className="mode-btn mode-btn--advanced"
-                        href="/ide"
-                        onClick={handleAdvanced}
-                    >
-                        <span className="mode-label">Advanced</span>
-                        <span className="mode-hint">Full block IDE with boards and upload</span>
-                    </a>
+                    {advancedOn ? (
+                        <a
+                            className="mode-btn mode-btn--advanced"
+                            href="/ide"
+                            onClick={handleAdvanced}
+                        >
+                            <span className="mode-label">Advanced</span>
+                            <span className="mode-hint">Full block IDE with boards and upload</span>
+                        </a>
+                    ) : (
+                        <div
+                            className="mode-btn mode-btn--locked"
+                            aria-disabled="true"
+                        >
+                            <span className="mode-label">Advanced</span>
+                            <span className="mode-hint">Paused for now while we focus on Beginner</span>
+                        </div>
+                    )}
                 </div>
                 <p className="choose-lead choose-cloud">
                     Already connected a board to WiFi?{' '}

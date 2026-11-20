@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
+import {isAdvancedModeOn} from '../../../lib/advanced-mode';
 import {useStudio} from '../../context/StudioContext.jsx';
 
 import SignOutDialog from './SignOutDialog.jsx';
@@ -207,9 +208,11 @@ const AccountMenu = () => {
                     >
                         {'Update board'}
                     </button>
-                    <a role="menuitem" href="/choose" style={itemStyle(K)}>
-                        {'Switch mode (Beginner / Advanced)'}
-                    </a>
+                    {isAdvancedModeOn() ? (
+                        <a role="menuitem" href="/choose" style={itemStyle(K)}>
+                            {'Switch mode (Beginner / Advanced)'}
+                        </a>
+                    ) : null}
                     <a role="menuitem" href="/iot" style={itemStyle(K)}>
                         {'IoT Dashboard (full page)'}
                     </a>

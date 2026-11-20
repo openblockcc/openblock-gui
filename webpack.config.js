@@ -264,7 +264,9 @@ module.exports = [
                 'process.env.DEBUG': Boolean(process.env.DEBUG),
                 'process.env.GA_ID': '"' + (process.env.GA_ID || 'UA-000000-01') + '"',
                 'process.env.CLARITY_ID': JSON.stringify(process.env.CLARITY_ID || ''),
-                'process.env.COMPILE_API_URL': JSON.stringify(process.env.COMPILE_API_URL || '/api/compile')
+                'process.env.COMPILE_API_URL': JSON.stringify(process.env.COMPILE_API_URL || '/api/compile'),
+                // Advanced mode stays locked unless this is "on" (src/lib/advanced-mode.js).
+                'process.env.ADVANCED_MODE': JSON.stringify(process.env.ADVANCED_MODE || '')
             }),
             // Block IDE at /ide → ide.html
             new HtmlWebpackPlugin({
@@ -376,7 +378,9 @@ module.exports = [
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"' + process.env.NODE_ENV + '"',
                 'process.env.CLARITY_ID': JSON.stringify(process.env.CLARITY_ID || ''),
-                'process.env.COMPILE_API_URL': JSON.stringify(process.env.COMPILE_API_URL || '')
+                'process.env.COMPILE_API_URL': JSON.stringify(process.env.COMPILE_API_URL || ''),
+                // Advanced mode stays locked unless this is "on" (src/lib/advanced-mode.js).
+                'process.env.ADVANCED_MODE': JSON.stringify(process.env.ADVANCED_MODE || '')
             }),
             // Generated images/icons (scripts/build-site-assets.js) + root files (robots, sitemap, 404, manifest)
             new CopyWebpackPlugin([

@@ -141,6 +141,20 @@ h1 {
   opacity: 0.88;
 }
 
+/* Advanced mode while it is locked (src/lib/advanced-mode.js): visible, not clickable. */
+.mode-btn--locked {
+  background: transparent;
+  color: var(--text);
+  border: 1px dashed rgba(43, 43, 43, 0.25);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mode-btn--locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .mode-btn--advanced .mode-hint {
   opacity: 0.92;
 }

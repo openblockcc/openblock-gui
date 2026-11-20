@@ -100,6 +100,29 @@ describe('Beginner account menu', () => {
         expect(window.sessionStorage.getItem(`tb_cloud:${EMAIL}:wifi`)).toBeNull();
     });
 
+    test('no Switch mode item while Advanced mode is locked', () => {
+        const saved = process.env.ADVANCED_MODE;
+        try {
+            delete process.env.ADVANCED_MODE;
+            render(null);
+            click(document.querySelector('button[aria-label="More options"]'));
+            expect(document.querySelector('a[href="/choose"]')).toBeNull();
+            expect(document.body.textContent).not.toContain('Switch mode');
+            ReactDOM.unmountComponentAtNode(root);
+
+            process.env.ADVANCED_MODE = 'on';
+            render(null);
+            click(document.querySelector('button[aria-label="More options"]'));
+            expect(document.querySelector('a[href="/choose"]').textContent).toBe('Switch mode (Beginner / Advanced)');
+        } finally {
+            if (typeof saved === 'undefined') {
+                delete process.env.ADVANCED_MODE;
+            } else {
+                process.env.ADVANCED_MODE = saved;
+            }
+        }
+    });
+
     test('cancel leaves everything in place', () => {
         render({email: EMAIL, name: 'Kid Maker'});
         openSignOut();

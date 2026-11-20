@@ -1,7 +1,7 @@
 # TinkerBit — project documentation
 
 **Product:** browser studio for the Maker ESP32 RJ11 kit  
-**Modes:** Beginner (`/beginner`) and Advanced (`/ide`)  
+**Modes:** Beginner (`/beginner`) and Advanced (`/ide`). **Advanced is locked** while we focus on Beginner (see "Advanced mode lock" in section 4.1).  
 **Audience:** students, teachers, and anyone who needs to see how the app is put together
 
 This is the project document. It is written as five parts:
@@ -23,7 +23,7 @@ The same kit is used in two products:
 | Mode | URL | Who it is for | How you program |
 |------|-----|---------------|-----------------|
 | **Beginner Studio** | `/beginner` | First lessons, classrooms, kit tours | Pick a module, plug it into a jack, click action blocks. Live MicroPython appears on the side. |
-| **Advanced IDE** | `/ide` | Students who already know blocks | OpenBlock Blockly. Generic pin blocks, kit device blocks, motors, I2C, and Blynk. |
+| **Advanced IDE** (locked) | `/ide` | Students who already know blocks | OpenBlock Blockly. Generic pin blocks, kit device blocks, motors, I2C, and Blynk. Paused for now: `/ide` redirects to Beginner. |
 
 The two modes reach the board in different ways, both from the browser over USB (Web Serial):
 
@@ -39,7 +39,7 @@ There is no student project database in this repository. Work lives in the brows
 **Accounts**
 
 - Google sign-in before Choose, Beginner, or Advanced.  
-- A **Choose** page: Beginner or Advanced. You can go back and switch.  
+- A **Choose** page: Beginner or Advanced. While Advanced is locked it shows as "Paused for now", not as a link.  
 - Localhost can open Choose without a session so developers can work offline.
 
 **Beginner Studio**
@@ -151,6 +151,8 @@ The firmware is ready. The board has not entered download mode. On many laptops 
 - After an upload, press Start again. Start restarts the board; if nothing appears within 4 s, press RST once (some laptops start the board in its flashing mode when it is plugged in).
 
 ### 2.3 Advanced — a typical session
+
+> **Locked for now.** `/ide` and the IDE example pages redirect to `/beginner` until Advanced mode is switched back on (section 4.1). The steps below describe it when it is open.
 
 1. Open `/ide`. It starts on the Maker ESP32, the only board in the board list. Other OpenBlock boards stay in the code (hidden by `KIT_DEVICE_ID` in [devices/index.jsx](src/lib/libraries/devices/index.jsx)), so old projects saved for them still open.  
 2. Drag blocks from **Maker Kit Sensors**, **Maker Kit Outputs**, or **Maker Kit Radio**, or from Digital / Analog / Motors / Stepper / I2C / Blynk.  
@@ -268,12 +270,18 @@ Webpack writes several HTML apps into `build/` ([webpack.config.js](webpack.conf
 | `/login` | login | Google sign-in |
 | `/choose` | choose | Beginner vs Advanced |
 | `/beginner` | beginnerStudio | Kit studio |
-| `/ide` | IDE bundle | OpenBlock GUI |
+| `/ide` | IDE bundle | OpenBlock GUI (locked: redirects to `/beginner`) |
 | `/iot`, `/iot/*` | iot | IoT Dashboard, full page (phone friendly) |
 
 Local development is usually `http://127.0.0.1:8601`.
 
-[middleware.js](middleware.js) runs on `/choose`, `/beginner`, `/ide`, and `/iot`. If auth is on and the session cookie is missing, the request goes to `/login?next=...`. If auth is off, the pages open. If auth is on but `AUTH_SECRET` or `GOOGLE_CLIENT_ID` is missing, login fails closed.
+**Advanced mode lock.** One switch, `ADVANCED_MODE`, keeps the IDE closed unless it is set to `on`:
+
+- [middleware.js](middleware.js) redirects `/ide`, `/ide.html` and the IDE example pages (`blocks-only.html`, `compatibility-testing.html`, `player.html`) to `/beginner` with a 302, before any sign-in check.
+- webpack bakes the same value into the pages ([advanced-mode.js](src/lib/advanced-mode.js)). The IDE page sends itself to `/beginner` (this also covers local dev, which has no middleware), the Choose page shows Advanced as paused, and the Beginner menu hides "Switch mode".
+- To unlock: set `ADVANCED_MODE=on` in the Vercel project and redeploy, or run `ADVANCED_MODE=on npm start` locally. The IDE code and its build stay in place; the IDE build also copies `static/`, which Beginner needs for the bundled firmware.
+
+[middleware.js](middleware.js) also runs on `/choose`, `/beginner`, `/ide`, and `/iot` for sign-in. If auth is on and the session cookie is missing, the request goes to `/login?next=...`. If auth is off, the pages open. If auth is on but `AUTH_SECRET` or `GOOGLE_CLIENT_ID` is missing, login fails closed.
 
 `/api/compile` and `/api/compile/health` are not implemented in the frontend host. They are rewritten to the compile server. `/devices/*` and `/extensions/*` for the Advanced IDE are rewritten the same way.
 
