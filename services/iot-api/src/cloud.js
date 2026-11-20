@@ -1,6 +1,6 @@
 import {evaluateRule, ruleMessage} from './alerts.js';
 import {log} from './log.js';
-import {effectiveStatus, serializeAlert, serializeControl, serializeDevice} from './repo.js';
+import {effectiveStatus, parseLabels, serializeAlert, serializeControl, serializeDevice} from './repo.js';
 import {DEVICE_ID_RE, hashToken, newDeviceId, newDeviceToken, tokenPrefix} from './tokens.js';
 import {
     CONTROL_KEYS,
@@ -413,7 +413,7 @@ export class Cloud {
                 this.repo.setRuleState(rule.id, result.active, result.lastFired);
             }
             if (result.fire) {
-                this.raiseAlert(device, {kind: 'rule', ruleId: rule.id, message: ruleMessage(rule, value, device.name)});
+                this.raiseAlert(device, {kind: 'rule', ruleId: rule.id, message: ruleMessage(rule, value, device.name, parseLabels(device.labels_json)[rule.key])});
             }
         });
     }

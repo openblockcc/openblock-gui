@@ -149,6 +149,24 @@ test('dashboard: suggestion uses titles given for its own keys only', async () =
     assert.equal(odd.body.dashboard.layout.find(w => w.id === 'v_0').title, 'Distance', 'a list is not a titles map');
 });
 
+test('labels: Studio names readings and controls; blanks drop, bad input is 400', async () => {
+    const res = await alice.patch(`/devices/${deviceId}`, {labels: {switch1: '  Pump ', distance: 'Water level', slider1: '   '}});
+    assert.equal(res.status, 200);
+    assert.deepEqual(res.body.device.labels, {switch1: 'Pump', distance: 'Water level'});
+    const listed = await alice.get('/devices');
+    assert.deepEqual(listed.body.devices.find(d => d.id === deviceId).labels, {switch1: 'Pump', distance: 'Water level'});
+    const replaced = await alice.patch(`/devices/${deviceId}`, {labels: {switch1: 'Fan'}});
+    assert.deepEqual(replaced.body.device.labels, {switch1: 'Fan'}, 'the whole set is replaced');
+    assert.equal((await alice.patch(`/devices/${deviceId}`, {labels: ['Pump']})).status, 400);
+    assert.equal((await alice.patch(`/devices/${deviceId}`, {labels: {'bad key!': 'x'}})).status, 400);
+    const many = {};
+    for (let i = 0; i < 33; i++) {
+        many[`k${i}`] = 'x';
+    }
+    assert.equal((await alice.patch(`/devices/${deviceId}`, {labels: many})).status, 400);
+    assert.equal((await bob.patch(`/devices/${deviceId}`, {labels: {switch1: 'Mine'}})).status, 404);
+});
+
 test('dashboard: suggestion only replaces the default; edits are versioned', async () => {
     const sug = await alice.post(`/devices/${deviceId}/dashboard/suggest`, {keys: ['distance', 'bad key'], controls: ['switch1', 'x']});
     assert.equal(sug.body.applied, true);

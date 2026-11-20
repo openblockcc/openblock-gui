@@ -104,6 +104,10 @@ export class Repo {
         this.stmt('UPDATE devices SET name = ? WHERE id = ?').run(name, id);
     }
 
+    setLabels (id, labels) {
+        this.stmt('UPDATE devices SET labels_json = ? WHERE id = ?').run(JSON.stringify(labels), id);
+    }
+
     setInterval (id, sec) {
         this.stmt('UPDATE devices SET interval_sec = ? WHERE id = ?').run(sec, id);
     }
@@ -485,6 +489,15 @@ export function effectiveStatus (row, now = Date.now()) {
     return 'online';
 }
 
+export const parseLabels = json => {
+    try {
+        const labels = JSON.parse(json || '{}');
+        return labels && typeof labels === 'object' && !Array.isArray(labels) ? labels : {};
+    } catch (err) {
+        return {};
+    }
+};
+
 export function serializeDevice (row, now = Date.now()) {
     return {
         id: row.id,
@@ -500,6 +513,7 @@ export function serializeDevice (row, now = Date.now()) {
         warning: row.warning,
         disabledReason: row.disabled_reason,
         tokenPrefix: row.token_prefix,
+        labels: parseLabels(row.labels_json),
         createdAt: row.created_at
     };
 }

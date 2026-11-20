@@ -51,10 +51,10 @@ export function evaluateRule (rule, value, now) {
     return {active: wasActive, fire: false, lastFired: rule.last_fired, changed: false};
 }
 
-export function ruleMessage (rule, value, deviceName) {
+export function ruleMessage (rule, value, deviceName, label) {
     if (rule.message) {
         return rule.message;
     }
     const shown = Number.isInteger(value) ? value : Number(value.toFixed(2));
-    return `${deviceName}: ${rule.key} is ${shown} (${rule.op} ${rule.threshold})`;
+    return `${deviceName}: ${label || rule.key} is ${shown} (${rule.op} ${rule.threshold})`;
 }

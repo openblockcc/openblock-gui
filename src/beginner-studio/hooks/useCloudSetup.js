@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {CLOUD_DEFAULTS, DEVICE_TOKEN_RE, clampInterval, validateWifi} from '../domain/cloud';
 import {telemetryReadings, usedCloudControls} from '../domain/cloudFirmware';
-import {keyTitles} from '../domain/cloudPanel';
+import {CONTROL_NAME_MAX, cloudLabels, keyTitles} from '../domain/cloudPanel';
 import {uniqueBoardName} from '../domain/cloudProgress';
 import {
     forgetAll,
@@ -16,6 +16,7 @@ import {
 import {errorText, iotApi} from '../../lib/iot-api';
 
 const NEW = '__new__';
+const NO_NAMES = Object.freeze({});
 
 /** Steps the student is part-way through; coming back to the Cloud tab keeps them there. */
 const MID_FLOW = ['wifi', 'upload'];
@@ -244,6 +245,12 @@ const useCloudSetup = ({studio, cloudLive, active}) => {
         setStep('wifi');
     });
 
+    /** Cloud labels for what this program sends and listens to, with the student's control names. */
+    const labelsFor = names => {
+        const keys = telemetryReadings(connections, program, ai).map(r => r.key).concat(usedCloudControls(program));
+        return cloudLabels(keys, keyTitles(connections, ai, names));
+    };
+
     const saveWifi = () => run('save', async () => {
         setTouched(true);
         if (!selected) {
@@ -257,6 +264,8 @@ const useCloudSetup = ({studio, cloudLive, active}) => {
         const link = {
             deviceId: selected.id,
             deviceName: selected.name,
+            // Control names belong to the project, so they follow it to another board.
+            labels: (cloud && cloud.labels) || {},
             intervalSec,
             ssid: wifi.ssid,
             email,
@@ -269,16 +278,10 @@ const useCloudSetup = ({studio, cloudLive, active}) => {
         setCloud(link);
         // The tab would otherwise treat the new link as "a different board" and start over.
         shownFor.current = selected.id;
-        const keys = telemetryReadings(connections, program, ai).map(r => r.key);
-        const controls = usedCloudControls(program);
-        const titleOf = keyTitles(connections, ai);
-        const titles = {};
-        keys.concat(controls).forEach(k => {
-            if (titleOf(k)) {
-                titles[k] = titleOf(k);
-            }
-        });
-        iotApi.suggestDashboard(selected.id, keys, controls, titles).catch(() => {});
+        // Names go to the board as labels, so a dashboard follows later renames; its tiles keep plain titles.
+        iotApi.updateDevice(selected.id, {labels: labelsFor(link.labels)}).catch(() => {});
+        iotApi.suggestDashboard(selected.id, telemetryReadings(connections, program, ai).map(r => r.key),
+            usedCloudControls(program), {}).catch(() => {});
         setStep('upload');
     });
 
@@ -402,6 +405,34 @@ const useCloudSetup = ({studio, cloudLive, active}) => {
         fixWifi: () => {
             setTouched(true);
             setStep('wifi');
+        },
+        controlNames: (cloud && cloud.labels) || NO_NAMES,
+        /**
+         * Name a dashboard switch or slider ("Pump"); a blank name goes back to "Switch 1".
+         * Saved with the project and sent to the board's Cloud labels.
+         */
+        nameControl: (key, name) => {
+            if (!cloud) {
+                return Promise.resolve(false);
+            }
+            const labels = Object.assign({}, cloud.labels);
+            const clean = String(name || '').replace(/\s+/g, ' ').trim()
+                .slice(0, CONTROL_NAME_MAX);
+            if ((labels[key] || '') === clean) {
+                return Promise.resolve(false);
+            }
+            if (clean) {
+                labels[key] = clean;
+            } else {
+                delete labels[key];
+            }
+            const link = Object.assign({}, cloud, {labels});
+            writeLastDevice(email, link);
+            setCloud(link);
+            return iotApi.updateDevice(cloud.deviceId, {labels: labelsFor(labels)}).then(() => true, err => {
+                setError(errorText(err));
+                return false;
+            });
         },
         newKeyAndUpload: () => run('token', async () => {
             const res = await iotApi.regenerateToken(w.deviceId);

@@ -90,7 +90,11 @@ const isAutoTitle = widget => {
     const title = (widget.title || '').trim();
     const key = widget.key || '';
     const same = (a, b) => a.toLowerCase() === b.toLowerCase();
-    return !title || same(title, key) || same(title, prettyKey(key)) || same(title, key.replace(/(\d)$/, ' $1'));
+    // Older Studio dashboards titled controls after the block ("Dashboard switch 1").
+    const spaced = key.replace(/(\d)$/, ' $1');
+    const blockTitle = /^(switch|slider)\d$/.test(key) &&
+        same(title.replace(/\s*\(.*\)$/, ''), `Dashboard ${spaced}`);
+    return !title || blockTitle || same(title, key) || same(title, prettyKey(key)) || same(title, spaced);
 };
 
 /**

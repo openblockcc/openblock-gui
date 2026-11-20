@@ -9,6 +9,7 @@ import {
     defaultSpan,
     validateDeviceName,
     validateInterval,
+    validateLabels,
     validateLayout,
     validateRule
 } from './validate.js';
@@ -154,6 +155,13 @@ export const routes = [
                     throw new HttpError(400, interval.error);
                 }
                 ctx.repo.setInterval(device.id, interval.value);
+            }
+            if (ctx.body.labels !== undefined) {
+                const labels = validateLabels(ctx.body.labels);
+                if (!labels.ok) {
+                    throw new HttpError(400, labels.error);
+                }
+                ctx.repo.setLabels(device.id, labels.value);
             }
             if (ctx.body.clearWarning === true) {
                 ctx.repo.clearWarning(device.id);

@@ -144,5 +144,10 @@ CREATE TABLE audit (
 );
 CREATE INDEX audit_sub_action ON audit(sub, action, ts);
 `
+    },
+    {
+        // Names Studio gives readings and dashboard controls ("Pump" for switch1), as a JSON object.
+        version: 2,
+        sql: `ALTER TABLE devices ADD COLUMN labels_json TEXT NOT NULL DEFAULT '{}';`
     }
 ];

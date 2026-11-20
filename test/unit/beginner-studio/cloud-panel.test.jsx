@@ -104,7 +104,9 @@ describe('Studio Cloud page: one checklist', () => {
             goUpload: jest.fn(),
             newKeyAndUpload: jest.fn(),
             unlink: jest.fn(),
-            forget: jest.fn()
+            forget: jest.fn(),
+            controlNames: {},
+            nameControl: jest.fn(() => Promise.resolve(true))
         };
     });
 
@@ -165,6 +167,43 @@ describe('Studio Cloud page: one checklist', () => {
         expect(root.textContent).not.toContain('Edit dashboard');
     });
 
+    test('names on your phone: one field per control the program uses, saved on leaving it', async () => {
+        const program = [{id: 'b1', type: 'if', params: {sensor: 'cloudSwitch1'}, children: []}];
+        useStudio.mockReturnValue({connections: parking.connections, ai: null, program});
+        w.cloud = {deviceId: 'g', deviceName: 'Garden', ssid: 'HomeNet', labels: {switch1: 'Pump'}};
+        w.controlNames = {switch1: 'Pump'};
+        render('live');
+        const card = root.querySelector('section[aria-label="Names on your phone"]');
+        const input = card.querySelector('input');
+        expect(card.textContent).toContain('Dashboard switch 1');
+        expect(card.querySelectorAll('input').length).toBe(1);
+        expect(input.value).toBe('Pump');
+        // The live card uses the name too.
+        expect(root.querySelector('aside').textContent).toContain('Pump');
+
+        const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        act(() => {
+            setValue.call(input, 'Water pump');
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+        });
+        act(() => {
+            input.dispatchEvent(new FocusEvent('blur'));
+        });
+        await flush();
+        expect(w.nameControl).toHaveBeenCalledWith('switch1', 'Water pump');
+        expect(card.textContent).toContain('Saved');
+    });
+
+    test('no names card while setting up, or when the program uses no controls', () => {
+        useStudio.mockReturnValue({connections: parking.connections, ai: null, program: []});
+        w.cloud = {deviceId: 'g', deviceName: 'Garden', ssid: 'HomeNet'};
+        render('live');
+        expect(root.querySelector('section[aria-label="Names on your phone"]')).toBeNull();
+        useStudio.mockReturnValue({connections: parking.connections, ai: null, program: [{id: 'b', type: 'if', params: {sensor: 'cloudSlider1'}}]});
+        render('wifi');
+        expect(root.querySelector('section[aria-label="Names on your phone"]')).toBeNull();
+    });
+
     test('a board that has not sent anything yet says so', () => {
         w.cloud = {deviceId: 'g', deviceName: 'Garden', ssid: 'HomeNet'};
         state.details.g = Object.assign({}, state.details.g, {latest: [], controls: [], device: {id: 'g', name: 'Garden', status: 'never', lastSeen: null}});
@@ -176,8 +215,8 @@ describe('Studio Cloud page: one checklist', () => {
 describe('setup state', () => {
     let w;
     let setCloud;
-    const Probe = ({cloud, active}) => {
-        const studio = {cloud, setCloud, connections: [], program: [], projectName: 'Garden', setView: jest.fn()};
+    const Probe = ({cloud, active, program}) => {
+        const studio = {cloud, setCloud, connections: [], program: program || [], projectName: 'Garden', setView: jest.fn()};
         w = useCloudSetup({studio, cloudLive: {stage: 'idle'}, active: Boolean(active)}).w;
         return null;
     };
@@ -227,5 +266,37 @@ describe('setup state', () => {
         act(() => w.deviceChanged({id: 'g', name: 'Garden', intervalSec: 10}));
         expect(setCloud).not.toHaveBeenCalled();
         expect(writeLastDevice).not.toHaveBeenCalled();
+    });
+
+    test('naming a control saves it with the project and sends the board its labels', async () => {
+        iotApi.updateDevice.mockReturnValue(Promise.resolve({device: {id: 'g'}}));
+        const program = [{id: 'b1', type: 'if', params: {sensor: 'cloudSwitch1'}, children: []}];
+        const cloud = {deviceId: 'g', deviceName: 'Garden', intervalSec: 10};
+        mount(<Probe cloud={cloud} program={program} />);
+        let changed;
+        await act(async () => {
+            changed = await w.nameControl('switch1', '  Pump  ');
+        });
+        expect(changed).toBe(true);
+        const link = Object.assign({}, cloud, {labels: {switch1: 'Pump'}});
+        expect(setCloud).toHaveBeenCalledWith(link);
+        expect(writeLastDevice).toHaveBeenCalledWith(null, link);
+        expect(iotApi.updateDevice).toHaveBeenCalledWith('g', {labels: {switch1: 'Pump'}});
+    });
+
+    test('a blank name goes back to the plain one; the same name sends nothing', async () => {
+        iotApi.updateDevice.mockClear();
+        iotApi.updateDevice.mockReturnValue(Promise.resolve({device: {id: 'g'}}));
+        const cloud = {deviceId: 'g', deviceName: 'Garden', labels: {switch1: 'Pump'}};
+        mount(<Probe cloud={cloud} program={[{id: 'b', type: 'if', params: {sensor: 'cloudSwitch1'}}]} />);
+        await act(async () => {
+            expect(await w.nameControl('switch1', 'Pump')).toBe(false);
+        });
+        expect(iotApi.updateDevice).not.toHaveBeenCalled();
+        await act(async () => {
+            await w.nameControl('switch1', '   ');
+        });
+        expect(setCloud).toHaveBeenCalledWith(Object.assign({}, cloud, {labels: {}}));
+        expect(iotApi.updateDevice).toHaveBeenCalledWith('g', {labels: {}});
     });
 });

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 
-import {evaluateRule} from '../src/alerts.js';
+import {evaluateRule, ruleMessage} from '../src/alerts.js';
 import {createDeviceCommands, deviceAcls, isBenignError, kickCommands, removeCommands} from '../src/broker/dynsec.js';
 import {loadConfig} from '../src/config.js';
 import {lttb, pickTier} from '../src/downsample.js';
@@ -213,4 +213,11 @@ test('rate limiter refills over time', () => {
     assert.equal(blocked.retryAfterSec, 1);
     assert.ok(rl.take('a', 1000).allowed);
     assert.ok(rl.take('b', 0).allowed, 'keys are independent');
+});
+
+test('alerts: the default message uses the name Studio gave the reading', () => {
+    const rule = {key: 'distance', op: '<', threshold: 10, message: ''};
+    assert.equal(ruleMessage(rule, 7, 'Tank', 'Water level'), 'Tank: Water level is 7 (< 10)');
+    assert.equal(ruleMessage(rule, 7.123, 'Tank'), 'Tank: distance is 7.12 (< 10)');
+    assert.equal(ruleMessage(Object.assign({}, rule, {message: 'Refill!'}), 7, 'Tank', 'Water level'), 'Refill!');
 });

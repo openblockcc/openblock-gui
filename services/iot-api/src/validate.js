@@ -154,6 +154,34 @@ export function parseAlertText (payload) {
     return text ? ok(text) : fail('bad_alert');
 }
 
+export const MAX_LABELS = 32;
+export const LABEL_MAX_CHARS = 40;
+
+/**
+ * Names for readings and controls, e.g. {switch1: 'Pump', distance: 'Water level'}.
+ * Blank names are dropped; the whole set replaces the old one.
+ */
+export function validateLabels (value) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        return fail('invalid_labels');
+    }
+    const keys = Object.keys(value);
+    if (keys.length > MAX_LABELS) {
+        return fail('too_many_labels');
+    }
+    const labels = {};
+    for (const key of keys) {
+        if (!READING_KEY_RE.test(key)) {
+            return fail('invalid_labels');
+        }
+        const label = cleanText(value[key], LABEL_MAX_CHARS);
+        if (label) {
+            labels[key] = label;
+        }
+    }
+    return ok(labels);
+}
+
 export function validateDeviceName (value) {
     const name = cleanText(value, 40);
     return name ? ok(name) : fail('invalid_name');

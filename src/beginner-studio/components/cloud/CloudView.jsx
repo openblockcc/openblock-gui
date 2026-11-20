@@ -1,8 +1,9 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {useStudio} from '../../context/StudioContext.jsx';
 import {useUpload} from '../../context/UploadContext.jsx';
-import {keyTitles} from '../../domain/cloudPanel';
+import {usedCloudControls} from '../../domain/cloudFirmware';
+import {CONTROL_NAME_MAX, blockName, keyTitles} from '../../domain/cloudPanel';
 import useCloudSetup from '../../hooks/useCloudSetup';
 import {KNOWN_UNITS, formatValue, labelFor, statusText} from '../../../iot/format';
 import {useCloudStore} from '../../../iot/store';
@@ -89,6 +90,64 @@ const Item = ({K, n, state, title, summary, onChange, changeLabel, children}) =>
     );
 };
 
+/** One dashboard control's name: typed here, saved when the field loses focus or on Enter. */
+const NameRow = ({K, s, controlKey, saved, onSave}) => {
+    const [text, setText] = useState(saved || '');
+    const [note, setNote] = useState('');
+    useEffect(() => {
+        setText(saved || '');
+    }, [saved]);
+    const id = `tb-cloud-name-${controlKey}`;
+    const save = () => {
+        onSave(controlKey, text).then(changed => {
+            if (changed) {
+                setNote('Saved');
+            }
+        });
+    };
+    return (
+        <div style={{display: 'grid', gridTemplateColumns: 'minmax(0, 150px) minmax(0, 1fr) 52px', gap: 10, alignItems: 'center'}}>
+            <label htmlFor={id} style={{fontSize: 13, color: K.sub}}>{blockName(controlKey).replace(/\s*\(.*\)$/, '')}</label>
+            <input
+                id={id}
+                value={text}
+                maxLength={CONTROL_NAME_MAX}
+                placeholder={labelFor(null, controlKey)}
+                onChange={e => {
+                    setText(e.target.value);
+                    setNote('');
+                }}
+                onBlur={save}
+                onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                        e.target.blur();
+                    }
+                }}
+                style={Object.assign({}, s.input, {marginTop: 0})}
+            />
+            <span aria-live="polite" style={{fontSize: 12, color: K.green}}>{note}</span>
+        </div>
+    );
+};
+
+/** Names for the dashboard switches and sliders this program listens to ("Pump" for switch 1). */
+const NamesCard = ({K, w, controls}) => {
+    const s = ui(K);
+    return (
+        <section aria-label="Names on your phone" style={{background: K.panel, border: `1px solid ${K.border}`, borderRadius: 14, padding: '14px 16px'}}>
+            <div style={{fontWeight: 700, fontSize: 15, color: K.text}}>Names on your phone</div>
+            <div style={{fontSize: 13, color: K.sub, margin: '4px 0 12px', lineHeight: 1.5}}>
+                Give each dashboard control a name, like “Pump” or “Fan speed”. Your phone shows it at once.
+            </div>
+            <div style={{display: 'grid', gap: 8}}>
+                {controls.map(key => (
+                    <NameRow key={key} K={K} s={s} controlKey={key} saved={w.controlNames[key]} onSave={w.nameControl} />
+                ))}
+            </div>
+        </section>
+    );
+};
+
 /** Readings and controls of the project's board, live, plus the way to open it on a phone. */
 const LiveCard = ({K, w, titleFor}) => {
     const deviceId = w.cloud.deviceId;
@@ -159,8 +218,10 @@ const LiveCard = ({K, w, titleFor}) => {
  * Cloud (/iot), never inside Studio.
  */
 const CloudPanel = ({K, w, step, error, cloudLive}) => {
-    const {connections, ai} = useStudio();
-    const titleFor = useMemo(() => keyTitles(connections, ai), [connections, ai]);
+    const {connections, ai, program} = useStudio();
+    const names = w.controlNames;
+    const titleFor = useMemo(() => keyTitles(connections, ai, names), [connections, ai, names]);
+    const controls = useMemo(() => usedCloudControls(program || []), [program]);
     const waiting = cloudLive.stage === 'uploading' || cloudLive.stage === 'waiting';
     const setUp = Boolean(w.cloud);
     // "live" without a board means the link was removed: start again at the board.
@@ -231,6 +292,7 @@ const CloudPanel = ({K, w, step, error, cloudLive}) => {
                         {goBody}
                     </Item>
                 </ol>
+                {home && controls.length ? <NamesCard K={K} w={w} controls={controls} /> : null}
                 {setUp ? (
                     <details style={{fontSize: 13, color: K.sub}}>
                         <summary style={{cursor: 'pointer', minHeight: 28}}>Board key and other settings</summary>
