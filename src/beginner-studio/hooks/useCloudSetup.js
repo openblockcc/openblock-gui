@@ -112,14 +112,9 @@ const useCloudSetup = ({studio, cloudLive, active}) => {
         const sameUser = cloud && cloud.email === userEmail;
         const last = sameUser ? cloud : readLastDevice(userEmail);
         const lastFound = last && list.some(d => d.id === last.deviceId);
-        let pick = NEW;
-        if (lastFound) {
-            pick = last.deviceId;
-        } else if (list.length === 1) {
-            pick = list[0].id;
-        } else if (list.length) {
-            pick = '';
-        }
+        // A project keeps the board it used; otherwise it gets a board of its own (named after
+        // the project), and using an existing board is the student's choice.
+        const pick = lastFound ? last.deviceId : NEW;
         const picked = list.find(d => d.id === pick);
         setDevices(list);
         setChoice(pick);

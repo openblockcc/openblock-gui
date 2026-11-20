@@ -11,7 +11,7 @@ import AccountMenu from './AccountMenu.jsx';
 import UndoButtons from './UndoButtons.jsx';
 import UploadButton from './UploadButton.jsx';
 
-/** Status dot on the IoT Dashboard button: set up, connecting after an upload, needs help, online or offline. */
+/** Status dot on the Cloud button: set up, connecting after an upload, needs help, online or offline. */
 const cloudLook = (K, cloud, live) => {
     if (!cloud) {
         return {dot: K.orange, title: 'Finish setting up Cloud'};
@@ -168,7 +168,7 @@ const TopBar = () => {
             <button
                 type="button"
                 title={cloudPart ? look.title : 'Send readings to your phone and control your board from it'}
-                aria-label={cloudPart ? `IoT Dashboard: ${look.title}` : 'IoT Dashboard: add Cloud to this project'}
+                aria-label={cloudPart ? `Cloud: ${look.title}` : 'Cloud: add it to this project'}
                 aria-pressed={view === 'cloud'}
                 onClick={() => (cloudPart ? setView('cloud') : setShowCloudSetup(true))}
                 style={{
@@ -200,7 +200,7 @@ const TopBar = () => {
                         }}
                     />
                 ) : null}
-                IoT Dashboard
+                Cloud
             </button>
 
             <button

@@ -108,7 +108,7 @@ const App = () => {
                         href="/iot"
                         onClick={() => clarityEvent('mode_cloud')}
                     >
-                        Open your IoT Dashboard
+                        Open TinkerBit Cloud
                     </a>
                 </p>
             </section>

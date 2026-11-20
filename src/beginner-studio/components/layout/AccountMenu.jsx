@@ -214,7 +214,7 @@ const AccountMenu = () => {
                         </a>
                     ) : null}
                     <a role="menuitem" href="/iot" style={itemStyle(K)}>
-                        {'IoT Dashboard (full page)'}
+                        {'TinkerBit Cloud (dashboards)'}
                     </a>
                     {user ? (
                         <React.Fragment>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {useStudio} from '../../context/StudioContext.jsx';
 import {NEW} from '../../hooks/useCloudSetup';
@@ -19,15 +19,17 @@ const madeOn = iso => {
 };
 
 /**
- * Pick the board this project runs on, or name a new one. The new board is only made when the
- * student presses Next, so a double click or a change of mind leaves no empty boards behind.
- * @param {object} props.w wizard state and actions from CloudWizard
+ * The project's Cloud board. By default the project gets a board of its own, named after the
+ * project; an existing board is one click away ("Use a board I already have"). The new board is
+ * only made when the student presses Next, so a change of mind leaves no empty boards behind.
+ * @param {object} props.w setup state and actions from useCloudSetup
  */
 const BoardStep = ({w}) => {
     const {K} = useStudio();
     const s = ui(K);
     const {devices, choice, setChoice, newName, setNewName, selected, hasToken, busy, atLimit, maxDevices} = w;
     const making = choice === NEW || !devices.length;
+    const [showList, setShowList] = useState(!making);
     const nameCount = {};
     devices.forEach(d => {
         const key = (d.name || '').toLowerCase();
@@ -59,8 +61,8 @@ const BoardStep = ({w}) => {
     );
 
     const nameField = (
-        <div style={{marginTop: devices.length ? 8 : 0}}>
-            <label style={s.label} htmlFor="tb-cloud-new-name">Board name</label>
+        <div style={{marginTop: showList && devices.length ? 8 : 0}}>
+            <label style={s.label} htmlFor="tb-cloud-new-name">It shows up on your phone as</label>
             <input
                 id="tb-cloud-new-name"
                 value={newName}
@@ -71,24 +73,39 @@ const BoardStep = ({w}) => {
                         w.next();
                     }
                 }}
-                autoFocus={!devices.length}
                 style={s.input}
             />
-            <div style={Object.assign({}, s.small, {marginTop: 4})}>This is how it shows up on your phone.</div>
         </div>
     );
 
     return (
         <div>
-            <h3 style={s.title}>{devices.length ? 'Which board is this?' : 'Name your board'}</h3>
-            <p style={s.lead}>
-                {devices.length ?
-                    'Pick the board you will plug in, or make a new one.' :
-                    'Your first Cloud board. You can change the name later.'}
+            <p style={Object.assign({}, s.lead, {marginTop: 0})}>
+                {making ?
+                    'This project gets its own Cloud board. You can rename it later.' :
+                    'This project will use a board you already have.'}
             </p>
 
-            {devices.length ? (
-                <div role="radiogroup" aria-label="Your Cloud boards" style={{display: 'grid', gap: 6}}>
+            {making && !atLimit ? nameField : null}
+            {making && atLimit ? (
+                <div style={s.small}>
+                    You have {devices.length} of {maxDevices} boards. Use one below, or delete one in TinkerBit Cloud to make another.
+                </div>
+            ) : null}
+
+            {devices.length && !showList ? (
+                <button
+                    type="button"
+                    onClick={() => setShowList(true)}
+                    style={{border: 'none', background: 'transparent', color: K.accent, fontWeight: 700, fontSize: 13, padding: '8px 0', cursor: 'pointer'}}
+                >
+                    Use a board I already have ({devices.length})
+                </button>
+            ) : null}
+
+            {devices.length && (showList || atLimit) ? (
+                <div role="radiogroup" aria-label="Your Cloud boards" style={{display: 'grid', gap: 6, marginTop: 10}}>
+                    {atLimit ? null : row(NEW, <span style={{fontSize: 14, color: K.text}}>A new board for this project</span>)}
                     {devices.map(d => row(d.id, (
                         <React.Fragment>
                             <span
@@ -104,15 +121,8 @@ const BoardStep = ({w}) => {
                             <span style={{fontSize: 12, color: K.dim}}>{STATUS_WORDS[d.status] || d.status}</span>
                         </React.Fragment>
                     )))}
-                    {atLimit ? (
-                        <div style={s.small}>
-                            You have {devices.length} of {maxDevices} boards. Delete one on the dashboard to make another.
-                        </div>
-                    ) : row(NEW, <span style={{fontSize: 14, color: K.text}}>+ A new board</span>)}
                 </div>
             ) : null}
-
-            {making && !atLimit ? nameField : null}
 
             {!making && selected && selected.status === 'disabled' ? (
                 <Note
@@ -141,7 +151,7 @@ const BoardStep = ({w}) => {
                 </Note>
             ) : null}
 
-            <Disclosure K={K} label="More settings">
+            <Disclosure K={K} label="How often it sends readings">
                 <label style={s.label} htmlFor="tb-cloud-interval">Send readings</label>
                 <select
                     id="tb-cloud-interval"
@@ -155,10 +165,6 @@ const BoardStep = ({w}) => {
                 </select>
                 <div style={Object.assign({}, s.small, {marginTop: 4})}>
                     Switches and sliders on your phone reach the board straight away, whatever you pick.
-                </div>
-                <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12}}>
-                    {w.cloud ? <Button K={K} onClick={w.unlink}>Unlink this project</Button> : null}
-                    <Button K={K} onClick={w.forget}>Forget WiFi and keys on this computer</Button>
                 </div>
             </Disclosure>
 

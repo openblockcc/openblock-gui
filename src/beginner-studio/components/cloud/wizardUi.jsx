@@ -86,58 +86,10 @@ const Disclosure = ({K, label, children}) => (
 );
 
 /** Board · WiFi · Upload · Live, with the current step highlighted. */
-const STEPS = [
-    {id: 'board', label: 'Board'},
-    {id: 'wifi', label: 'WiFi'},
-    {id: 'upload', label: 'Upload'},
-    {id: 'live', label: 'Live'}
-];
-
-const StepBar = ({K, step}) => {
-    const at = STEPS.findIndex(s => s.id === step);
-    return (
-        <ol
-            aria-label="Cloud setup steps"
-            style={{display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: '0 0 16px'}}
-        >
-            {STEPS.map((s, i) => {
-                const done = i < at;
-                const current = i === at;
-                return (
-                    <li
-                        key={s.id}
-                        aria-current={current ? 'step' : undefined}
-                        style={{flex: 1, minWidth: 0}}
-                    >
-                        <div
-                            style={{
-                                height: 4,
-                                borderRadius: 2,
-                                background: done || current ? K.accent : K.border,
-                                opacity: current ? 1 : (done ? 0.6 : 1)
-                            }}
-                        />
-                        <div
-                            style={{
-                                fontSize: 11,
-                                fontWeight: current ? 800 : 600,
-                                color: current ? K.text : K.dim,
-                                marginTop: 4
-                            }}
-                        >
-                            {done ? `✓ ${s.label}` : s.label}
-                        </div>
-                    </li>
-                );
-            })}
-        </ol>
-    );
-};
-
 const Footer = ({children}) => (
     <div style={{display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, flexWrap: 'wrap'}}>{children}</div>
 );
 
 const Spacer = () => <div style={{flex: 1}} />;
 
-export {Button, Disclosure, Footer, Note, Spacer, StepBar, ui};
+export {Button, Disclosure, Footer, Note, Spacer, ui};

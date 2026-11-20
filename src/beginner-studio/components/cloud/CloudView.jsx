@@ -1,280 +1,265 @@
-import React, {Suspense, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo} from 'react';
 
 import {useStudio} from '../../context/StudioContext.jsx';
 import {useUpload} from '../../context/UploadContext.jsx';
 import {keyTitles} from '../../domain/cloudPanel';
-import {writeToken} from '../../domain/cloudSecrets';
 import useCloudSetup from '../../hooks/useCloudSetup';
-import {errorText, iotApi} from '../../../lib/iot-api';
-import {useWidth} from '../../../iot/hooks';
-import {canLeave} from '../../../iot/router';
+import {KNOWN_UNITS, formatValue, labelFor, statusText} from '../../../iot/format';
 import {useCloudStore} from '../../../iot/store';
-import {ThemeContext} from '../../../iot/ui.jsx';
 
 import BoardStep from './BoardStep.jsx';
-import DeviceDashboard from './DeviceDashboardLazy';
-import DeviceManager, {PROJECT} from './DeviceManager.jsx';
-import LiveStep from './LiveStep.jsx';
+import LiveStep, {PhoneLink} from './LiveStep.jsx';
 import UploadStep from './UploadStep.jsx';
 import WifiStep from './WifiStep.jsx';
-import {Button, Note, StepBar, ui} from './wizardUi.jsx';
-
-/** Below this width the board list turns into a dropdown above the dashboard. */
-const NARROW = 900;
+import {Button, Note, ui} from './wizardUi.jsx';
 
 const isLocalHost = () => {
     const host = window.location.hostname;
     return host === 'localhost' || host === '127.0.0.1';
 };
 
-const SetupCard = ({K, children}) => (
+const Card = ({K, children, style}) => (
     <div
-        style={{
+        style={Object.assign({
             background: K.panel,
             border: `1px solid ${K.border}`,
             borderRadius: 14,
-            padding: 20,
-            maxWidth: 560,
-            margin: '0 auto'
-        }}
+            padding: 18
+        }, style)}
     >
         {children}
     </div>
 );
 
-/** Ticks so "seen 5 min ago" keeps moving between updates. */
-const useNow = ms => {
-    const [now, setNow] = useState(Date.now());
-    useEffect(() => {
-        const timer = setInterval(() => setNow(Date.now()), ms);
-        return () => clearInterval(timer);
-    }, [ms]);
-    return now;
+/** A numbered checklist item: a tick when done, open while it is the step being worked on. */
+const Item = ({K, n, state, title, summary, onChange, changeLabel, children}) => {
+    const done = state === 'done';
+    const open = state === 'active';
+    return (
+        <li
+            aria-current={open ? 'step' : undefined}
+            style={{
+                background: K.panel,
+                border: `1px solid ${open ? K.accent : K.border}`,
+                borderRadius: 14,
+                padding: '14px 16px',
+                display: 'flex',
+                gap: 12,
+                alignItems: 'flex-start'
+            }}
+        >
+            <span
+                aria-hidden="true"
+                style={{
+                    flex: 'none',
+                    width: 26,
+                    height: 26,
+                    borderRadius: 13,
+                    marginTop: 1,
+                    background: done ? K.green : (open ? K.accent : K.surface),
+                    color: done || open ? '#fff' : K.dim,
+                    fontSize: 13,
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                {done ? '✓' : n}
+            </span>
+            <div style={{flex: 1, minWidth: 0}}>
+                <div style={{display: 'flex', alignItems: 'baseline', gap: 10, justifyContent: 'space-between', flexWrap: 'wrap'}}>
+                    <span style={{fontWeight: 700, fontSize: 15, color: state === 'waiting' ? K.dim : K.text}}>
+                        {done && summary ? summary : title}
+                        <span style={{position: 'absolute', width: 1, height: 1, overflow: 'hidden'}}>{done ? ' (done)' : ''}</span>
+                    </span>
+                    {done && onChange ? (
+                        <button
+                            type="button"
+                            onClick={onChange}
+                            style={{border: 'none', background: 'transparent', color: K.accent, fontWeight: 700, fontSize: 13, cursor: 'pointer', padding: 4}}
+                        >
+                            {changeLabel || 'Change'}
+                        </button>
+                    ) : null}
+                </div>
+                {open ? <div style={{marginTop: 10}}>{children}</div> : null}
+            </div>
+        </li>
+    );
 };
 
-/**
- * The IoT page once Cloud is reachable: the board list on the left, and on the right either the
- * project's setup steps, its going-live checklist, or a board's dashboard.
- */
-const CloudBoards = ({K, w, step, error, cloudLive}) => {
-    const {connections, ai} = useStudio();
-    const now = useNow(15000);
-    const [selected, setSelected] = useState(PROJECT);
-    const [editing, setEditing] = useState(false);
-    const wrapRef = useRef(null);
-    const width = useWidth(wrapRef);
-    const narrow = width > 0 && width < NARROW;
-
-    const projectId = w.cloud ? w.cloud.deviceId : null;
-    const settingUp = !(step === 'live' && w.cloud && cloudLive.stage !== 'waiting');
-    // Picked or just made on the Board step; the project links to it when the WiFi step is saved.
-    const setupBoard = settingUp && step === 'wifi' && w.selected && w.selected.id !== projectId ? w.selected : null;
-    const projectView = selected === PROJECT || (!setupBoard && selected === projectId);
-    let shownId = null;
-    if (!projectView) {
-        shownId = selected;
-    } else if (!settingUp) {
-        shownId = projectId;
-    }
-    const route = useMemo(() => (shownId ? {page: 'device', id: shownId} : {page: 'devices'}), [shownId]);
-    const [state, actions] = useCloudStore(route);
-    const devices = state.devices;
-    const email = state.config && state.config.user ? state.config.user.email : null;
-    const limit = state.config && state.config.limits ? state.config.limits.maxDevices : 0;
-    const projectDevice = devices && projectId ? devices.find(d => d.id === projectId) : null;
-    let projectBoard = '';
-    if (setupBoard) {
-        projectBoard = setupBoard.name;
-    } else if (projectId) {
-        projectBoard = projectDevice ? projectDevice.name : w.cloud.deviceName;
-    }
-    const titleFor = useMemo(() => keyTitles(connections, ai), [connections, ai]);
-
-    const select = target => {
-        const next = target === projectId && !setupBoard ? PROJECT : target;
-        if (next === selected || !canLeave()) {
-            return;
-        }
-        setSelected(next);
-    };
-
-    // An upload always goes to the project's board, so show that board while it happens.
-    useEffect(() => {
-        if ((cloudLive.stage === 'uploading' || cloudLive.stage === 'waiting') && canLeave()) {
-            setSelected(PROJECT);
-        }
-    }, [cloudLive.stage]);
-
-    // The project switched boards (setup finished): show it, and refresh the list. The store
-    // loads the list by itself when the page opens, so the first run has nothing to do.
-    const mounted = useRef(false);
-    useEffect(() => {
-        if (mounted.current) {
-            setSelected(PROJECT);
-            actions.refreshDevices();
-        }
-    }, [projectId]);
-
-    // The setup steps made or deleted a board.
-    useEffect(() => {
-        if (mounted.current) {
-            actions.refreshDevices();
-        }
-        mounted.current = true;
-    }, [w.devices.length]);
-
-    // The board on show was deleted here or on another screen.
-    useEffect(() => {
-        if (selected !== PROJECT && devices && !devices.some(d => d.id === selected)) {
-            setSelected(PROJECT);
-        }
-    }, [devices, selected]);
-
-    const addBoard = async name => {
-        try {
-            const res = await iotApi.createDevice(name);
-            const saved = writeToken(email, res.device.id, res.token);
-            actions.dispatch({type: 'device/upsert', device: Object.assign({latest: []}, res.device)});
-            w.refreshDevices();
-            w.tokenChanged();
-            if (canLeave()) {
-                setSelected(res.device.id);
-            }
-            return saved ? '' : 'Board added, but this browser would not save its key (private window?). Use a normal window.';
-        } catch (err) {
-            return errorText(err);
-        }
-    };
-
-    const linkToProject = id => {
-        if (id === projectId) {
-            // Back to the board the project already uses: drop the half-done switch.
-            w.close();
-            setSelected(PROJECT);
-            return;
-        }
-        const board = devices && devices.find(d => d.id === id);
-        const name = board ? board.name : 'this board';
-        // eslint-disable-next-line no-alert
-        if (projectDevice && !window.confirm(
-            `Your next Upload goes to “${name}”.\n“${projectDevice.name}” keeps running its old program.`
-        )) {
-            return;
-        }
-        if (!canLeave()) {
-            return;
-        }
-        w.switchBoard(id);
-        w.refreshDevices();
-        setSelected(PROJECT);
-    };
-
-    const onDeleted = id => {
-        if (id === projectId) {
-            w.unlink();
-        }
-        setSelected(PROJECT);
-        w.refreshDevices();
-    };
-
-    let right;
-    if (projectView && settingUp) {
-        const shown = step === 'live' && !w.cloud ? 'board' : step;
-        const body = {
-            board: <BoardStep w={w} />,
-            wifi: <WifiStep w={w} />,
-            upload: <UploadStep w={w} />,
-            live: <LiveStep w={w} />
-        }[shown];
-        right = (
-            <SetupCard K={K}>
-                <StepBar K={K} step={shown} />
-                {body}
-            </SetupCard>
-        );
-    } else {
-        right = (
-            <Suspense fallback={<div style={{fontSize: 13, color: K.sub, padding: 12}}>Loading the dashboard…</div>}>
-                <DeviceDashboard
-                    K={K}
-                    id={shownId}
-                    state={state}
-                    actions={actions}
-                    isProject={projectView}
-                    projectBoard={projectBoard}
-                    projectGone={Boolean(!setupBoard && projectId && devices && !projectDevice)}
-                    now={now}
-                    titleFor={projectView ? titleFor : null}
-                    onUpload={w.goUpload}
-                    onChangeWifi={w.fixWifi}
-                    onChangeBoard={w.goBoard}
-                    onBack={() => select(PROJECT)}
-                    onUseForProject={() => linkToProject(shownId)}
-                    onUnlinkDeleted={w.unlink}
-                    onDeleted={onDeleted}
-                    onNewKey={w.tokenChanged}
-                    onChanged={w.deviceChanged}
-                    onEditingChange={setEditing}
-                />
-            </Suspense>
-        );
-    }
-
-    let mode = 'full';
-    if (narrow) {
-        mode = 'narrow';
-    } else if (editing) {
-        mode = 'rail';
-    } else if (devices && devices.length <= 1) {
-        mode = 'compact';
-    }
-    const columns = {full: 'minmax(260px, 30%) minmax(0, 1fr)', compact: '230px minmax(0, 1fr)', rail: '52px minmax(0, 1fr)'}[mode];
-    let phoneId = null;
-    if (!projectView) {
-        phoneId = selected;
-    } else if (projectDevice) {
-        phoneId = projectId;
-    }
-    const phoneBoard = phoneId && devices ? devices.find(d => d.id === phoneId) : null;
+/** Readings and controls of the project's board, live, plus the way to open it on a phone. */
+const LiveCard = ({K, w, titleFor}) => {
+    const deviceId = w.cloud.deviceId;
+    const route = useMemo(() => ({page: 'device', id: deviceId}), [deviceId]);
+    const [state] = useCloudStore(route);
+    const detail = state.details[deviceId];
+    const device = (detail && detail.device) || (state.devices || []).find(d => d.id === deviceId) || null;
+    const name = (device && device.name) || w.cloud.deviceName;
+    const readings = detail ? (detail.latest || []).slice(0, 4) : [];
+    const controls = detail ? (detail.controls || []).filter(c => (c.version || 0) > 1 || (c.ackedVersion || 0) > 0) : [];
+    const nameOf = key => (titleFor && titleFor(key)) || labelFor(device, key);
+    const online = device && device.status === 'online';
 
     return (
-        <ThemeContext.Provider value={K}>
-            <div
-                ref={wrapRef}
-                style={narrow ?
-                    {display: 'grid', gap: 12} :
-                    {display: 'grid', gridTemplateColumns: columns, gap: 16, alignItems: 'start'}}
-            >
-                <div style={narrow ? null : {position: 'sticky', top: 0, maxHeight: 'calc(100vh - 140px)', overflowY: 'auto'}}>
-                    <DeviceManager
-                        K={K}
-                        mode={mode}
-                        devices={devices}
-                        devicesError={state.devicesError}
-                        onRetry={actions.refreshDevices}
-                        limit={limit}
-                        project={setupBoard ?
-                            {id: setupBoard.id, name: setupBoard.name, settingUp: true} :
-                            {id: projectId, name: w.cloud ? w.cloud.deviceName : ''}}
-                        selected={projectView ? PROJECT : selected}
-                        onSelect={select}
-                        onAdd={addBoard}
-                        phone={phoneBoard ? {id: phoneBoard.id, name: phoneBoard.name} : null}
-                        now={now}
-                    />
+        <div style={{display: 'grid', gap: 14}}>
+            <Card K={K}>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 12}}>
+                    <span style={{fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: K.dim}}>Live now</span>
+                    {device ? (
+                        <span
+                            style={{
+                                fontSize: 12,
+                                fontWeight: 700,
+                                padding: '3px 10px',
+                                borderRadius: 999,
+                                background: online ? `${K.green}26` : K.surface,
+                                color: online ? K.green : K.sub
+                            }}
+                        >
+                            {statusText(device)}
+                        </span>
+                    ) : null}
                 </div>
-                <div style={{minWidth: 0}}>
-                    {error && projectView ? <Note K={K} tone="red" title={error} /> : null}
-                    {error && projectView ? <div style={{height: 10}} /> : null}
-                    {right}
-                </div>
-            </div>
-        </ThemeContext.Provider>
+                {readings.length || controls.length ? (
+                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8}}>
+                        {readings.map(r => (
+                            <div key={r.key} style={{background: K.surface, borderRadius: 10, padding: '10px 12px', minWidth: 0}}>
+                                <div style={{fontSize: 12, color: K.sub, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{nameOf(r.key)}</div>
+                                <div style={{fontSize: 20, fontWeight: 700, color: K.text}}>{formatValue(r.value, KNOWN_UNITS[r.key])}</div>
+                            </div>
+                        ))}
+                        {controls.map(c => (
+                            <div key={c.key} style={{background: K.surface, borderRadius: 10, padding: '10px 12px', minWidth: 0}}>
+                                <div style={{fontSize: 12, color: K.sub}}>{nameOf(c.key)}</div>
+                                <div style={{fontSize: 16, fontWeight: 700, color: K.text}}>
+                                    {c.kind === 'switch' ? (c.value ? 'On' : 'Off') : c.value}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div style={{fontSize: 13, color: K.sub, lineHeight: 1.5}}>
+                        {device && device.lastSeen ? 'No readings yet.' : 'Readings show up here once the board is online.'}
+                    </div>
+                )}
+            </Card>
+            <Card K={K}>
+                <div style={{fontWeight: 700, fontSize: 15, color: K.text, marginBottom: 10}}>Open it on your phone</div>
+                <PhoneLink K={K} id={deviceId} name={name} />
+            </Card>
+        </div>
     );
 };
 
 /**
- * The IoT Dashboard page: setup steps until the board is linked, then the board list and dashboards.
+ * The Cloud page in Studio: one checklist (board, WiFi, upload and going live) and, once the
+ * project has a board, its live values and a QR code. The dashboard itself lives in TinkerBit
+ * Cloud (/iot), never inside Studio.
+ */
+const CloudPanel = ({K, w, step, error, cloudLive}) => {
+    const {connections, ai} = useStudio();
+    const titleFor = useMemo(() => keyTitles(connections, ai), [connections, ai]);
+    const waiting = cloudLive.stage === 'uploading' || cloudLive.stage === 'waiting';
+    const setUp = Boolean(w.cloud);
+    // "live" without a board means the link was removed: start again at the board.
+    const at = step === 'live' && !setUp ? 'board' : step;
+    const home = at === 'live' && setUp && !waiting;
+    const ssid = (w.wifi && w.wifi.ssid) || (w.cloud && w.cloud.ssid) || '';
+
+    const stateOf = item => {
+        const order = ['board', 'wifi', 'go'];
+        const current = at === 'board' ? 'board' : (at === 'wifi' ? 'wifi' : 'go');
+        if (item === 'go' && home) {
+            return 'done';
+        }
+        if (item === current) {
+            return 'active';
+        }
+        return order.indexOf(item) < order.indexOf(current) ? 'done' : 'waiting';
+    };
+
+    let goBody = null;
+    if (at === 'upload') {
+        goBody = <UploadStep w={w} />;
+    } else if (at === 'live' && waiting) {
+        goBody = <LiveStep w={w} />;
+    }
+
+    return (
+        <div style={{display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start', maxWidth: 1040, margin: '0 auto'}}>
+            <div style={{flex: '1 1 460px', maxWidth: 640, minWidth: 0, display: 'grid', gap: 14}}>
+                <div>
+                    <h2 style={{margin: 0, fontSize: 22, color: K.text}}>Cloud</h2>
+                    <div style={{fontSize: 14, color: K.sub, marginTop: 4}}>
+                        Your phone can see this board’s readings and control it, over WiFi.
+                    </div>
+                </div>
+                {error ? <Note K={K} tone="red" title={error} /> : null}
+                <ol aria-label="Cloud setup" style={{listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 10}}>
+                    <Item
+                        K={K}
+                        n={1}
+                        state={stateOf('board')}
+                        title="Your Cloud board"
+                        summary={`Cloud board “${w.boardName}”`}
+                        onChange={w.goBoard}
+                        changeLabel="Change"
+                    >
+                        <BoardStep w={w} />
+                    </Item>
+                    <Item
+                        K={K}
+                        n={2}
+                        state={stateOf('wifi')}
+                        title="WiFi for the board"
+                        summary={ssid ? `WiFi “${ssid}”` : 'WiFi'}
+                        onChange={w.fixWifi}
+                    >
+                        <WifiStep w={w} />
+                    </Item>
+                    <Item
+                        K={K}
+                        n={3}
+                        state={stateOf('go')}
+                        title="Upload and go live"
+                        summary="On your board and live"
+                        onChange={w.goUpload}
+                        changeLabel="Upload again"
+                    >
+                        {goBody}
+                    </Item>
+                </ol>
+                {setUp ? (
+                    <details style={{fontSize: 13, color: K.sub}}>
+                        <summary style={{cursor: 'pointer', minHeight: 28}}>Board key and other settings</summary>
+                        <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10}}>
+                            <Button K={K} disabled={Boolean(w.busy)} onClick={w.newKeyAndUpload}>Make a new key</Button>
+                            <Button K={K} onClick={w.unlink}>Unlink this project</Button>
+                            <Button K={K} onClick={w.forget}>Forget WiFi and keys on this computer</Button>
+                        </div>
+                        <div style={{marginTop: 8, lineHeight: 1.5}}>
+                            Dashboards, alerts and board settings are in TinkerBit Cloud: <a href="/iot" target="_blank" rel="noopener noreferrer" style={{color: K.accent, fontWeight: 700}}>open it</a>.
+                        </div>
+                    </details>
+                ) : null}
+            </div>
+            {setUp ? (
+                <aside aria-label="Your board, live" style={{flex: '1 1 300px', maxWidth: 380, minWidth: 0}}>
+                    <LiveCard K={K} w={w} titleFor={titleFor} />
+                </aside>
+            ) : null}
+        </div>
+    );
+};
+
+const SetupCard = ({K, children}) => (
+    <Card K={K} style={{maxWidth: 560, margin: '0 auto'}}>{children}</Card>
+);
+
+/**
+ * The Cloud page: the setup checklist and, once linked, the board live.
  * Stays mounted (but draws nothing) on the other tabs so a half-typed WiFi password survives.
  */
 const CloudView = () => {
@@ -306,13 +291,13 @@ const CloudView = () => {
 
     let content;
     if (phase === 'loading' || !step) {
-        content = <div style={{fontSize: 13, color: K.sub, textAlign: 'center'}}>Opening your IoT Dashboard…</div>;
+        content = <div style={{fontSize: 13, color: K.sub, textAlign: 'center'}}>Opening Cloud…</div>;
     } else if (phase === 'signed_out') {
         content = message(
-            'Sign in to use the IoT Dashboard',
+            'Sign in to use Cloud',
             isLocalHost() ?
-                'You are running Studio locally without the sign-in service, so the IoT Dashboard is off. Everything else works.' :
-                'The IoT Dashboard keeps your boards under your account, so you need to be signed in.',
+                'You are running Studio locally without the sign-in service, so Cloud is off. Everything else works.' :
+                'Cloud keeps your boards under your account, so you need to be signed in.',
             isLocalHost() ? null : (
                 <a href={`/login?next=${encodeURIComponent('/beginner')}`} style={{color: K.accent, fontWeight: 700}}>
                     Sign in
@@ -327,7 +312,7 @@ const CloudView = () => {
         );
     } else if (phase === 'unreachable') {
         content = message(
-            'The IoT Dashboard cannot connect right now',
+            'Cloud cannot connect right now',
             isLocalHost() ?
                 'The Cloud service is not running. Start it with “npm start” in services/iot-api, then retry.' :
                 `${phaseNote || 'TinkerBit Cloud is not available right now.'} Everything else in Studio still works.`,
@@ -335,20 +320,20 @@ const CloudView = () => {
         );
     } else if (phase === 'disabled') {
         content = message(
-            'The IoT Dashboard is paused',
+            'Cloud is paused',
             'TinkerBit Cloud is down for maintenance. Your boards keep running their programs and reconnect by themselves.',
             <Button K={K} onClick={() => load()}>Check again</Button>
         );
     } else if (phase === 'not_in_pilot') {
         content = message(
-            'The IoT Dashboard is in a private pilot',
+            'Cloud is in a private pilot',
             `Your account${email ? ` (${email})` : ''} is not on the pilot list yet. Ask your teacher to add it.`
         );
     }
 
     return (
         <main
-            aria-label="IoT Dashboard"
+            aria-label="Cloud"
             style={{flex: 1, minHeight: 0, overflow: 'auto', background: K.canvas}}
         >
             {content ? (
@@ -361,13 +346,13 @@ const CloudView = () => {
                     ) : null}
                 </div>
             ) : (
-                <div style={{maxWidth: 1400, margin: '0 auto', padding: '16px 16px 40px'}}>
-                    <CloudBoards K={K} w={w} step={step} error={error} cloudLive={cloudLive} />
+                <div style={{padding: '24px 16px 48px'}}>
+                    <CloudPanel K={K} w={w} step={step} error={error} cloudLive={cloudLive} />
                 </div>
             )}
         </main>
     );
 };
 
-export {CloudBoards};
+export {CloudPanel};
 export default CloudView;
