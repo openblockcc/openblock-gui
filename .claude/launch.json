@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["cross-env", "NODE_OPTIONS=--openssl-legacy-provider", "webpack-dev-server", "--host", "127.0.0.1"],
       "port": 8601
+    },
+    {
+      "name": "iot-api-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["cross-env", "AUTH_DISABLED=1", "IOT_BROKER_MODE=none", "npm", "--prefix", "services/iot-api", "start"],
+      "port": 20114
     }
   ]
 }

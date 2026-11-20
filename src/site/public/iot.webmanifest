@@ -1,13 +1,13 @@
 {
-  "name": "TinkerBit IoT Dashboard",
-  "short_name": "IoT Dashboard",
+  "name": "TinkerBit Cloud",
+  "short_name": "TinkerBit Cloud",
   "description": "Live readings, switches and alerts for your TinkerBit boards.",
   "id": "/iot",
   "start_url": "/iot",
   "scope": "/iot",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#111827",
+  "background_color": "#FBF9FF",
+  "theme_color": "#5B2BD1",
   "icons": [
     {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
     {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 import {errorText, iotApi} from '../../lib/iot-api';
-import {formatValue, isAutoTitle, newWidgetId, prettyKey} from '../format';
+import {formatValue, isAutoTitle, labelFor, newWidgetId} from '../format';
 import {colsForWidth, moveItem, normalizeWidget, sizeFromW, typeDefaultSpan} from '../grid';
 import {useWidth, useWindowWidth} from '../hooks';
 import {setNavigationBlocker} from '../router';
@@ -13,6 +13,14 @@ import {AddPanel, EditPanel} from './WidgetPanel.jsx';
 import {WidgetBody} from './widgets.jsx';
 
 const PANEL_SPACE = 336;
+
+// On a phone the things you act on come first: controls, then numbers, then history.
+const PHONE_ORDER = {switch: 0, slider: 0, value: 1, gauge: 1, chart: 2, status: 3, alerts: 4};
+const rank = w => (Object.prototype.hasOwnProperty.call(PHONE_ORDER, w.type) ? PHONE_ORDER[w.type] : 5);
+const phoneOrder = widgets => widgets
+    .map((w, i) => ({w, i}))
+    .sort((a, b) => (rank(a.w) - rank(b.w)) || (a.i - b.i))
+    .map(x => x.w);
 
 /**
  * The board's widgets, plus the editor: drag tiles to move them, drag the corner to resize, tap a
@@ -34,9 +42,9 @@ const DashboardTab = ({detail, state, actions, onControl, titleFor, onEditingCha
     const windowWidth = useWindowWidth();
     const sheet = windowWidth < 800;
 
-    const keyTitle = key => (titleFor && key && titleFor(key)) || prettyKey(key);
-    const named = w => (titleFor && w.key && isAutoTitle(w) && titleFor(w.key) ?
-        Object.assign({}, w, {title: titleFor(w.key)}) : w);
+    // Studio's part names (titleFor), else the names Studio stored on the board, else the key made readable.
+    const keyTitle = key => (titleFor && key && titleFor(key)) || labelFor(detail.device, key);
+    const named = w => (w.key && isAutoTitle(w) ? Object.assign({}, w, {title: keyTitle(w.key)}) : w);
     const saved = detail.dashboard.layout.map(normalizeWidget).map(named);
     const editing = draft !== null;
     const changed = editing && JSON.stringify(draft) !== JSON.stringify(saved);
@@ -44,7 +52,7 @@ const DashboardTab = ({detail, state, actions, onControl, titleFor, onEditingCha
     const panelOpen = editing && (adding || Boolean(selected));
     const cols = colsForWidth(rowWidth - (panelOpen && !sheet ? PANEL_SPACE : 0));
     const readingKeys = (detail.latest || []).map(r => r.key);
-    const widgets = draft || saved;
+    const widgets = draft || (cols <= 2 ? phoneOrder(saved) : saved);
 
     useEffect(() => {
         setNavigationBlocker(() => (changed ? 'Leave without saving your dashboard changes?' : null));
@@ -222,13 +230,13 @@ const DashboardTab = ({detail, state, actions, onControl, titleFor, onEditingCha
                             setAdding(true);
                         }}
                         >
-                            + Add widget
+                            + Add a tile
                         </Button>
                         <Button onClick={cancel}>Cancel</Button>
-                        <Button kind="primary" disabled={saving || !changed} onClick={save}>{saving ? 'Saving…' : 'Save dashboard'}</Button>
+                        <Button kind="primary" disabled={saving || !changed} onClick={save}>{saving ? 'Saving…' : 'Save'}</Button>
                     </React.Fragment>
                 ) : (
-                    <Button onClick={startEdit}>Edit dashboard</Button>
+                    <Button onClick={startEdit}>Arrange tiles</Button>
                 )}
             </div>
 
@@ -251,7 +259,7 @@ const DashboardTab = ({detail, state, actions, onControl, titleFor, onEditingCha
                         <Card>
                             <div style={{color: K.sub, fontSize: 14}}>
                                 {editing ?
-                                    'This dashboard is empty. Press “Add widget” to put something on it.' :
+                                    'This dashboard is empty. Press “Add a tile” to put something on it.' :
                                     'The dashboard fills in by itself when the board sends its first readings.'}
                                 {!editing && detail.latest.length ?
                                     ` Latest: ${detail.latest.map(r => `${keyTitle(r.key)} ${formatValue(r.value)}`).join(', ')}.` : ''}

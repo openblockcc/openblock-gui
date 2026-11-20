@@ -89,7 +89,53 @@ const prettyKey = key => {
 const isAutoTitle = widget => {
     const title = (widget.title || '').trim();
     const key = widget.key || '';
-    return !title || title === key || title === prettyKey(key) || title === key.replace(/(\d)$/, ' $1');
+    const same = (a, b) => a.toLowerCase() === b.toLowerCase();
+    return !title || same(title, key) || same(title, prettyKey(key)) || same(title, key.replace(/(\d)$/, ' $1'));
+};
+
+/**
+ * What a reading or control is called on screen: the name Studio sent for it (device.labels,
+ * e.g. "Soil moisture", "Pump"), else the key made readable ("soilMoisture" -> "Soil moisture").
+ * @param {object} device the board (may carry labels)
+ * @param {string} key reading or control key
+ * @returns {string} the name
+ */
+const labelFor = (device, key) => {
+    const labels = device && device.labels && typeof device.labels === 'object' ? device.labels : null;
+    const given = labels && typeof labels[key] === 'string' ? labels[key].trim() : '';
+    if (given) {
+        return given;
+    }
+    const pretty = prettyKey(key);
+    return pretty.charAt(0) + pretty.slice(1).toLowerCase();
+};
+
+/**
+ * A widget's title: what someone typed, or the reading's name when nobody did.
+ * @param {object} widget dashboard widget
+ * @param {object} device the board
+ * @returns {string} the title
+ */
+const widgetTitle = (widget, device) => {
+    if (widget.key && isAutoTitle(widget)) {
+        return labelFor(device, widget.key);
+    }
+    return widget.title || (widget.key ? labelFor(device, widget.key) : '');
+};
+
+/**
+ * @param {object} device the board
+ * @param {number} [now] the time now
+ * @returns {string} "Online", "Paused", "Offline · 2 h ago" or "Waiting for first connection"
+ */
+const statusText = (device, now) => {
+    if (device.status === 'disabled') {
+        return 'Paused';
+    }
+    if (device.status === 'online') {
+        return 'Online';
+    }
+    return device.lastSeen ? `Offline · ${timeAgo(device.lastSeen, now)}` : 'Not connected yet';
 };
 
 const newWidgetId = existing => {
@@ -108,8 +154,11 @@ export {
     clockTime,
     formatValue,
     isAutoTitle,
+    labelFor,
     newWidgetId,
     prettyKey,
     rssiBars,
-    timeAgo
+    statusText,
+    timeAgo,
+    widgetTitle
 };

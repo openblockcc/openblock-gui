@@ -484,13 +484,13 @@ module.exports = [
                 chunks: ['site-vendor', 'iot'],
                 template: 'src/site/site.ejs',
                 filename: 'iot.html',
-                title: 'IoT Dashboard · TinkerBit',
+                title: 'TinkerBit Cloud',
                 description: 'Live readings, switches and alerts for your TinkerBit boards.',
                 robots: 'noindex',
                 canonical: `${SITE_ORIGIN}/iot`,
-                themeColor: '#111827',
+                themeColor: '#FBF9FF',
                 manifestHref: '/iot.webmanifest',
-                fontsHref: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+                fontsHref: SITE_FONTS_HREF,
                 extraHead: [
                     // Live updates connect straight to the API host (Vercel rewrites cannot carry WebSockets).
                     `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self' wss://api.tinkerbit.io${IOT_DEV_WS}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">`,

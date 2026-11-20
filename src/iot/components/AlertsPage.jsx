@@ -36,8 +36,8 @@ const AlertsPage = ({state, actions}) => {
 
     return (
         <div>
-            <div style={{display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12}}>
-                <h1 style={{fontSize: 22, margin: 0, flex: 1}}>Alerts</h1>
+            <div style={{display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16}}>
+                <h1 style={{fontFamily: K.fontDisplay, fontSize: 28, margin: 0, flex: 1}}>Alerts</h1>
                 <Button disabled={busy || !state.unread} onClick={markAll}>Mark all read</Button>
             </div>
             {error ? <Banner tone="error">{error}</Banner> : null}
@@ -45,13 +45,13 @@ const AlertsPage = ({state, actions}) => {
             {loaded && !items.length ? (
                 <Card>
                     <div style={{color: K.sub, fontSize: 14}}>
-                        No alerts yet. Add alert rules on a board’s Alerts tab, or use the “Send alert” block in Beginner Studio.
+                        No alerts yet. Open a board and use “Tell me when…”, or the “Send alert” block in Beginner Studio.
                     </div>
                 </Card>
             ) : null}
             <div style={{display: 'grid', gap: 8}}>
                 {items.map(a => (
-                    <Card key={a.id} style={{display: 'flex', gap: 10, alignItems: 'flex-start', padding: 12}}>
+                    <Card key={a.id} style={{display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px'}}>
                         <span
                             aria-hidden="true"
                             style={{width: 8, height: 8, borderRadius: 4, marginTop: 6, flexShrink: 0, background: a.read ? K.surface : K[KIND_COLOR[a.kind] || 'accent']}}

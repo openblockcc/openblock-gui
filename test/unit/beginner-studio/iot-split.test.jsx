@@ -464,9 +464,9 @@ describe('board dashboard', () => {
         click(button('Alerts'));
         expect(root.textContent).toContain('Get a message on your phone when a reading goes above or below a number.');
         click(button('Settings'));
-        const fold = root.querySelector('details');
+        const fold = [...root.querySelectorAll('details')].find(d => d.querySelector('summary').textContent.indexOf('Advanced') === 0);
         expect(fold.hasAttribute('open')).toBe(false);
-        expect(fold.querySelector('summary').textContent).toContain('Advanced (for teachers)');
+        expect(fold.querySelector('summary').textContent).toContain('board key, delete');
         expect(fold.textContent).toContain('Make a new key');
         expect(fold.textContent).toContain('This project will need a new board after this.');
         typeInto(fold.querySelector('input[aria-label="Type the board name to confirm"]'), 'Garden');

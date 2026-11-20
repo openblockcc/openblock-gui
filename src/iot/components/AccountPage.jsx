@@ -52,7 +52,7 @@ const AccountPage = ({state, actions}) => {
 
     return (
         <div style={{display: 'grid', gap: 12}}>
-            <h1 style={{fontSize: 22, margin: 0}}>Your Cloud data</h1>
+            <h1 style={{fontFamily: K.fontDisplay, fontSize: 28, margin: 0}}>Data and privacy</h1>
             {error ? <Banner tone="error">{error}</Banner> : null}
             {done ? <Banner tone="ok">{done}</Banner> : null}
             <Card>

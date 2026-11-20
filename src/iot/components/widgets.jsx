@@ -88,12 +88,12 @@ const controlNote = (control, device, sendError) => {
         return {tone: 'dim', text: ''};
     }
     if ((control.ackedVersion || 0) >= control.version) {
-        return {tone: 'ok', text: 'board has it'};
+        return {tone: 'ok', text: 'The board has it'};
     }
     if (device.status !== 'online') {
-        return {tone: 'warn', text: 'board is offline — it will update when it reconnects'};
+        return {tone: 'warn', text: 'The board is offline. It changes when it reconnects.'};
     }
-    return {tone: 'warn', text: 'sending…'};
+    return {tone: 'warn', text: 'Sending to the board…'};
 };
 
 const useControlSender = (deviceId, control, onControl) => {

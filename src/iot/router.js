@@ -4,9 +4,10 @@ const BASE = '/iot';
 
 const parseRoute = pathname => {
     const path = (pathname || '').replace(/\/+$/, '');
-    const device = /^\/iot\/d\/([A-Za-z0-9_-]{1,32})$/.exec(path);
+    const device = /^\/iot\/d\/([A-Za-z0-9_-]{1,32})(\/settings)?$/.exec(path);
     if (device) {
-        return {page: 'device', id: device[1]};
+        // A board's settings are its own screen, but the same board for loading and live data.
+        return device[2] ? {page: 'device', id: device[1], view: 'settings'} : {page: 'device', id: device[1]};
     }
     if (path === `${BASE}/alerts`) {
         return {page: 'alerts'};

@@ -2,12 +2,13 @@ import React, {useState} from 'react';
 
 import {writeToken} from '../../beginner-studio/domain/cloudSecrets';
 import {errorText, iotApi} from '../../lib/iot-api';
-import {prettyKey, timeAgo} from '../format';
+import {labelFor, timeAgo} from '../format';
 import {navigate} from '../router';
 import {Banner, Button, Card, Field, inputStyle, useTheme} from '../ui.jsx';
 
 const INTERVALS = [5, 10, 15, 30, 60, 300, 900, 3600];
-const FAILSAFE = [0, 10, 30, 60, 300, 900, 3600];
+// 120 s is what new controls start with (the firmware's default), so it must be a choice here.
+const FAILSAFE = [0, 10, 30, 60, 120, 300, 900, 3600];
 
 const durationLabel = s => {
     if (s === 0) {
@@ -33,8 +34,21 @@ const DeviceSettings = ({detail, config, actions, simple, onDeleted, onNewKey, o
     const [error, setError] = useState('');
     const [done, setDone] = useState('');
     const [confirmName, setConfirmName] = useState('');
+    const [allControls, setAllControls] = useState(false);
     const email = config.user ? config.user.email : null;
     const minInterval = config.limits.minIntervalSec;
+    // Controls this board uses: on its dashboard, ever changed, or named by Studio.
+    const onDashboard = {};
+    ((detail.dashboard && detail.dashboard.layout) || []).forEach(w => {
+        if (w.key) {
+            onDashboard[w.key] = true;
+        }
+    });
+    // A control starts at version 1; a later version, a board's ack or a person's change means it is in use.
+    const used = c => onDashboard[c.key] || (c.version || 0) > 1 || (c.ackedVersion || 0) > 0 || Boolean(c.updatedBy) ||
+        Boolean(device.labels && device.labels[c.key]);
+    const shownControls = allControls ? detail.controls : detail.controls.filter(used);
+    const hiddenControls = detail.controls.length - detail.controls.filter(used).length;
 
     const run = async (label, fn) => {
         setBusy(label);
@@ -104,14 +118,75 @@ const DeviceSettings = ({detail, config, actions, simple, onDeleted, onNewKey, o
         }
     });
 
-    const advanced = cards => (simple ? (
-        <details style={{border: `1px solid ${K.border}`, borderRadius: 14, padding: '10px 14px'}}>
-            <summary style={{cursor: 'pointer', fontWeight: 700, fontSize: 13, color: K.sub}}>
-                Advanced (for teachers): WiFi loss, board key, delete
-            </summary>
+    const fold = (title, cards) => (
+        <details style={{border: `1.5px solid ${K.border}`, borderRadius: 18, padding: '12px 16px', background: K.panel}}>
+            <summary style={{cursor: 'pointer', fontWeight: 700, fontSize: 15, color: K.sub, minHeight: 28}}>{title}</summary>
             <div style={{display: 'grid', gap: 12, marginTop: 12}}>{cards}</div>
         </details>
-    ) : cards);
+    );
+    const cardTitle = text => <div style={{fontFamily: K.fontDisplay, fontWeight: 700, fontSize: 17, marginBottom: 6}}>{text}</div>;
+
+    const failsafeCard = (
+        <Card>
+            {cardTitle('If the WiFi drops')}
+            <div style={{fontSize: 14, color: K.dim, marginBottom: 12, lineHeight: 1.5}}>
+                After this long offline, the board sets a control to a safe value by itself (for example, pump off).
+            </div>
+            {shownControls.length ? null : (
+                <div style={{fontSize: 14, color: K.sub, marginBottom: 8}}>This board’s program does not use any dashboard controls yet.</div>
+            )}
+            <div style={{display: 'grid', gap: 10}}>
+                {shownControls.map(c => (
+                    <div key={c.key} style={{display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap'}}>
+                        <span style={{width: 120, fontWeight: 700, fontSize: 15}}>{labelFor(device, c.key)}</span>
+                        <select
+                            aria-label={`${labelFor(device, c.key)}: when to change it`}
+                            value={c.failsafeSec}
+                            disabled={busy === c.key}
+                            onChange={e => setFailsafe(c, {failsafeSec: Number(e.target.value)})}
+                            style={inputStyle(K)}
+                        >
+                            {FAILSAFE.map(s => <option key={s} value={s}>{s === 0 ? 'keep its last value' : `after ${durationLabel(s)}`}</option>)}
+                        </select>
+                        {c.failsafeSec > 0 && c.kind === 'switch' ? (
+                            <select
+                                aria-label={`${labelFor(device, c.key)}: safe value`}
+                                value={c.failsafeValue}
+                                disabled={busy === c.key}
+                                onChange={e => setFailsafe(c, {failsafeValue: Number(e.target.value)})}
+                                style={inputStyle(K)}
+                            >
+                                <option value={0}>turn off</option>
+                                <option value={1}>turn on</option>
+                            </select>
+                        ) : null}
+                        {c.failsafeSec > 0 && c.kind !== 'switch' ? (
+                            <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                aria-label={`${labelFor(device, c.key)}: safe value`}
+                                defaultValue={c.failsafeValue}
+                                disabled={busy === c.key}
+                                onBlur={e => {
+                                    const v = Math.round(Number(e.target.value));
+                                    if (Number.isFinite(v) && v !== c.failsafeValue && v >= 0 && v <= 100) {
+                                        setFailsafe(c, {failsafeValue: v});
+                                    }
+                                }}
+                                style={Object.assign(inputStyle(K), {width: 90})}
+                            />
+                        ) : null}
+                    </div>
+                ))}
+            </div>
+            {hiddenControls > 0 ? (
+                <Button kind="ghost" style={{marginTop: 8, paddingLeft: 0}} onClick={() => setAllControls(!allControls)}>
+                    {allControls ? 'Only the controls this board uses' : `Show all ${detail.controls.length} controls`}
+                </Button>
+            ) : null}
+        </Card>
+    );
 
     return (
         <div style={{display: 'grid', gap: 12}}>
@@ -138,115 +213,74 @@ const DeviceSettings = ({detail, config, actions, simple, onDeleted, onNewKey, o
             ) : null}
 
             <Card>
-                <div style={{display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'flex-end'}}>
-                    <Field label="Name">
-                        <input value={name} maxLength={40} onChange={e => setName(e.target.value)} style={Object.assign(inputStyle(K), {width: 220})} />
-                    </Field>
+                {cardTitle('Name')}
+                <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center'}}>
+                    <input
+                        aria-label="Board name"
+                        value={name}
+                        maxLength={40}
+                        onChange={e => setName(e.target.value)}
+                        style={Object.assign(inputStyle(K), {width: 260})}
+                    />
                     <Button
                         disabled={busy === 'name' || !name.trim() || name.trim() === device.name}
                         onClick={() => patchDevice('name', {name: name.trim()}, 'Name saved.')}
                     >
                         Save name
                     </Button>
-                    <Field label="Board sends readings" hint={intervalHint || 'Change it in Beginner Studio too, then upload.'}>
-                        <select
-                            value={device.intervalSec}
-                            onChange={e => patchDevice('interval', {intervalSec: Number(e.target.value)}, 'Interval saved.')}
-                            style={inputStyle(K)}
-                        >
-                            {INTERVALS.filter(s => s >= minInterval || s === device.intervalSec).map(s => (
-                                <option key={s} value={s}>every {durationLabel(s)}</option>
-                            ))}
-                        </select>
-                    </Field>
                 </div>
             </Card>
 
-            {advanced(<React.Fragment>
-                {detail.controls.length ? (
+            {detail.controls.length && simple ? fold('If the WiFi drops', failsafeCard) : null}
+            {detail.controls.length && !simple ? failsafeCard : null}
+
+            {fold('Advanced: readings interval, board key, delete', (
+                <React.Fragment>
                     <Card>
-                        <div style={{fontWeight: 800, marginBottom: 6}}>If the board loses WiFi</div>
-                        <div style={{fontSize: 12, color: K.dim, marginBottom: 10}}>
-                            After this long offline, the board sets the control to a safe value by itself (for example, motor off).
+                        {cardTitle('How often it sends readings')}
+                        <Field label="The board sends readings" hint={intervalHint || 'Beginner Studio sets this when you upload; change it there too.'}>
+                            <select
+                                value={device.intervalSec}
+                                onChange={e => patchDevice('interval', {intervalSec: Number(e.target.value)}, 'Interval saved.')}
+                                style={Object.assign(inputStyle(K), {width: 200})}
+                            >
+                                {INTERVALS.filter(s => s >= minInterval || s === device.intervalSec).map(s => (
+                                    <option key={s} value={s}>every {durationLabel(s)}</option>
+                                ))}
+                            </select>
+                        </Field>
+                    </Card>
+
+                    <Card>
+                        {cardTitle('Board key')}
+                        <div style={{fontSize: 14, color: K.dim, marginBottom: 12, lineHeight: 1.5}}>
+                            Key starting <code>{device.tokenPrefix}…</code> · board made {timeAgo(device.createdAt)}.
+                            Make a new key if this one leaked (for example, the code was shared with the key in it).
                         </div>
-                        <div style={{display: 'grid', gap: 8}}>
-                            {detail.controls.map(c => (
-                                <div key={c.key} style={{display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap'}}>
-                                    <span style={{width: 90, fontWeight: 700, fontSize: 13}}>{prettyKey(c.key)}</span>
-                                    <select
-                                        aria-label={`${c.key} failsafe delay`}
-                                        value={c.failsafeSec}
-                                        disabled={busy === c.key}
-                                        onChange={e => setFailsafe(c, {failsafeSec: Number(e.target.value)})}
-                                        style={inputStyle(K)}
-                                    >
-                                        {FAILSAFE.map(s => <option key={s} value={s}>{s === 0 ? 'keep last value' : `after ${durationLabel(s)}`}</option>)}
-                                    </select>
-                                    {c.failsafeSec > 0 ? (
-                                        c.kind === 'switch' ? (
-                                            <select
-                                                aria-label={`${c.key} failsafe value`}
-                                                value={c.failsafeValue}
-                                                disabled={busy === c.key}
-                                                onChange={e => setFailsafe(c, {failsafeValue: Number(e.target.value)})}
-                                                style={inputStyle(K)}
-                                            >
-                                                <option value={0}>turn off</option>
-                                                <option value={1}>turn on</option>
-                                            </select>
-                                        ) : (
-                                            <input
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                aria-label={`${c.key} failsafe value`}
-                                                defaultValue={c.failsafeValue}
-                                                disabled={busy === c.key}
-                                                onBlur={e => {
-                                                    const v = Math.round(Number(e.target.value));
-                                                    if (Number.isFinite(v) && v !== c.failsafeValue && v >= 0 && v <= 100) {
-                                                        setFailsafe(c, {failsafeValue: v});
-                                                    }
-                                                }}
-                                                style={Object.assign(inputStyle(K), {width: 80})}
-                                            />
-                                        )
-                                    ) : null}
-                                </div>
-                            ))}
+                        <Button disabled={busy === 'token'} onClick={regenerate}>Make a new key</Button>
+                    </Card>
+
+                    <Card style={{border: `1.5px solid ${K.red}`}}>
+                        <div style={{fontFamily: K.fontDisplay, fontWeight: 700, fontSize: 17, marginBottom: 6, color: K.red}}>Delete board</div>
+                        <div style={{fontSize: 14, color: K.dim, marginBottom: 12, lineHeight: 1.5}}>
+                            The board stops connecting at once; its readings, dashboard and alerts are erased within 7 days.
+                            {deleteNote ? ` ${deleteNote}` : ''} Type its name to confirm.
+                        </div>
+                        <div style={{display: 'flex', gap: 10, flexWrap: 'wrap'}}>
+                            <input
+                                value={confirmName}
+                                onChange={e => setConfirmName(e.target.value)}
+                                placeholder={device.name}
+                                aria-label="Type the board name to confirm"
+                                style={Object.assign(inputStyle(K), {width: 240})}
+                            />
+                            <Button kind="danger" disabled={busy === 'delete' || confirmName.trim() !== device.name} onClick={remove}>
+                                Delete forever
+                            </Button>
                         </div>
                     </Card>
-                ) : null}
-
-                <Card>
-                    <div style={{fontWeight: 800, marginBottom: 6}}>Device key</div>
-                    <div style={{fontSize: 12, color: K.dim, marginBottom: 10}}>
-                        Key starting <code>{device.tokenPrefix}…</code> · board made {timeAgo(device.createdAt)}.
-                        Make a new key if this one leaked (for example, the code was shared with the key in it).
-                    </div>
-                    <Button disabled={busy === 'token'} onClick={regenerate}>Make a new key</Button>
-                </Card>
-
-                <Card style={{borderColor: K.red}}>
-                    <div style={{fontWeight: 800, marginBottom: 6, color: K.red}}>Delete board</div>
-                    <div style={{fontSize: 12, color: K.dim, marginBottom: 10}}>
-                        The board stops connecting at once; its readings, dashboard and alerts are erased within 7 days.
-                        {deleteNote ? ` ${deleteNote}` : ''} Type its name to confirm.
-                    </div>
-                    <div style={{display: 'flex', gap: 8, flexWrap: 'wrap'}}>
-                        <input
-                            value={confirmName}
-                            onChange={e => setConfirmName(e.target.value)}
-                            placeholder={device.name}
-                            aria-label="Type the board name to confirm"
-                            style={Object.assign(inputStyle(K), {width: 220})}
-                        />
-                        <Button kind="danger" disabled={busy === 'delete' || confirmName.trim() !== device.name} onClick={remove}>
-                            Delete forever
-                        </Button>
-                    </div>
-                </Card>
-            </React.Fragment>)}
+                </React.Fragment>
+            ))}
         </div>
     );
 };

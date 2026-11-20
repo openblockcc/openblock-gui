@@ -45,22 +45,27 @@ export function suggestLayout (readingKeys, controlKeys, titles = {}) {
         {id, type, key, title, size, options: {}},
         defaultSpan(type, size)
     );
-    const titleFor = (key, fallback) => {
-        const given = Object.prototype.hasOwnProperty.call(titles, key) ? cleanText(titles[key], 40) : '';
-        return given || fallback;
+    // "soilMoisture" -> "Soil moisture", "switch1" -> "Switch 1" when Studio sent no name.
+    const readable = key => {
+        const spaced = key.replace(/([a-z])([A-Z0-9])/g, '$1 $2');
+        return spaced.charAt(0).toUpperCase() + spaced.slice(1).toLowerCase();
     };
-    const layout = [widget('status', 'status', null, 'Board', 'S')];
+    const titleFor = key => {
+        const given = Object.prototype.hasOwnProperty.call(titles, key) ? cleanText(titles[key], 40) : '';
+        return given || readable(key);
+    };
+    // Things you act on first, then numbers, then history. The page itself shows the board's
+    // status and its alerts, so neither gets a tile.
+    const layout = [];
+    controlKeys.filter(k => CONTROL_KEYS[k]).forEach(key => {
+        layout.push(widget(`c_${key}`, CONTROL_KEYS[key].kind, key, titleFor(key), 'S'));
+    });
     readingKeys.slice(0, 6).forEach((key, i) => {
-        layout.push(widget(`v_${i}`, 'value', key, titleFor(key, key), 'S'));
+        layout.push(widget(`v_${i}`, 'value', key, titleFor(key), 'S'));
     });
     if (readingKeys.length) {
-        layout.push(widget('chart_0', 'chart', readingKeys[0], titleFor(readingKeys[0], readingKeys[0]), 'L'));
+        layout.push(widget('chart_0', 'chart', readingKeys[0], titleFor(readingKeys[0]), 'L'));
     }
-    controlKeys.filter(k => CONTROL_KEYS[k]).forEach(key => {
-        const type = CONTROL_KEYS[key].kind;
-        layout.push(widget(`c_${key}`, type, key, titleFor(key, key.replace(/(\d)$/, ' $1')), 'S'));
-    });
-    layout.push(widget('alerts', 'alerts', null, 'Alerts', 'M'));
     return layout;
 }
 
