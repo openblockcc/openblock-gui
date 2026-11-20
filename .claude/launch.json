@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "tinkerbit-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["cross-env", "NODE_OPTIONS=--openssl-legacy-provider", "webpack-dev-server", "--host", "127.0.0.1"],
+      "port": 8601
+    }
+  ]
+}
